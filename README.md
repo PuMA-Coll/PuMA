@@ -1,10 +1,16 @@
 # puma_pipe
 
-Data pipe for pulsar observation at IAR. Will eventually include:
+Data pipe scripts for pulsar observation at IAR.
 
-0) configuration files for pulsar software
-1) pulsar_reduc.py : processing of filterbank files
+Includes:
+
+1) configuration files for pulsar software
 2) puma_toa.py : log generator and toa extractor
-3) puma_cal.py : calibration pipe
-4) puma_rfi.py : handles rfi statistics
+3) looper.py: loops soft over data folders
+
+Will include:
+
+1) pulsar_reduc.py: adapted version from bash 
+2) puma_cal.py : calibration pipe
+3) puma_rfi.py : handles rfi statistics
 
