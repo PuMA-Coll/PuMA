@@ -11,7 +11,7 @@ import subprocess
 # choose a process to loop
 import argparse
 parser = argparse.ArgumentParser()
-parser.add_argument("script", action='store' type=str, help="choose the process and this will loop it")
+parser.add_argument("script", action='store', type=str, help="choose the process and this will loop it")
 parser.add_argument("--p", action='store', type=str, help="additional", required=False)
 args = parser.parse_args()
 
@@ -30,11 +30,11 @@ for root, dirs, files in os.walk(directory):
 looplist=[]
 
 # We just take the folders of the type: /obs#
-files = re.compile(r'obs[1-9]{2})
+files = re.compile(r'obs[1-9]+')
 
-for x in rootlist	
-    if files.findall(x):
-        looplist.append(x)
+for x in rootlist:
+	if files.findall(x):
+	        looplist.append(x)
 
 #We arrange the list
 looplist.sort()
