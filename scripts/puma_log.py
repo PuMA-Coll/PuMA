@@ -1,28 +1,14 @@
-
-# coding: utf-8
-
-# In[3]:
-
-
 #!/usr/bin/env python
 
-
-# # PuMA log
-
-# ### Python script for .log file generation.
-# 
-# This script is intended to gain control and check systematics in all PuMA observations. 
-# 
-# Can be adapted for particular projects. 
-# 
-# It is expected to run after the pulsar_reduc routine. It works under the pulsar_reduc organisation scheme: /pulsar_name/yearmonthday/AX/obs# where AX could be A1 or A2 with (a) pulsar .fil files (b) calibration .fil files (c) .pfd files (d) .mask files.
+## PuMA log
+#### Python script for .log file generation.
+# This script is intended to gain control and check systematics in all PuMA observations.  
+# Can be adapted for particular projects. It is expected to run after the pulsar_reduc routine. It works under the pulsar_reduc organisation scheme: /pulsar_name/yearmonthday/AX/obs# where AX could be A1 or A2 with (a) pulsar .fil files (b) calibration .fil files (c) .pfd files (d) .mask files.
 # 
 # 
 # Version: 0.1
 # Date: 1/4/19
 # authors: Luciano Combi
-
-# In[1]:
 
 
 # Import standard packages
@@ -61,16 +47,8 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("-n", "--notoa", action="store_true",
                     help="save log and moves folders without obtaining TOAs")
+
 args = parser.parse_args()
-
-if args.notoa:
-    antenna = 'N'
-    print('Saving log and moving files without obtaining toas')
-else: antenna = 'Y'
-
-
-# In[2]:
-
 
 # Extract number of parts of raw files
 
