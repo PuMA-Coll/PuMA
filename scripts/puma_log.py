@@ -28,7 +28,6 @@
 # Import standard packages
 
 import numpy as np
-import matplotlib.pyplot as mp
 import astropy 
 from astropy.io import ascii
 from astropy.table import Table, Column, MaskedColumn
@@ -129,6 +128,9 @@ maskname = glob.glob('*.mask')[0]
 
 
 # Correct metadata information. We should include a proper name function here (e.g. for vela)
+
+# Type
+subprocess.call(['psredit', '-c','type=Pulsar','-m',pfd], shell=True)
 
 # Coordinates
 subprocess.check_output(['psredit', '-c','coord='+scoord,'-m',pfd]) 
@@ -237,8 +239,8 @@ lognames = ['Name of pulsar',
 
 
 # Do the log with the current information. Use astropy table. 
-
-file_name = pulsar[0]+'log.txt'
+destination='./../../../'
+file_name = pulsar+'log.txt'
 if not os.path.exists(destination+file_name):
     table = Table(logvar, names = lognames)
     ascii.write(table,destination+file_name)

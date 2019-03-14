@@ -1,9 +1,3 @@
-
-# coding: utf-8
-
-# In[3]:
-
-
 #!/usr/bin/env python
 
 
@@ -25,7 +19,6 @@
 # Import standard packages
 
 import numpy as np
-import matplotlib.pyplot as mp
 
 # We will need to execute shell scripts
 
@@ -50,12 +43,22 @@ from sigproc import *
 
 # Open pfd.
 
-pfd = glob.glob('*.pfd')[0]
+pfd = glob.glob('*tim*.pfd')[0]
+
+directory = os.getcwd()
+splitdir = directory.split('/')
+
+if splitdir[7] == 'A1':
+        subprocess.check_output(['psredit', '-c','site=IAR1','-m',pfd])
+else:
+        subprocess.check_output(['psredit', '-c','site=IAR2','-m',pfd])
+
+subprocess.check_output(['psredit', '-c','name='+splitdir[5],'-m',pfd])
+
+
 arch = psrchive.Archive_load(pfd)
 source = arch.get_source()
 
-
-# In[3]:
 
 
 # Check if timing foler exist for the pulsar. If not, create it.
@@ -70,9 +73,6 @@ else:
     
 if not os.path.exists(timingfolder):
     os.makedirs(tfolder)
-
-
-# In[4]:
 
 
 # Create template variables:
