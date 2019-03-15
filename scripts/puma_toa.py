@@ -50,6 +50,6 @@ flags= '-X "-section "'
 
 j=0
 for pfd in pfds:
-    subprocess.call(['pat '+pat_args(flags+str(j),nsubints)+pfd+pat_output_general], shell=True)
+    subprocess.call(['pat '+pat_args(flags+str(j),nsubints)+pfd+pat_output_total], shell=True)
     subprocess.call(['pat '+pat_args(flags+str(j),1 )+pfd+pat_output_individual], shell=True)
     j+=1
