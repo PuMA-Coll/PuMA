@@ -38,26 +38,10 @@ from os.path import dirname
 sys.path.append('/opt/pulsar/PyPulse/pypulse/')
 
 
-# In[2]:
-
-
-# Let us enable a no timing option and a help. Future options of calibration an pazi
-
-import argparse
-parser = argparse.ArgumentParser()
-parser.add_argument("-n", "--notoa", action="store_true",
-                    help="save log and moves folders without obtaining TOAs")
-
-args = parser.parse_args()
-
 # Extract number of parts of raw files
 
 rawname = glob.glob('*.fil')
 firstfil= read_header(rawname[0])[0]
-
-
-# In[5]:
-
 
 # Observation details (from the first filterbank if there are more than one)
 
@@ -93,19 +77,13 @@ sourceantenna = firstfil['rawdatafile']
 pulsar= sourceantenna[:len(sourceantenna)-3]
 
 
-# In[6]:
-
-
 # Open pfd files and masks.
 
 pfd = glob.glob('*.pfd')[0]
 maskname = glob.glob('*.mask')[0]
 
 
-# In[7]:
-
-
-# Correct metadata information. We should include a proper name function here (e.g. for vela)
+# Correct metadata information.
 
 # Type
 subprocess.call(['psredit', '-c','type=Pulsar','-m',pfd], shell=True)
@@ -125,15 +103,6 @@ subprocess.check_output(['psredit', '-c','be:name=Ettus-B120','-m',pfd])
 subprocess.check_output(['psredit', '-c','obs:projid=PuMA','-m',pfd]) 
 
 
-# In[8]:
-
-
-# In this step we should include a zapping option and calibration. 
-# Since we do not have yet two polarization we skip calibration.
-
-
-# In[9]:
-
 
 # Save all relevant data from the pfd using rfifind and psrchive.
     
@@ -142,19 +111,12 @@ maskrfi = rfifind.rfifind(maskname)
 mjd = arch.start_time()
 
 
-# In[10]:
-
-
 #Usable % of the observations due to RFI. We do not take into account pazi filters.
 
 maskrfi.read_bytemask()
 maskarr = maskrfi.bytemask
 nbadint = float(np.count_nonzero(maskarr))
 ntotalint = float(len(maskrfi.goodints))*float(len(maskrfi.freqs))
-
-
-# In[11]:
-
 
 # Parameters (we also have nobs and coords)
 
@@ -211,10 +173,6 @@ lognames = ['Name of pulsar',
             'Time of RFI Mask',
             '% of RFI in obs',
            'Backend']
-
-
-# In[ ]:
-
 
 # Do the log with the current information. Use astropy table. 
 destination='./../../../'
