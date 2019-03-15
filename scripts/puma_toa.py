@@ -22,8 +22,16 @@ pfdtype = '*tim*.pfd'
 pfds = glob.glob(pfdtype)
 pfds.sort()
 
-arch = psrchive.Archive_load(pfds[0])
-pulsarname= arch.get_source()
+# Basic Labeling
+
+pulsar= 'B0833-45'
+telescope = 'IAR2'
+
+for pfd in pfds:
+    arch = psrchive.Archive_load(pfd)
+    arch.set_telescope(telescope)
+    arch.set_source(pulsar)
+    arch.unload()
 
 # Choose a given template named 'pulsar.pfd.std'
 usingtemplate = './timing/{}.pfd.std'.format(pulsarname)
