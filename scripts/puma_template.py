@@ -29,6 +29,7 @@ for pfd in pfds:
     arch = psrchive.Archive_load(pfd)
     arch.set_telescope(telescope)
     arch.set_source(pulsar)
+    arch.unload()
 
 # Add pfds and form a super pfd:
 
