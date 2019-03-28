@@ -1,0 +1,47 @@
+Tratando de entender RFIFIND y cómo sacarle jugo…
+Los archivos que deja la tarea rfifind son:
+
+mask_J0437-4715_0.1_rfifind.bytemask	(binario)
+mask_J0437-4715_0.1_rfifind.inf      		(ascii)
+mask_J0437-4715_0.1_rfifind.mask     	(binario)
+mask_J0437-4715_0.1_rfifind.ps       		(ps)
+mask_J0437-4715_0.1_rfifind.rfi      		(binario)
+mask_J0437-4715_0.1_rfifind.stats		(binario)
+
+Todos los archivos se pueden leer con PYTHON usando rfifind.py de PRESTO, que incluye varias tareas. Lo único que no se puede leer por defecto es BYTEMASK.
+
+BYTEMASK es una matriz de NUMINT x NUMCHAN que tiene la información de la máscara donde se detectaron RFI que se puede ver en los plots postscript. Los valores de la matriz son:
+
+#define GOODDATA 0x00
+#define PADDING  0x01
+#define OLDMASK  0x02
+#define USERCHAN 0x04
+#define USERINTS 0x08
+#define BAD_POW  0x10
+#define BAD_STD  0x20
+#define BAD_AVG  0x40
+#define BADDATA  (BAD_POW|BAD_STD|BAD_AVG)
+#define USERZAP  (USERCHAN|USERINTS)
+
+De donde surge que en la BYTEMATRIX se tienen “0” para GOODDATA y se tiene, por ejemplo “60” para (BAD_STD and BAD_AVG).  También se puede definir BADDATA como la unión de todos los males. De esta manera podemos entender los valores de BYTEMATRIX en números enteros, pero en general, la regla es que todo lo que no es 0, es malo.
+
+Acá está la máscara, este es el archivo bytemask, lo podemos leer con python. Para ello tenemos que agregar esta función dentro de la clase rfifind.
+
+def read_bytemask(self):
+       x = open(self.basename+".bytemask")
+       count = self.nchan * self.nint
+       self.bytemask = np.fromfile(x, dtype=np.int8, count=count)
+       self.bytemask.shape = (self.nint, self.nchan)
+       x.close()
+
+NUMCHAN es el número total de canales
+NUMINT es el número total de intervalos de tiempo.
+
+
+
+
+	Esto fue incorporado a pulsar: ingresar a cualquier carpeta del tipo ‘reduc_####’, donde debe haber archivos de una máscara, e ingresar:
+
+> pulsar_rfi_stats
+
+
