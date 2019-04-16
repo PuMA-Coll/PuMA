@@ -34,7 +34,7 @@ date= fil_dic['rawdatafile'][-19:-4]
 
 configdest = '/opt/pulsar/puma/config/'
 configfile = SafeConfigParser()
-configfile.read(pulsarname+'.ini') 
+configfile.read(configdest+pulsarname+'.ini') 
 
 # If we are not using manual mode, take all parameters in the config file
 
@@ -56,7 +56,7 @@ phase = configfile.get('parameters','phase')
 # Config parameters. Define search parameters if timing is not used:
 checktiming= configfile.getboolean('main','timing')
 
-if not usetiming:
+if not checktiming:
     npart = configfile.get('parameters','npart')
     pstep = configfile.get('parameters','pstep')
 
@@ -65,10 +65,7 @@ pardest = '/opt/pulsar/tempo/tzpar/'
 dotpar = glob.glob(pardest+pulsarname+'.par')
 
 # Input all fils
-inputfil=''
-
-for i in range(len(fils)):
-    inputfil+=fils[i]+' '
+inputfil= " ".join(fils)
 
 # RFIfind process
 
@@ -77,6 +74,7 @@ for i in range(len(fils)):
 if checkreuse:
     
     maskes = glob.glob('*.mask')
+
     if len(maskes)>1:
         
         print('WARNING: More than one mask in the folder! I will use the first one.')
@@ -88,6 +86,9 @@ if checkreuse:
         output= 'mask_'+pulsarname+'_'+rfitime
         subprocess.check_output(['rfifind','-time',rfitime,'-zerodm','-o',output,inputfils])      
         usingmask = output+'_rfifind.mask'
+  
+    else:
+	usingmask = maskes[0]	
     
 else:
     
@@ -98,13 +99,10 @@ else:
 # Prepfold process
 
 #Seed process:
-prepfold= ['prepfold','-nsub',nchan, '-n', nbin]
+prepfold= ['prepfold','-nsub',nchan, '-n', nbins,'-mask',usingmask]
 
 # Check what to use and complete process
-if checkuserfi:
-    prepfold.append('-mask')
-    prepfold.append(usingmask)
-    
+
 if not dmsearch:
     prepfold.append('-nodmsearch')
     
@@ -114,11 +112,11 @@ if movephase:
     
 if checktiming:
     prepfold.append('-timing')
-    prepfold.append(dotpar)
+    prepfold.append(dotpar[0])
     
 else:
     prepfold.append('-par')
-    prepfold.append(dotpar)
+    prepfold.append(dotpar[0])
     prepfold.append('-pstep')
     prepfold.append(pstep)
     prepfold.append('-npart')
@@ -127,9 +125,11 @@ else:
 # Output & Input
 
 output = 'prepfold_'+date
+prepfold.append('-o')
 prepfold.append(output)
+prepfold.append('-filterbank')
 prepfold.append(inputfil)
 
 # RUN PREPFOLD
 
-subprocess.check_output(prepfold)
+subprocess.check_call(prepfold)
