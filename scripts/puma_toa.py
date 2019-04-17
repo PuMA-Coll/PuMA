@@ -11,30 +11,35 @@ import sys
 import glob
 import os
 import shutil
-
-# Import psrchive
-
-import psrchive
+import parfile
 
 # Open pfds.
 
-pfdtype = '*tim*.pfd'
+pfdtype = '*.pfd'
 pfds = glob.glob(pfdtype)
 pfds.sort()
 
 # Basic Labeling
 
-pulsar= 'B0833-45'
-telescope = 'IAR2'
+pardest = './../timing/'
+greppar = glob.glob(pardest+'*.par')
+pulsarpar= parfile.psr_par(greppar[0])
+pulsar= pulsarpar.PSRJ
+scoord = pulsarpar.RAJ+pulsarpar.DECJ
+
 
 for pfd in pfds:
-    arch = psrchive.Archive_load(pfd)
-    arch.set_telescope(telescope)
-    arch.set_source(pulsar)
-    arch.unload()
+    subprocess.check_call(['psredit','-c',
+	'coord='+scoord,'-c',
+	'name='+pulsar,
+	'-m',pfd])
+    subprocess.check_call(['psredit','-c',
+	'obs:projid=PuMA','-c',
+	'be:name=Ettus-SDR',
+	'-m',pfd])
 
 # Choose a given template named 'pulsar.pfd.std'
-usingtemplate = './timing/{}.pfd.std'.format(pulsarname)
+usingtemplate = './../timing/{}.pfd.std'.format(pulsar)
 
 # Define arguments.
 def pat_args(patflags, nsubint):
@@ -51,7 +56,7 @@ pat_output_individual= '>> {}'.format(singletoa)
 
 # Choose a given number of subintegrations to obtain toa and a flag:
 
-nsubints= 10
+nsubints= 5
 flags= '-X "-section "'
 
 # Loop over all the observatins:
