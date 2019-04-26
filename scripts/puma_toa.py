@@ -1,4 +1,5 @@
 #!/usr/bin/env python2
+#
 # PuMA toa
 # Python script for obtaining time of arrivals
 # Author: Luciano Combi.
@@ -45,8 +46,8 @@ usingtemplate = './../timing/{}.pfd.std'.format(pulsar)
 def pat_args(patflags, nsubint):
     return '-A PGS -f "tempo2" {} -s {} -jFD -j "T {}" '.format(patflags,usingtemplate,nsubint)
 
-totaltoa= './timing/total.tim'
-singletoa= './timing/single.tim'
+totaltoa= './../timing/total.tim'
+singletoa= './../timing/single.tim'
 
 # Define general output
 pat_output_total= '>> {}'.format(totaltoa)
@@ -56,7 +57,7 @@ pat_output_individual= '>> {}'.format(singletoa)
 
 # Choose a given number of subintegrations to obtain toa and a flag:
 
-nsubints= 5
+nsubints=5
 flags= '-X "-section "'
 
 # Loop over all the observatins:

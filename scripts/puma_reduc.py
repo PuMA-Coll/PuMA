@@ -99,7 +99,7 @@ else:
 # Prepfold process
 
 #Seed process:
-prepfold= ['prepfold','-nsub',nchan, '-n', nbins,'-mask',usingmask]
+prepfold= ['prepfold','-nsub',nchan, '-n', nbins,'-mask',usingmask,'-noxwin']
 
 # Check what to use and complete process
 
