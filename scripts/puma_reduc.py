@@ -64,12 +64,12 @@ if not checktiming:
 pardest = '/opt/pulsar/tempo/tzpar/'
 dotpar = glob.glob(pardest+pulsarname+'.par')
 
-# Input all fils
-inputfils= " ".join(fils)
 
 # RFIfind process
 
 # Check if we would re-use an existing mask. If not, start rfifind process
+rfifind = ['rfifind','-time',rfitime,'-zerodm','-o',output]
+rfifind.extend(fils)
 
 if checkreuse:
     
@@ -84,7 +84,7 @@ if checkreuse:
         
         print('WARNING: No mask in the folder. I will make one for you')
         output= 'mask_'+pulsarname+'_'+rfitime
-        subprocess.check_call(['rfifind','-time',rfitime,'-zerodm','-o',output,inputfils])      
+        subprocess.check_call(rfifind)      
         usingmask = output+'_rfifind.mask'
   
     else:
@@ -93,7 +93,7 @@ if checkreuse:
 else:
     
     output= 'mask_'+pulsarname+'_'+rfitime
-    subprocess.check_call(['rfifind','-time',rfitime,'-zerodm','-o',output,inputfils])      
+    subprocess.check_call(rfifind)      
     usingmask = output+'_rfifind.mask'
 
 # Prepfold process
@@ -128,7 +128,7 @@ output = 'prepfold_'+date
 prepfold.append('-o')
 prepfold.append(output)
 prepfold.append('-filterbank')
-prepfold.append(inputfils)
+prepfold.extend(fils)
 
 # RUN PREPFOLD
 
