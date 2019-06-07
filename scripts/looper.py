@@ -47,7 +47,7 @@ for x in looplist:
 
 if args.p:
        for x in looplist:
-               subprocess.check_call([args.script,args.p], cwd=x)
+               subprocess.call([args.script,args.p], cwd=x, shell=True)
 else :
        for x in looplist:
-              subprocess.check_call([args.script], cwd=x)
+              subprocess.call([args.script], cwd=x, shell=True)

@@ -16,7 +16,7 @@ import parfile
 # Grab name of .fils
 
 fils = glob.glob('*.fil')
-
+fils.sort()
 # Count how many fils are in the folder
 nfils = len(fils)
 
@@ -68,6 +68,7 @@ dotpar = glob.glob(pardest+pulsarname+'.par')
 # RFIfind process
 
 # Check if we would re-use an existing mask. If not, start rfifind process
+output= 'mask_'+pulsarname+'_'+rfitime
 rfifind = ['rfifind','-time',rfitime,'-zerodm','-o',output]
 rfifind.extend(fils)
 
@@ -83,7 +84,6 @@ if checkreuse:
     elif len(maskes)==0:
         
         print('WARNING: No mask in the folder. I will make one for you')
-        output= 'mask_'+pulsarname+'_'+rfitime
         subprocess.check_call(rfifind)      
         usingmask = output+'_rfifind.mask'
   
@@ -92,7 +92,6 @@ if checkreuse:
     
 else:
     
-    output= 'mask_'+pulsarname+'_'+rfitime
     subprocess.check_call(rfifind)      
     usingmask = output+'_rfifind.mask'
 

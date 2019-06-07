@@ -14,6 +14,14 @@ import os
 import shutil
 import parfile
 
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("name", action='store', type=str, help="write name of the pulsar")
+parser.add_argument("--s", action='store', type=str, help="choose subintegration number", default='5')
+args = parser.parse_args()
+
+
+
 # Open pfds.
 
 pfdtype = '*.pfd'
@@ -22,48 +30,48 @@ pfds.sort()
 
 # Basic Labeling
 
-pardest = './../timing/'
-greppar = glob.glob(pardest+'*.par')
-pulsarpar= parfile.psr_par(greppar[0])
-pulsar= pulsarpar.PSRJ
+pulsar = args.name
+timingfolder = '/opt/pulsar/puma/config/timing/'
+timingpar = timingfolder+'{}.par'.format(pulsar)
+pulsarpar= parfile.psr_par(timingpar)
 scoord = pulsarpar.RAJ+pulsarpar.DECJ
 
 
 for pfd in pfds:
-    subprocess.check_call(['psredit','-c',
+    subprocess.call(['psredit','-c',
 	'coord='+scoord,'-c',
 	'name='+pulsar,
 	'-m',pfd])
-    subprocess.check_call(['psredit','-c',
+    subprocess.call(['psredit','-c',
 	'obs:projid=PuMA','-c',
 	'be:name=Ettus-SDR',
 	'-m',pfd])
 
 # Choose a given template named 'pulsar.pfd.std'
-usingtemplate = './../timing/{}.pfd.std'.format(pulsar)
+usingtemplate = timingfolder+'{}.pfd.std'.format(pulsar)
 
 # Define arguments.
-def pat_args(patflags, nsubint):
-    return '-A PGS -f "tempo2" {} -s {} -jFD -j "T {}" '.format(patflags,usingtemplate,nsubint)
+def pat_args(nsubint):
+    return '-A PGS -f "tempo2" -s {} -jFD -j "T {}" '.format(usingtemplate,nsubint)
 
-totaltoa= './../timing/total.tim'
-singletoa= './../timing/single.tim'
+subintstoa= './subints.tim'
+singletoa= './single.tim'
 
 # Define general output
-pat_output_total= '>> {}'.format(totaltoa)
+pat_output_subints= '>> {}'.format(subintstoa)
 
 # Define individual output
 pat_output_individual= '>> {}'.format(singletoa)
 
 # Choose a given number of subintegrations to obtain toa and a flag:
 
-nsubints=5
-flags= '-X "-section "'
+nsubints= args.s
 
 # Loop over all the observatins:
 
-j=0
+# First remove old .tim
+subprocess.call(['rm',singletoa,subintstoa])
+
 for pfd in pfds:
-    subprocess.call(['pat '+pat_args(flags+str(j),nsubints)+pfd+pat_output_total], shell=True)
-    subprocess.call(['pat '+pat_args(flags+str(j),1 )+pfd+pat_output_individual], shell=True)
-    j+=1
+    subprocess.call(['pat '+pat_args(nsubints)+pfd+pat_output_subints], shell=True)
+    subprocess.call(['pat '+pat_args(1)+pfd+pat_output_individual], shell=True)
