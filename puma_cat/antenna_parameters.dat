@@ -7,6 +7,8 @@ gain = 30.0
 t_sys = 90
 n_pol = 1
 beta_g = 10.5
+t_obs = 240
+maxDECJ = -10.0
 
 [A2]
 bandwidth = 56.0e6
@@ -15,4 +17,6 @@ gain = 30.0
 t_sys = 80
 n_pol = 2
 beta_g = 10.5
+t_obs = 240
+maxDECJ = -10.0
 
