@@ -1,0 +1,18 @@
+;antennas_parameters.dat
+
+[A1]
+bandwidth = 112.0e6
+nu_central = 1.42e9
+gain = 30.0
+t_sys = 90
+n_pol = 1
+beta_g = 10.5
+
+[A2]
+bandwidth = 56.0e6
+nu_central = 1.42e9
+gain = 30.0
+t_sys = 80
+n_pol = 2
+beta_g = 10.5
+
