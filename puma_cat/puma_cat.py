@@ -33,11 +33,6 @@ class Antenna:
         cond2 = (psr_DECJ < self._DECJlimit)
         return (cond1 and cond2)
     
-    def create_parfile(self,psr):
-        par = open(psr.name+'.par','w')
-        par.write(query.get_ephemeris(psr.name))
-        par.close()
-    
     def create_pointer(self,psr):
         pointer = open(psr.name+'_'+self._name+'.sh','w')
         pointer.write('#!/bin/bash'+'\n')
@@ -49,6 +44,11 @@ class Antenna:
 
 def IAR_can_detect(pulsar):
     return (A1.can_detect(pulsar) or A2.can_detect(pulsar))
+
+def create_parfile(psr):
+    par = open(psr.name+'.par','w')
+    par.write(query.get_ephemeris(psr.name))
+    par.close()
 
 #####################################################################################################
 
@@ -64,7 +64,9 @@ psrs = query.get_pulsars()
 #####################################################################################################
 
 for psr in psrs:
-    if(IAR_can_detect(psrs[psr])):
-        A1.create_parfile(psrs[psr])
-        A1.create_pointer(psrs[psr])
-        A2.create_pointer(psrs[psr])
+    if IAR_can_detect(psrs[psr]):
+        create_parfile(psrs[psr])
+        if A1.can_detect(psrs[psr]):
+            A1.create_pointer(psrs[psr])
+        if A2.can_detect(psrs[psr]):
+            A2.create_pointer(psrs[psr])
