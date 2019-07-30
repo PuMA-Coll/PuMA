@@ -9,6 +9,7 @@ n_pol = 1
 beta_g = 10.5
 t_obs = 240
 maxDECJ = -10.0
+pointer_file = pulsar_usrp_2.sh
 
 [A2]
 bandwidth = 56.0e6
@@ -19,4 +20,5 @@ n_pol = 2
 beta_g = 10.5
 t_obs = 240
 maxDECJ = -10.0
+pointer_file = pulsar_usrp_A2.sh
 
