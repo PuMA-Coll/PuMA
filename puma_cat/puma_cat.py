@@ -120,7 +120,7 @@ A2 = Antenna(antennas_file,'A2')
 
 #####################################################################################################
 
-query = QueryATNF(condition='S1400 > 50 && W50 > 0')
+query = QueryATNF(condition='S1400 > 0 && W50 > 0')
 psrs = query.get_pulsars()
 
 #####################################################################################################
@@ -128,9 +128,10 @@ psrs = query.get_pulsars()
 for psr in psrs:
 	if IAR_can_point(psrs[psr]):
 		if IAR_can_detect(psrs[psr]):
+			create_parfile(psrs[psr])
+			create_inifile(psrs[psr])
 			A1.create_iarfile(psrs[psr])
 			A2.create_iarfile(psrs[psr])
-			create_parfile(psrs[psr])
 			A1.create_pointer(psrs[psr])
 			A2.create_pointer(psrs[psr])
 
