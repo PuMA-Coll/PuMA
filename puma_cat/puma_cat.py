@@ -26,17 +26,19 @@ class Antenna:
 		self._tel_id = a_param.get(name,'tel_id')
 		self._mach_id = a_param.get(name,'mach_id')
 		self._sub_bands = a_param.get(name,'sub_bands')
-		
-		
+
+        
+	def can_point(self,psr):
+		psr_DECJ = Angle(psr.DECJ,unit=u.deg).to_value()
+		return (psr_DECJ < self._DECJlimit)
+    
+    
 	def can_detect(self,psr):
 		psr_S1400_Jy = psr.S1400/1000.0
 		psr_W50_sec = psr.W50/1000.0
 		psr_flux = psr_S1400_Jy * np.sqrt((psr.P0-psr_W50_sec)/psr_W50_sec)
 		min_flux = SNR_min * self._system_temp / np.sqrt(self._npol*self._obs_time*self._bandwidth)
-		cond1 = (psr_flux > min_flux)
-		psr_DECJ = Angle(psr.DECJ,unit=u.deg).to_value()
-		cond2 = (psr_DECJ < self._DECJlimit)
-		return (cond1 and cond2)
+		return (psr_flux > min_flux)
 
 
 	def create_pointer(self,psr):
@@ -45,7 +47,6 @@ class Antenna:
 		pointer.write('# ./pulsar_usrp.sh RA_ang DEC_ang time_seconds Name'+'\n')
 		pointer.write('./'+self._pointer_file+' '+psr.DECJ+' '+psr.RAJ+' '+psr.name+'\n')
 		pointer.close()
-
 
 
 	def create_iarfile(self,psr):
@@ -70,6 +71,10 @@ class Antenna:
 
 #####################################################################################################
 
+def IAR_can_point(pulsar):
+	return (A1.can_point(pulsar) or A2.can_point(pulsar))
+
+
 def IAR_can_detect(pulsar):
 	return (A1.can_detect(pulsar) or A2.can_detect(pulsar))
 
@@ -79,9 +84,10 @@ def create_parfile(psr):
 	par.write(query.get_ephemeris(psr.name))
 	par.close()
 
+    
 def create_inifile(self,psr):
 	ini = open(psr.name + '.ini','w')
-        
+    
 	line1=';' + psr.name + '.ini' + '\n' + '\n'
 	line2='[main]' + '\n'
 	line3='timing = True' + '\n'
@@ -105,6 +111,7 @@ def create_inifile(self,psr):
 	ini.writelines([line1, line2, line3, line4, line5, line6, line7, line8, line9, line10, line11, line12, line13, line14, line15, line16, line17])
 	ini.close()
         
+        
 #####################################################################################################
 
 antennas_file = './antenna_parameters.dat'
@@ -119,15 +126,12 @@ psrs = query.get_pulsars()
 #####################################################################################################
 
 for psr in psrs:
-	if IAR_can_detect(psrs[psr]):
-		A1.create_iarfile(psrs[psr])
-		A2.create_iarfile(psrs[psr])
-		create_parfile(psrs[psr])
-		A1.create_pointer(psrs[psr])
-		A2.create_pointer(psrs[psr])
-		#if A1.can_detect(psrs[psr]):
-		#    A1.create_pointer(psrs[psr])
-		#if A2.can_detect(psrs[psr]):
-		#    A2.create_pointer(psrs[psr])
+	if IAR_can_point(psrs[psr]):
+		if IAR_can_detect(psrs[psr]):
+			A1.create_iarfile(psrs[psr])
+			A2.create_iarfile(psrs[psr])
+			create_parfile(psrs[psr])
+			A1.create_pointer(psrs[psr])
+			A2.create_pointer(psrs[psr])
 
 
