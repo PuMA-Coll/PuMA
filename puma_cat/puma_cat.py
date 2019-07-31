@@ -1,5 +1,5 @@
 # Must install psrqpy first: https://github.com/mattpitkin/psrqpy
-import psrqpy
+from psrqpy import *
 from configparser import ConfigParser
 from astropy import units as u
 from astropy.coordinates import Angle
@@ -16,7 +16,7 @@ class Antenna:
 		self._name = name
 		self._bandwidth = a_param.getfloat(name,'bandwidth')
 		self._nu_highest = a_param.get(name,'nu_highest')
-		self._gain = a_param.getfloat(name,'gain')
+		self._gain = a_param.get(name,'gain')
 		self._system_temp = a_param.getfloat(name,'t_sys')
 		self._npol = a_param.getfloat(name,'n_pol')
 		self._beta_g = a_param.getfloat(name,'beta_g')
@@ -49,19 +49,23 @@ class Antenna:
 
 
 	def create_iarfile(self,psr):
-		iar = open(psr.name+'_'+self._name+'.iar','w')
-		line1='Source Name,'+psr.name+self._name
-		line2='Highest Observation Frequency (MHz),'+self._nu_highest
-		line3='Telescope ID,'+self._tel_id
-		line4='Machine ID,'+self._mach_id
-		line5='Data Type,1'
-		line6='Observing Time (minutes),200'
-		line7='Gain (dB),'+self._gain
-		line8='Total Bandwith (MHz),'+str(self._bandwidth/1e6)
-		line9='Average Data,'+min(16384,psr.psr_W50_sec/psr.p0)
-		line10='Sub Bands,'+self._sub_bands
+		psr_W50_sec = psr.W50/1000.0
+		iar = open(psr.name + '_' + self._name + '.iar','w')
+		line1='Source Name,' + psr.name + '_' + self._name +'\n'
+		line2='Highest Observation Frequency (MHz),'+self._nu_highest +'\n'
+		line3='Telescope ID,'+self._tel_id+'\n'
+		line4='Machine ID,'+self._mach_id +'\n'
+		line5='Data Type,1' +'\n'
+		line6='Observing Time (minutes),200' +'\n'
+		line7='Gain (dB),'+self._gain +'\n'
+		line8='Total Bandwith (MHz),'+str(self._bandwidth/1e6) +'\n'
+        #N_ave is a power 2**n
+		n_min = int(np.log2(self._bandwidth*psr_W50_sec/2.0))
+		line9='Average Data,'+ str(2**min(14,n_min)) +'\n'
+		line10='Sub Bands,'+self._sub_bands + '\n'
 		iar.writelines([line1, line2, line3, line4, line5, line6, line7, line8, line9, line10])
 		iar.close()
+        
 
 
 #####################################################################################################
