@@ -123,16 +123,37 @@ A2 = Antenna(antennas_file,'A2')
 query = QueryATNF(condition='S1400 > 0 && W50 > 0')
 psrs = query.get_pulsars()
 
-#####################################################################################################
-
+psrs_iar = pulsar.Pulsars()
 for psr in psrs:
 	if IAR_can_point(psrs[psr]):
 		if IAR_can_detect(psrs[psr]):
-			create_parfile(psrs[psr])
-			create_inifile(psrs[psr])
-			A1.create_iarfile(psrs[psr])
-			A2.create_iarfile(psrs[psr])
-			A1.create_pointer(psrs[psr])
-			A2.create_pointer(psrs[psr])
+			psrs_iar.add_pulsar(psrs[psr])
+            
+#####################################################################################################
+
+for psr in psrs_iar:
+	if IAR_can_point(psrs_iar[psr]):
+		if IAR_can_detect(psrs_iar[psr]):
+			create_parfile(psrs_iar[psr])
+			create_inifile(psrs_iar[psr])
+			A1.create_iarfile(psrs_iar[psr])
+			A2.create_iarfile(psrs_iar[psr])
+			A1.create_pointer(psrs_iar[psr])
+			A2.create_pointer(psrs_iar[psr])
+            
+#####################################################################################################
+            
+arr = np.zeros((len(psrs_iar),7), dtype=object)
+for i,psr in enumerate(psrs_iar):
+	arr[i,0], arr[i,1] = psrs_iar[psr].name, psrs_iar[psr].raj
+	arr[i,2], arr[i,3] = psrs_iar[psr].decj, psrs_iar[psr].p0
+	arr[i,4], arr[i,5], arr[i,6] = psrs_iar[psr].w50, psrs_iar[psr].S1400, psrs_iar[psr].dm
+    
+# Create output Data Frame object
+import pandas as pd
+OutputObj = pd.DataFrame(arr)
+WriterObj = pd.ExcelWriter('psr_iar.xlsx')
+OutputObj.to_excel(WriterObj, sheet_name = 'Sheet1' ,na_rep = ' ', index = False, header = False)
+WriterObj.save()
 
 
