@@ -52,19 +52,20 @@ class Antenna:
 	def create_iarfile(self,psr):
 		psr_W50_sec = psr.W50/1000.0
 		iar = open(psr.name + '_' + self._name + '.iar','w')
-		line1='Source Name,' + psr.name + '_' + self._name +'\n'
-		line2='Highest Observation Frequency (MHz),'+self._nu_highest +'\n'
-		line3='Telescope ID,'+self._tel_id+'\n'
-		line4='Machine ID,'+self._mach_id +'\n'
-		line5='Data Type,1' +'\n'
-		line6='Observing Time (minutes),200' +'\n'
-		line7='Gain (dB),'+self._gain +'\n'
-		line8='Total Bandwith (MHz),'+str(self._bandwidth/1e6) +'\n'
+		lines = []
+		lines.append('Source Name,' + psr.name + '_' + self._name +'\n')
+		lines.append('Highest Observation Frequency (MHz),'+self._nu_highest +'\n')
+		lines.append('Telescope ID,'+self._tel_id+'\n')
+		lines.append('Machine ID,'+self._mach_id +'\n')
+		lines.append('Data Type,1' +'\n')
+		lines.append('Observing Time (minutes),200'+'\n')
+		lines.append('Gain (dB),'+self._gain +'\n')
+		lines.append('Total Bandwith (MHz),'+str(self._bandwidth/1e6) +'\n')
         #N_ave is a power 2**n
 		n_min = int(np.log2(self._bandwidth*psr_W50_sec/2.0))
-		line9='Average Data,'+ str(2**min(14,n_min)) +'\n'
-		line10='Sub Bands,'+self._sub_bands + '\n'
-		iar.writelines([line1, line2, line3, line4, line5, line6, line7, line8, line9, line10])
+		lines.append('Average Data,'+ str(2**min(14,n_min)) +'\n')
+		lines.append('Sub Bands,'+self._sub_bands + '\n')
+		iar.writelines(line for line in lines)
 		iar.close()
         
 
@@ -88,27 +89,26 @@ def create_parfile(psr):
 def create_inifile(self,psr):
 	ini = open(psr.name + '.ini','w')
     
-	line1=';' + psr.name + '.ini' + '\n' + '\n'
-	line2='[main]' + '\n'
-	line3='timing = True' + '\n'
-	line4='dmsearch = False' + '\n'
-	line5='rfimask = True' + '\n'
-	line6='gvoutput = True' + '\n'
-	line7='movephase = False' + '\n'
-	line8='name = \'' + psr.name + '\'' + '\n' + '\n'
+	lines = []
+	lines.append(';' + psr.name + '.ini' + '\n' + '\n')
+	lines.append('[main]' + '\n')
+	lines.append('timing = True' + '\n')
+	lines.append('dmsearch = False' + '\n')
+	lines.append('rfimask = True' + '\n')
+	lines.append('gvoutput = True' + '\n')
+	lines.append('movephase = False' + '\n')
+	lines.append('name = \'' + psr.name + '\'' + '\n' + '\n')
+	lines.append('[parameters]' + '\n')
+	lines.append('nbins= 256' + '\n')
+	lines.append('nchan = 32' + '\n')
+	lines.append('phase = 0.0' + '\n')
+	lines.append('npart = 128' + '\n')
+	lines.append('pstep = 1' + '\n' + '\n')
+	lines.append('[rfi]' + '\n')
+	lines.append('nint = 0.04' + '\n')
+	lines.append('reuse = True' + '\n')
         
-	line9='[parameters]' + '\n'
-	line10='nbins= 256' + '\n'
-	line11='nchan = 32' + '\n'
-	line12='phase = 0.0' + '\n'
-	line13='npart = 128' + '\n'
-	line14='pstep = 1' + '\n' + '\n'
-        
-	line15='[rfi]' + '\n'
-	line16='nint = 0.04' + '\n'
-	line17='reuse = True' + '\n'
-        
-	ini.writelines([line1, line2, line3, line4, line5, line6, line7, line8, line9, line10, line11, line12, line13, line14, line15, line16, line17])
+	ini.writelines(line for line in lines)
 	ini.close()
         
         
