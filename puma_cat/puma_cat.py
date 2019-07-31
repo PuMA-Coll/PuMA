@@ -79,7 +79,32 @@ def create_parfile(psr):
 	par.write(query.get_ephemeris(psr.name))
 	par.close()
 
-
+def create_inifile(self,psr):
+	ini = open(psr.name + '.ini','w')
+        
+	line1=';' + psr.name + '.ini' + '\n' + '\n'
+	line2='[main]' + '\n'
+	line3='timing = True' + '\n'
+	line4='dmsearch = False' + '\n'
+	line5='rfimask = True' + '\n'
+	line6='gvoutput = True' + '\n'
+	line7='movephase = False' + '\n'
+	line8='name = \'' + psr.name + '\'' + '\n' + '\n'
+        
+	line9='[parameters]' + '\n'
+	line10='nbins= 256' + '\n'
+	line11='nchan = 32' + '\n'
+	line12='phase = 0.0' + '\n'
+	line13='npart = 128' + '\n'
+	line14='pstep = 1' + '\n' + '\n'
+        
+	line15='[rfi]' + '\n'
+	line16='nint = 0.04' + '\n'
+	line17='reuse = True' + '\n'
+        
+	ini.writelines([line1, line2, line3, line4, line5, line6, line7, line8, line9, line10, line11, line12, line13, line14, line15, line16, line17])
+	ini.close()
+        
 #####################################################################################################
 
 antennas_file = './antenna_parameters.dat'
@@ -88,7 +113,7 @@ A2 = Antenna(antennas_file,'A2')
 
 #####################################################################################################
 
-query = QueryATNF(condition='S1400 > 0 && W50 > 0')
+query = QueryATNF(condition='S1400 > 50 && W50 > 0')
 psrs = query.get_pulsars()
 
 #####################################################################################################
