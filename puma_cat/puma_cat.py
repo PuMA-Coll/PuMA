@@ -7,6 +7,7 @@ from astropy.coordinates import Angle
 SNR_min = 10.0
 
 #########################################################################################################
+
 class Antenna:     
     def __init__(self,a_param_location,name):
         a_param = ConfigParser()
@@ -14,7 +15,7 @@ class Antenna:
         
         self._name = name
         self._bandwidth = a_param.getfloat(name,'bandwidth')
-        self._nu_central = a_param.getfloat(name,'nu_central')
+        self._nu_highest = a_param.get(name,'nu_highest')
         self._gain = a_param.getfloat(name,'gain')
         self._system_temp = a_param.getfloat(name,'t_sys')
         self._npol = a_param.getfloat(name,'n_pol')
@@ -22,6 +23,10 @@ class Antenna:
         self._obs_time = a_param.getfloat(name,'t_obs')*60.0
         self._DECJlimit = a_param.getfloat(name,'maxDECJ')
         self._pointer_file = a_param.get(name,'pointer_file')
+        self._tel_id = a_param.get(name,'tel_id')
+        self._mach_id = a_param.get(name,'mach_id')
+        self._sub_bands = a_param.get(name,'sub_bands')
+        
         
     def can_detect(self,psr):
         psr_S1400_Jy = psr.S1400/1000.0
@@ -32,7 +37,8 @@ class Antenna:
         psr_DECJ = Angle(psr.DECJ,unit=u.deg).to_value()
         cond2 = (psr_DECJ < self._DECJlimit)
         return (cond1 and cond2)
-    
+   
+
     def create_pointer(self,psr):
         pointer = open(psr.name+'_'+self._name+'.sh','w')
         pointer.write('#!/bin/bash'+'\n')
@@ -40,10 +46,12 @@ class Antenna:
         pointer.write('./'+self._pointer_file+' '+psr.DECJ+' '+psr.RAJ+' '+psr.name+'\n')
         pointer.close()
 
+        
 #####################################################################################################
 
 def IAR_can_detect(pulsar):
     return (A1.can_detect(pulsar) or A2.can_detect(pulsar))
+
 
 def create_parfile(psr):
     par = open(psr.name+'.par','w')
