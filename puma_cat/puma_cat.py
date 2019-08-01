@@ -105,7 +105,7 @@ def create_inifile(self,psr):
 	lines.append('npart = 128' + '\n')
 	lines.append('pstep = 1' + '\n' + '\n')
 	lines.append('[rfi]' + '\n')
-	lines.append('nint = 0.04' + '\n')
+	lines.append('nint = 1.0' + '\n')
 	lines.append('reuse = True' + '\n')
         
 	ini.writelines(line for line in lines)
