@@ -3,11 +3,11 @@
 [A1]
 bandwidth = 112.0e6
 nu_highest = 1470
-gain = 20.0
-t_sys = 90
+gain = 11.9
+t_sys = 100
 n_pol = 1
-beta_g = 10.5
-t_obs = 240
+beta = 1.16
+t_obs = 220
 maxDECJ = -10.0
 pointer_file = pulsar_usrp_2.sh
 tel_id = 19
@@ -17,11 +17,11 @@ sub_bands = 32
 [A2]
 bandwidth = 56.0e6
 nu_highest = 1456
-gain = 20.0
-t_sys = 80
+gain = 13.02
+t_sys = 110
 n_pol = 2
-beta_g = 10.5
-t_obs = 240
+beta = 1.16
+t_obs = 220
 maxDECJ = -10.0
 pointer_file = pulsar_usrp_A2.sh
 tel_id = 20
