@@ -39,3 +39,10 @@ for pfd in pfds:
 
     if float(snr) < snr_min:
     	shutil.move(pfd,bad_pfd_folder)
+    	polycos = pfd+'.polycos'
+    	bestprof = pfd+'.bestprof'
+    	shutil.move(polycos,bad_pfd_folder)
+    	shutil.move(bestprof,bad_pfd_folder)
+
+    	#try:
+    		
