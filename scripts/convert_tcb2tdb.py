@@ -30,8 +30,8 @@ for par in pars:
     shutil.copy(par,ATNF_par_folder)
 
     # Transform TCB to TDB (have to do it twice to work)
-    #subprocess.call(['tempo2','-gr','transform',par,'temp.par','back'])
-    #subprocess.call(['tempo2','-gr','transform','temp.par',par,'back'])
+    subprocess.call(['tempo2','-gr','transform',par,'temp.par','back'])
+    subprocess.call(['tempo2','-gr','transform','temp.par',par,'back'])
 
     # Read in the file
     with open(par, 'r') as file:
@@ -50,9 +50,7 @@ for par in pars:
     with open(par, 'w') as file:
     	file.write("PSRJ" + "\t" + os.path.splitext(par)[0]+ "\n")
         file.write(filedata)
-    		
-	#    base = os.path.splitext(par)[0]
-	#    par_TDB = os.rename(par, base + "_TDB.par")
+        
 
 os.remove('test.par')
 
