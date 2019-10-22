@@ -52,5 +52,5 @@ for par in pars:
         file.write(filedata)
         
 
-os.remove('test.par')
+os.remove('temp.par')
 
