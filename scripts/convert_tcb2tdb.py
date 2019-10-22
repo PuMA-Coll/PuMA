@@ -30,8 +30,8 @@ for par in pars:
     shutil.copy(par,ATNF_par_folder)
 
     # Transform TCB to TDB (have to do it twice to work)
-    subprocess.call(['tempo2','-gr','transform',par,'temp.par','back'])
-    subprocess.call(['tempo2','-gr','transform','temp.par',par,'back'])
+    #subprocess.call(['tempo2','-gr','transform',par,'temp.par','back'])
+    #subprocess.call(['tempo2','-gr','transform','temp.par',par,'back'])
 
     # Read in the file
     with open(par, 'r') as file:
@@ -42,11 +42,17 @@ for par in pars:
     filedata = filedata.replace('-nan', '10000')
     # Comment out the CLK line
     filedata = filedata.replace('CLK', '#CLK')
+    # Fix the pulsar name
+    filedata = filedata.replace('PSRJ', 'PSRB')
+#    filedata = filedata.add('PSRJ	', os.path.splitext(par)[0])
 
     # Write the file out again
     with open(par, 'w') as file:
+    	file.write("PSRJ" + "\t" + os.path.splitext(par)[0]+ "\n")
         file.write(filedata)
-
     		
 	#    base = os.path.splitext(par)[0]
 	#    par_TDB = os.rename(par, base + "_TDB.par")
+
+os.remove('test.par')
+
