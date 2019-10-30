@@ -13,6 +13,7 @@ pointer_file = pulsar_usrp_2.sh
 tel_id = 19
 mach_id = 23
 sub_bands = 32
+local_oscillator = 1570.405
 
 [A2]
 bandwidth = 56.0e6
@@ -27,4 +28,5 @@ pointer_file = pulsar_usrp_A2.sh
 tel_id = 20
 mach_id = 23
 sub_bands = 64
+local_oscillator = 0.0
 

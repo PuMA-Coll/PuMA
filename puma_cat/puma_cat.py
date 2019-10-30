@@ -27,6 +27,8 @@ class Antenna:
 		self._mach_id = a_param.get(name,'mach_id')
 		self._sub_bands = a_param.get(name,'sub_bands')
 		self._beta_g = self._beta*self._gain
+		self._LO = a_param.getfloat(name,'local_oscillator')
+
 		
 		SNR_min = 8.0
 		self._min_flux = SNR_min * self._t_sys * self._beta_g / np.sqrt(self._npol*self._obs_time*self._bandwidth)
@@ -67,6 +69,7 @@ class Antenna:
 		lines.append('Machine ID,' + self._mach_id +'\n')
 		lines.append('Data Type,1' +'\n')
 		lines.append('Observing Time (minutes),200'+'\n')
+		lines.append('Local Oscillator (MHz),' + str(self._LO) +'\n')
 		lines.append('Gain (dB),' + str(20) +'\n')
 #		lines.append('Gain (dB),'+str(self._gain) +'\n')
 		lines.append('Total Bandwith (MHz),' + str(self._bandwidth/1e6) +'\n')
