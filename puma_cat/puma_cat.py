@@ -28,6 +28,7 @@ class Antenna:
 		self._sub_bands = a_param.get(name,'sub_bands')
 		self._beta_g = self._beta*self._gain
 		self._LO = a_param.getfloat(name,'local_oscillator')
+		self._gain_iar = a_param.getfloat(name,'gain_iar')
 
 		
 		SNR_min = 8.0
@@ -70,12 +71,16 @@ class Antenna:
 		lines.append('Data Type,1' +'\n')
 		lines.append('Observing Time (minutes),200'+'\n')
 		lines.append('Local Oscillator (MHz),' + str(self._LO) +'\n')
-		lines.append('Gain (dB),' + str(20) +'\n')
-#		lines.append('Gain (dB),'+str(self._gain) +'\n')
+#		lines.append('Gain (dB),' + str(20) +'\n')
+		lines.append('Gain (dB),'+str(self._gain_iar) +'\n')
 		lines.append('Total Bandwith (MHz),' + str(self._bandwidth/1e6) +'\n')
         #N_ave is a power 2**n
-		n_min = int(np.log2(self._bandwidth*psr_W50_sec/2.0))
-		lines.append('Average Data,' + str(2**min(14,n_min)) +'\n')
+		n_w50 = int(np.log2(self._bandwidth*psr_W50_sec/2.0))
+		# The previous condition can give values too low/high. Set between n_min and n_max.
+		n_min = 10
+		n_max = 14
+		n_average = max(n_w50,n_min)
+		lines.append('Average Data,' + str(2**min(n_max,n_average)) +'\n')
 		lines.append('Sub Bands,' + self._sub_bands + '\n')
 		iar.writelines(line for line in lines)
 		iar.close()
