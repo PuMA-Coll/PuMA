@@ -77,7 +77,7 @@ class Antenna:
         #N_ave is a power 2**n
 		n_w50 = int(np.log2(self._bandwidth*psr_W50_sec/2.0))
 		# The previous condition can give values too low/high. Set between n_min and n_max.
-		n_min = 10
+		n_min = 12
 		n_max = 14
 		n_average = max(n_w50,n_min)
 		lines.append('Average Data,' + str(2**min(n_max,n_average)) +'\n')
