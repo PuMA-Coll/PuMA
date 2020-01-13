@@ -22,7 +22,7 @@ parser = argparse.ArgumentParser(prog='puma_reduc.py',formatter_class=argparse.A
 # - add arguments
 parser.add_argument('--ftype', default='timing', type=str, help='folding tag option')
 parser.add_argument('--folder', default=os.environ['PWD'], type=str, help='ABSOLUTE PATH where observations are stored and where output will be created')
-parser.add_argument('--ptopo', default=None, type=float, help='seed for the topocentric folding period in sec')
+parser.add_argument('--ptopo', default=None, type=str, help='seed for the topocentric folding period in sec')
 parser.add_argument('--par_dirname', default='/opt/pulsar/tempo/tzpar/', type=str, help='path to directory containing .par file')
 args = parser.parse_args()
 
@@ -131,7 +131,7 @@ elif args.ftype == 'search':
 	prepfold.extend(('-topo', '-p', args.ptopo, '-pstep', pstep, '-npart', npart))
 
 # Output & Input
-output = 'prepfold_' + date
+output = 'prepfold_' + args.ftype + '_' + date
 prepfold.extend(('-o', output, '-filterbank'))
 prepfold.extend(fils)
 
