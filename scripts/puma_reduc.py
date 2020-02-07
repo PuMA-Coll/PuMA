@@ -115,7 +115,7 @@ def get_pulsar_info(path, dotpar_path):
 
     # Parameters information
     Parameters['nbins'] = configfile.get('parameters', 'nbins')
-    Parameters['nchan'] = fil_dic['nchans']
+    Parameters['nchan'] = str(fil_dic['nchans'])
     Parameters['phase'] = configfile.get('parameters', 'phase')
     Parameters['npart'] = configfile.get('parameters', 'npart')
     Parameters['pstep'] = configfile.get('parameters', 'pstep')
@@ -153,7 +153,7 @@ def do_rfi_search(Main, Rfi, args):
     # RFIfind process
     # - check if we would re-use an existing mask. If not, start rfifind process
     output = 'mask_' + Main['name'] + '_' + Rfi['nint'] + '_' + Main['date']
-    rfifind = ['rfifind', '-time', Rfi['nint'], 'freqsig', sigmas, '-zerodm', '-o', output]
+    rfifind = ['rfifind', '-time', Rfi['nint'], '-freqsig', sigmas, '-zerodm', '-o', output]
     rfifind.extend(Main['fils'])
 
     if Rfi['reuse']:
@@ -234,7 +234,7 @@ def do_reduc(args):
     return ierr
 
 
-if __name__ == 'main':
+if __name__ == '__main__':
 
     # get cli-arguments
     args = set_argparse()
@@ -254,5 +254,4 @@ if __name__ == 'main':
     end = time.time()
     hours, rem = divmod(end-start, 3600)
     minutes, seconds = divmod(rem, 60)
-    print('\n Reduction process completed in', end=' ')
-    print('{:0>2}:{:0>2}:{:05.2f}\n'.format(int(hours), int(minutes), seconds))
+    print('\n Reduction process completed in {:0>2}:{:0>2}:{:05.2f}\n'.format(int(hours), int(minutes), seconds))
