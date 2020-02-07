@@ -153,7 +153,7 @@ def do_rfi_search(Main, Rfi, args):
     # RFIfind process
     # - check if we would re-use an existing mask. If not, start rfifind process
     output = 'mask_' + Main['name'] + '_' + Rfi['nint'] + '_' + Main['date']
-    rfifind = ['rfifind', '-time', Rfi['nint'], '-freqsig', sigmas, '-zerodm', '-o', output]
+    rfifind = ['rfifind',  '-ncpus 2', '-time', Rfi['nint'], '-freqsig', sigmas, '-zerodm', '-o', output]
     rfifind.extend(Main['fils'])
 
     if Rfi['reuse']:
@@ -183,6 +183,7 @@ def prepare_prepfold_cmd(Main, Parameters, Rfi, args):
             '-nsub', Parameters['nchan'],
             '-n', Parameters['nbins'],
             '-mask', Rfi['maskname'],
+            '-ncpus 2',
             '-noxwin']
 
     # do_dm_search
