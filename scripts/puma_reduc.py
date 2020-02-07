@@ -35,7 +35,7 @@ def set_argparse():
             formatter_class=argparse.ArgumentDefaultsHelpFormatter,
             description='raw data folding with PRESTO')
     parser.add_argument('--ftype', default='timing', type=str,
-            help='folding tag option')
+            help='folding tag. Options are: timing, par and search')
     parser.add_argument('--folder', default=os.environ['PWD'], type=str,
             help='ABSOLUTE PATH where observations are stored and where output will be created')
     parser.add_argument('--ptopo', default=None, type=str,
@@ -198,11 +198,23 @@ def prepare_prepfold_cmd(Main, Parameters, Rfi, args):
     elif args.ftype == 'par':
         prepfold_args.extend(('-par', Main['dotpar'],
             '-pstep', Parameters['pstep'],
-            '-npart', Parameters['npart']))
+            '-npart', Parameters['npart'],
+            '-nopdsearch'))
     elif args.ftype == 'search':
+        # search dm
+        f= open(Main['dotpar'], 'r')
+        lines = f.readlines()
+        for line in lines:
+            if 'DM ' in line:
+                str_arr = line.strip().split(' ')
+                dm = filter(None, str_arr)[1]
+                break
+        f.close()
         prepfold_args.extend(('-topo', '-p', args.ptopo,
             '-pstep', Parameters['pstep'],
-            '-npart', Parameters['npart']))
+            '-npart', Parameters['npart'],
+            '-dm', dm,
+            '-nopdsearch'))
 
     # add output filename
     output = 'prepfold_' + args.ftype + '_' + Main['date']
