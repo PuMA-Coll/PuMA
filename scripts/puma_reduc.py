@@ -141,10 +141,19 @@ def do_rfi_search(Main, Rfi, args):
     ierr = 0
     maskname = ''
 
+    # search for antenna in one of the .fil(s)
+    if 'A1' in Main['fils'][0]:
+        sigmas = '35'
+    elif 'A2' in Main['fils'][0]:
+        sigmas = '4'
+    else:
+        print('\n ERROR: no antenna A1 or A2 found in .fil name \n')
+        sys.exit(1)
+
     # RFIfind process
     # - check if we would re-use an existing mask. If not, start rfifind process
     output = 'mask_' + Main['name'] + '_' + Rfi['nint'] + '_' + Main['date']
-    rfifind = ['rfifind', '-time', Rfi['nint'], '-zerodm', '-o', output]
+    rfifind = ['rfifind', '-time', Rfi['nint'], 'freqsig', sigmas, '-zerodm', '-o', output]
     rfifind.extend(Main['fils'])
 
     if Rfi['reuse']:
