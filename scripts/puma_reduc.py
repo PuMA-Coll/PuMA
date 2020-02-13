@@ -136,15 +136,15 @@ def get_pulsar_info(path, dotpar_path):
     return Main, Parameters, Rfi, ierr
 
 
-def do_rfi_search(Main, Rfi, args):
+def do_rfi_search(main_params={}, rfi_params={}, path_to_folder='', ncores=1):
 
     ierr = 0
     maskname = ''
 
     # search for antenna in one of the .fil(s)
-    if 'A1' in Main['fils'][0]:
+    if 'A1' in main_params['fils'][0]:
         sigmas = '35'
-    elif 'A2' in Main['fils'][0]:
+    elif 'A2' in main_params['fils'][0]:
         sigmas = '4'
     else:
         print('\n ERROR: no antenna A1 or A2 found in .fil name \n')
@@ -152,58 +152,58 @@ def do_rfi_search(Main, Rfi, args):
 
     # RFIfind process
     # - check if we would re-use an existing mask. If not, start rfifind process
-    output = 'mask_' + Main['name'] + '_' + Rfi['nint'] + '_' + Main['date']
-    rfifind = ['rfifind',  '-ncpus 2', '-time', Rfi['nint'], '-freqsig', sigmas, '-zerodm', '-o', output]
-    rfifind.extend(Main['fils'])
+    output = 'mask_' + main_params['name'] + '_' + rfi_params['nint'] + '_' + main_params['date']
+    rfifind = ['rfifind',  '-ncpus', ncores, '-time', rfi_params['nint'], '-freqsig', sigmas, '-zerodm', '-o', output]
+    rfifind.extend(main_params['fils'])
 
     if Rfi['reuse']:
-        masks = glob.glob(args.folder + '/*.mask')
+        masks = glob.glob(path_to_folder + '/*.mask')
         if len(masks) > 1:
             print('WARNING: More than one mask in the folder! I will use the first one.')
             usingmask = masks[0]
         elif len(masks) == 0:
             print('WARNING: No mask in the folder. I will make one for you')
-            subprocess.check_call(rfifind, cwd=args.folder)
+            subprocess.check_call(rfifind, cwd=path_to_folder)
             maskname = output+'_rfifind.mask'
         else:
             maskname = masks[0]
     else:
-        subprocess.check_call(rfifind, cwd=args.folder)
+        subprocess.check_call(rfifind, cwd=path_to_folder)
         maskname = output + '_rfifind.mask'
 
     return maskname, ierr
 
 
-def prepare_prepfold_cmd(Main, Parameters, Rfi, args):
+def prepare_prepfold_cmd(main_params={}, params={}, rfi_params={}, ftype='', ptopo=str(1.0), ncores=1):
 
     ierr = 0
 
     # command to run prepfold
     prepfold_args = ['prepfold',
-            '-nsub', Parameters['nchan'],
-            '-n', Parameters['nbins'],
-            '-mask', Rfi['maskname'],
-            '-ncpus 2',
+            '-nsub', params['nchan'],
+            '-n', params['nbins'],
+            '-mask', rfi_params['maskname'],
+            '-ncpus', ncores,
             '-noxwin']
 
     # do_dm_search
-    if not Main['dmsearch']:
+    if not main_params['dmsearch']:
         prepfold_args.append('-nodmsearch')
 
     # move_phase
-    if Main['movephase']:
-        prepfold_args.extend(('-phs', Parameters['phase']))
+    if main_params['movephase']:
+        prepfold_args.extend(('-phs', params['phase']))
 
-    if args.ftype == 'timing':
-        prepfold_args.extend(('-timing', Main['dotpar']))
-    elif args.ftype == 'par':
-        prepfold_args.extend(('-par', Main['dotpar'],
-            '-pstep', Parameters['pstep'],
-            '-npart', Parameters['npart'],
+    if ftype == 'timing':
+        prepfold_args.extend(('-timing', main_params['dotpar']))
+    elif ftype == 'par':
+        prepfold_args.extend(('-par', main_params['dotpar'],
+            '-pstep', params['pstep'],
+            '-npart', params['npart'],
             '-nopdsearch'))
-    elif args.ftype == 'search':
+    elif ftype == 'search':
         # search dm
-        f= open(Main['dotpar'], 'r')
+        f = open(main_params['dotpar'], 'r')
         lines = f.readlines()
         for line in lines:
             if 'DM ' in line:
@@ -211,38 +211,42 @@ def prepare_prepfold_cmd(Main, Parameters, Rfi, args):
                 dm = filter(None, str_arr)[1]
                 break
         f.close()
-        prepfold_args.extend(('-topo', '-p', args.ptopo,
-            '-pstep', Parameters['pstep'],
-            '-npart', Parameters['npart'],
+        prepfold_args.extend(('-topo', '-p', ptopo,
+            '-pstep', params['pstep'],
+            '-npart', params['npart'],
             '-dm', dm,
             '-nopdsearch'))
 
     # add output filename
-    output = 'prepfold_' + args.ftype + '_' + Main['date']
+    output = 'prepfold_' + ftype + '_' + main_params['date']
     prepfold_args.extend(('-o', output, '-filterbank'))
-    prepfold_args.extend(Main['fils'])
+    prepfold_args.extend(main_params['fils'])
 
     return prepfold_args, ierr
 
 
-def do_reduc(args):
+def do_reduc(ftype='timing', folder=os.environ['PWD'], par_dirname='/opt/pulsar/tempo/tzpar/', ptopo=1.0, ncores=1):
+
+    # convert ptopo to string
+    ptopo = str(ptopo)
 
     ierr = 0
 
     # get pulsar information
-    Main, Parameters, Rfi, ierr = get_pulsar_info(path=args.folder, dotpar_path=args.par_dirname)
+    Main, Parameters, Rfi, ierr = get_pulsar_info(path=folder, dotpar_path=par_dirname)
+    if ierr != 0: sys.exit(1)
 
     # apply mask on observation(s)
-    maskname, ierr = do_rfi_search(Main, Rfi, args)
+    maskname, ierr = do_rfi_search(main_params=Main, rfi_params=Rfi, path_to_folder=folder, ncores=ncores)
     Rfi['maskname'] = maskname
     if ierr != 0: sys.exit(1)
 
     # prepare to call prepfold for observation reduction process
-    prepfold_args, ierr = prepare_prepfold_cmd(Main, Parameters, Rfi, args)
+    prepfold_args, ierr = prepare_prepfold_cmd(main_params=Main, params=Parameters, rfi_params=Rfi, ftype=ftype, ptopo=ptopo, ncores=ncores)
     if ierr != 0: sys.exit(1)
 
     # do actual reduction
-    subprocess.check_call(prepfold_args, cwd=args.folder)
+    subprocess.check_call(prepfold_args, cwd=folder)
 
     return ierr
 
@@ -259,7 +263,7 @@ if __name__ == '__main__':
     else:
         start = time.time()
 
-    ierr = do_reduc(args)
+    ierr = do_reduc(args.ftype, args.folder, args.par_dirname, args.ptopo)
     if ierr != 0:
         sys.exit(1)
 
