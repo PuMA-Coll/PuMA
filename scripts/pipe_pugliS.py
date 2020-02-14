@@ -95,8 +95,8 @@ if __name__ == '__main__':
       obs.glitch = True
 
    # write observation info
-   path2db = path2pugliese + 'database'
-   write_pugliS_info(args.path2db, obs)
+   path2db = args.path2pugliese + 'database'
+   write_pugliS_info(path2db, obs)
 
    # copy files for visualization in ...
    # (to do)
