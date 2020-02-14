@@ -54,9 +54,13 @@ def send_alert(alert_type):
 
 
 
-def write_pugliS_info():
+def write_pugliS_info(obs):
    """ Write information"""
-   pass
+   print(obs.pname)
+   print(obs.mjd)
+   print(obs.red_alert)
+   print(obs.glitch)
+   
    
 
 #==================================================================================
@@ -86,8 +90,11 @@ if __name__ == '__main__':
    #obs.do_glitch_search(thresh)
    # if blue_alert: send_alert('blue')
 
+   if obs.red_alert or obs.blue_alert:
+      obs.glitch = True
+
    # write observation info
-   obs.write_pugliS_info()
+   write_pugliS_info(obs)
 
    # move files for visualization in ...
    # (to do)
