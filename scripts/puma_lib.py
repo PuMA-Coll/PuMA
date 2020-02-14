@@ -1,5 +1,10 @@
+import os
+import sys
+sys.path.insert(1,os.path.join(sys.path[0], '/opt/pulsar/puma/scripts/'))
+
 import sigproc
 import glob
+from pipe_red_trigger import glitch_search
 
 class Observation(object):
     """ This is the main class that represents an observation from a single antenna."""
