@@ -56,7 +56,7 @@ def read_bestprof(ftype=''):
    except Exception:
       print('\n FATAL ERROR: could not find bestprofile for ',ftype,'\n')
       ierr = -1
-      return 1000,ierr
+      return 1000,10,ierr
 
    f = open(filename, 'r')
    lines = f.readlines()
@@ -64,11 +64,12 @@ def read_bestprof(ftype=''):
       if 'P_topo ' in line:
          str_arr = line.strip().split(' ')
          P_topo = filter(None, str_arr)[4]
+         err_P_topo = filter(None, str_arr)[6]
          break
 
    f.close()
 
-   return float(P_topo),ierr
+   return float(P_topo),float(err_P_topo),ierr
 
 
 def glitch_search(folder='', par_dirname='', ncores=2, thresh=1e-8):
@@ -85,11 +86,11 @@ def glitch_search(folder='', par_dirname='', ncores=2, thresh=1e-8):
          sys.exit(1)
 
    # Check for glitch
-   P_eph, ierr = read_bestprof('timing')
+   P_eph, err_P, ierr = read_bestprof('timing')
    if ierr != 0:
       sys.exit(1)
 
-   P_obs, ierr = read_bestprof('par')
+   P_obs, err_P, ierr = read_bestprof('par')
    if ierr != 0:
       sys.exit(1)
 
@@ -97,7 +98,7 @@ def glitch_search(folder='', par_dirname='', ncores=2, thresh=1e-8):
    jump = DP/P_eph
 
    glitch = False
-   if jump > thresh:
+   if jump > thresh and err_P/P_eph < thresh:
       glitch = True
 
    return glitch, jump
