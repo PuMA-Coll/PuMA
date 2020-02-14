@@ -136,7 +136,7 @@ def get_pulsar_info(path, dotpar_path):
     return Main, Parameters, Rfi, ierr
 
 
-def do_rfi_search(main_params={}, rfi_params={}, path_to_folder='', ncores=1):
+def do_rfi_search(main_params={}, rfi_params={}, path_to_folder='', ncores=2):
 
     ierr = 0
     maskname = ''
@@ -153,10 +153,10 @@ def do_rfi_search(main_params={}, rfi_params={}, path_to_folder='', ncores=1):
     # RFIfind process
     # - check if we would re-use an existing mask. If not, start rfifind process
     output = 'mask_' + main_params['name'] + '_' + rfi_params['nint'] + '_' + main_params['date']
-    rfifind = ['rfifind',  '-ncpus', ncores, '-time', rfi_params['nint'], '-freqsig', sigmas, '-zerodm', '-o', output]
+    rfifind = ['rfifind',  '-ncpus', str(ncores), '-time', rfi_params['nint'], '-freqsig', sigmas, '-zerodm', '-o', output]
     rfifind.extend(main_params['fils'])
 
-    if Rfi['reuse']:
+    if rfi_params['reuse']:
         masks = glob.glob(path_to_folder + '/*.mask')
         if len(masks) > 1:
             print('WARNING: More than one mask in the folder! I will use the first one.')
@@ -174,7 +174,7 @@ def do_rfi_search(main_params={}, rfi_params={}, path_to_folder='', ncores=1):
     return maskname, ierr
 
 
-def prepare_prepfold_cmd(main_params={}, params={}, rfi_params={}, ftype='', ptopo=str(1.0), ncores=1):
+def prepare_prepfold_cmd(main_params={}, params={}, rfi_params={}, ftype='', ptopo=str(1.0), ncores=2):
 
     ierr = 0
 
@@ -183,7 +183,7 @@ def prepare_prepfold_cmd(main_params={}, params={}, rfi_params={}, ftype='', pto
             '-nsub', params['nchan'],
             '-n', params['nbins'],
             '-mask', rfi_params['maskname'],
-            '-ncpus', ncores,
+            '-ncpus', str(ncores),
             '-noxwin']
 
     # do_dm_search
