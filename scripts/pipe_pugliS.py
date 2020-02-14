@@ -28,7 +28,7 @@ def set_argparse():
       help='path to directory containing .par file')
    parser.add_argument('--thresh', default=1e-8, type=float,
       help='threshold for glitch alert (DP/P > thresh)')
-   parser.add_argument('--path2pugliese', default='/home/jovyan/work/shared/PuGli-S/', type=float,
+   parser.add_argument('--path2pugliese', default='/home/jovyan/work/shared/PuGli-S/', type=str,
       help='Pugli-S database folder')
 
    return parser.parse_args()
