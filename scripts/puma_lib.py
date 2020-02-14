@@ -17,6 +17,7 @@ class Observation(object):
         self.blue_alert = False
         self.par_dir = '/opt/pulsar/tempo/tzpar/'
         self.par = '/opt/pulsar/tempo/tzpar/' + self.pname + '.par'
+        self.jump = 0.0
 
 
     def get_pulsar_parameters(self):

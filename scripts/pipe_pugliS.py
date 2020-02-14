@@ -58,8 +58,22 @@ def write_pugliS_info(path2db,obs):
    """ Write information"""
    fname = path2db + obs.pname + '.txt'
 
-   for key,value in obs.__dict__.items()::
-      print(key, value)
+   order = ['pname', 'mjd', 'antenna', 'nchans', 'red_alert', 'blue_alert', 'par', 'jump', 'thresh' ]
+
+   if os.path.isfile(fname) is False:
+      f = open(fname, 'w')
+      header = ''
+      for key in order:
+         header += '{:>40}'.format(key)
+      print(header, file=f)
+      f.close()
+
+   f = open(fname, 'a')
+   line = ''
+   for key in order:
+      line += '{:>40}'.format(str(obs.__dict__[key]))
+   print(line, file=f)
+   f.close()
 
    
 
