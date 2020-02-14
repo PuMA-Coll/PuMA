@@ -28,9 +28,10 @@ def set_argparse():
       help='path to directory containing .par file')
    parser.add_argument('--thresh', default=1e-8, type=float,
       help='threshold for glitch alert (DP/P > thresh)')
+   parser.add_argument('--path2pugliese', default='/home/jovyan/work/shared/PuGli-S/', type=float,
+      help='Pugli-S database folder')
 
    return parser.parse_args()
-
 
 
 def check_cli_arguments(args):
@@ -44,8 +45,8 @@ def check_cli_arguments(args):
    return ierr
 
 
-
 def send_alert(alert_type):
+   # Define remote alert in a future
    if alert_type == 'red':
       print('\n \x1b[31;1m GLITCH RED ALERT! \x1b[0m \n')
 
@@ -53,15 +54,15 @@ def send_alert(alert_type):
       print('\n \x1b[34;1m glitch blue alert \x1b[0m \n')
 
 
-
-def write_pugliS_info(obs):
+def write_pugliS_info(path2db,obs):
    """ Write information"""
-   print(obs.pname)
-   print(obs.mjd)
-   print(obs.red_alert)
-   print(obs.glitch)
+   fname = path2db + obs.pname + '.txt'
+
+   for key,value in vals(obs):
+      print(key, value)
+
    
-   
+
 
 #==================================================================================
 
@@ -94,9 +95,10 @@ if __name__ == '__main__':
       obs.glitch = True
 
    # write observation info
-   write_pugliS_info(obs)
+   path2db = path2pugliese + 'database'
+   write_pugliS_info(args.path2db, obs)
 
-   # move files for visualization in ...
+   # copy files for visualization in ...
    # (to do)
 
    # call updater for webpage
