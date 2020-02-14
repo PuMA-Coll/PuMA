@@ -80,7 +80,7 @@ if __name__ == '__main__':
 
    # search for glitches (code red)
    obs.do_glitch_search(args.thresh)
-   if obs.red_alert: send_red_alert('red')
+   if obs.red_alert: send_alert('red')
 
    # search for glitches (code blue)
    #obs.do_glitch_search(thresh)
