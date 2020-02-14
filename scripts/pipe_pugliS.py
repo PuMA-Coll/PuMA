@@ -58,7 +58,7 @@ def write_pugliS_info(path2db,obs):
    """ Write information"""
    fname = path2db + obs.pname + '.txt'
 
-   for key,value in vals(obs):
+   for key,value in obs.__dict__.items()::
       print(key, value)
 
    
