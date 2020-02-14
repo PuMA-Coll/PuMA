@@ -83,7 +83,7 @@ if __name__ == '__main__':
    obs = Observation(args.folder)
 
    # search for glitches (code red)
-   obs.do_glitch_search(thresh)
+   obs.do_glitch_search(args.thresh)
    if obs.red_alert: send_red_alert('red')
 
    # search for glitches (code blue)
