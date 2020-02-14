@@ -65,6 +65,7 @@ def write_pugliS_info(path2db,obs):
       header = ''
       for key in order:
          header += '{:>40}'.format(key)
+      header += '\n'
       f.write(header)
       f.close()
 
@@ -72,6 +73,7 @@ def write_pugliS_info(path2db,obs):
    line = ''
    for key in order:
       line += '{:>40}'.format(str(obs.__dict__[key]))
+   line += '\n'
    f.write(line)
    f.close()
 
