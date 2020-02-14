@@ -58,7 +58,7 @@ def write_pugliS_info(path2db,obs):
    """ Write information"""
    fname = path2db + obs.pname + '.txt'
 
-   order = ['pname', 'mjd', 'antenna', 'nchans', 'red_alert', 'blue_alert', 'par', 'jump', 'thresh' ]
+   order = ['pname', 'mjd', 'antenna', 'nchans', 'red_alert', 'blue_alert', 'par', 'jump' ]
 
    if os.path.isfile(fname) is False:
       f = open(fname, 'w')
@@ -109,7 +109,7 @@ if __name__ == '__main__':
       obs.glitch = True
 
    # write observation info
-   path2db = args.path2pugliese + 'database'
+   path2db = args.path2pugliese + 'database/'
    write_pugliS_info(path2db, obs)
 
    # copy files for visualization in ...
