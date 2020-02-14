@@ -35,5 +35,5 @@ class Observation(object):
 
 
     def do_glitch_search(self, threshold):
-        self.red_alert, self.jump = glitch_search(folder=self.folder, 
+        self.red_alert, self.jump = glitch_search(folder=self.dir_path, 
             par_dirname=self.par_dirname, ncores=2, thresh=threshold)
