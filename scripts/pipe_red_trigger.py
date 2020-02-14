@@ -93,11 +93,11 @@ def glitch_search(folder='', par_dirname='', ncores=2, thresh=1e-8):
    if ierr != 0:
       sys.exit(1)
 
-   DP = P_eph - P_obs
+   DP = P_eph - P_obs #if >0 glitch, <0 anti-glitch
    jump = DP/P_eph
 
    glitch = False
-   if jump > thresh and err_P/P_eph < thresh:
+   if abs(jump) > thresh and err_P/P_eph < thresh:
       glitch = True
 
    return glitch, jump
