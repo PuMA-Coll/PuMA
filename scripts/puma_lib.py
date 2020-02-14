@@ -14,7 +14,7 @@ class Observation(object):
         self.par = '/opt/pulsar/tempo/tzpar/' + self.pname + '.par'
 
 
-    def get_pulsar_parameters():
+    def get_pulsar_parameters(self):
         # select .fil file
         fils = glob.glob(self.dir_path + '/*.fil')      
         fil = fils[0]
@@ -29,6 +29,6 @@ class Observation(object):
         return pname, antenna, mjd, nchans
 
 
-    def do_glitch_search(threshold):
+    def do_glitch_search(self, threshold):
         self.red_alert, self.jump = glitch_search(folder=self.folder, 
             par_dirname=self.par_dirname, ncores=2, thresh=threshold)
