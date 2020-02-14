@@ -71,7 +71,7 @@ def read_bestprof(ftype=''):
    return float(P_topo),ierr
 
 
-def glitch_search(folder='', par_dirname='', ncores=2):
+def glitch_search(folder='', par_dirname='', ncores=2, thresh=1e-8):
 
    # Check if the reducs have already been made
    if len(glob.glob('*timing*.pfd')) + len(glob.glob('*par*.pfd')) < 2: 
@@ -116,7 +116,8 @@ if __name__ == '__main__':
    else:
       start = time.time()
 
-      glitch, jump = glitch_search(folder=args.folder, par_dirname=args.par_dirname, ncores=2)
+      glitch, jump = glitch_search(folder=args.folder, par_dirname=args.par_dirname, 
+         ncores=2, thresh=args.thresh)
 
    print(glitch, jump)
 
