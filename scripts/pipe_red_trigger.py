@@ -22,9 +22,9 @@ from puma_reduc import do_reduc
 
 def set_argparse():
    # add arguments
-   parser = argparse.ArgumentParser(prog='puma_reduc.py',
+   parser = argparse.ArgumentParser(prog='pipe_red_trigger.py',
       formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-      description='raw data folding with PRESTO')
+      description='Red alerts for major glitches detected only using PRESTO')
    parser.add_argument('--folder', default=os.environ['PWD'], type=str,
       help='ABSOLUTE PATH where observations are stored and where output will be created')
    parser.add_argument('--par_dirname', default='/opt/pulsar/tempo/tzpar/', type=str,
@@ -120,7 +120,7 @@ if __name__ == '__main__':
       glitch, jump = glitch_search(folder=args.folder, par_dirname=args.par_dirname, 
          ncores=2, thresh=args.thresh)
 
-   print(glitch, jump)
+   print('Found glitch?', glitch, 'delta P/P = ', jump)
 
    if glitch: print('\n GLITCH RED ALERT! \n')
 
