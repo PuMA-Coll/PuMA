@@ -14,7 +14,6 @@ from ConfigParser import SafeConfigParser
 import glob
 import sigproc
 import subprocess
-import parfile
 
 from puma_reduc import do_reduc
 

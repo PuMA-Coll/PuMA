@@ -13,12 +13,8 @@ from ConfigParser import SafeConfigParser
 import glob
 import sigproc
 import subprocess
-import parfile
 
-from puma_reduc import do_reduc
-from pipe_red_trigger import glitch_search
 from puma_lib import Observation
-
 
 
 def set_argparse():
