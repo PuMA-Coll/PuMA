@@ -62,7 +62,7 @@ def read_bestprof(ftype=''):
    lines = f.readlines()
    for line in lines:
       if 'P_topo ' in line:
-      str_arr = line.strip().split(' ')
+         str_arr = line.strip().split(' ')
          P_topo = filter(None, str_arr)[4]
          break
 
