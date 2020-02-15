@@ -9,6 +9,7 @@ import os
 import sys
 import time
 import argparse
+from puma_lib import *
 
 from ConfigParser import SafeConfigParser
 import glob
@@ -76,15 +77,14 @@ if __name__ == '__main__':
     ierr = check_cli_arguments(args)
     if ierr != 0: sys.exit(1)
     
-	start = time.time()
+    start = time.time()
 
-	obs = Observation()
-	obs.set_params2reduc(ftype=args.ftype, folder=args.folder, par_dirname=args.par_dirname, ptopo=args.ptopo)
-    
-	ierr = obs.do_reduc()
+    obs = Observation()
+    ierr = obs.set_params2reduc(ftype=args.ftype, path_to_dir=args.folder, par_dirname=args.par_dirname, ptopo=args.ptopo)
+    ierr = obs.do_reduc()
     if ierr != 0: sys.exit(1)
 	
-	del obs
+    del obs
 
     # exit with success printing duration
     end = time.time()

@@ -15,7 +15,7 @@ import glob
 import sigproc
 import subprocess
 
-from puma_reduc import do_reduc
+from puma_lib import *
 
 
 def set_argparse():
@@ -59,7 +59,7 @@ if __name__ == '__main__':
    start = time.time()
 
    obs = Observation()
-   ierr = obs.do_glitch_search(par_to_dir=args.folder, par_dirname=args.par_dirname, ncores=ncores, thresh=args.thresh)
+   ierr = obs.do_glitch_search(path_to_dir=args.folder, par_dirname=args.par_dirname, ncores=1, thresh=args.thresh)
 
    print('Found glitch?', obs.red_alert, 'delta P/P = ', obs.jump)
    if obs.red_alert: print('\n GLITCH RED ALERT! \n')
