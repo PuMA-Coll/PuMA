@@ -88,8 +88,8 @@ class Observation(object):
                 '-n', self.params2reduc['nbins'],
                 '-mask', self.maskname,
                 '-ncpus', self.params2reduc['ncores'],
-                '-start', self.params2reduc['start'],
-                '-end', self.params2reduc['end'],
+                '-start', self.start,
+                '-end', self.end,
                 '-noxwin']
 
         # do_dm_search
