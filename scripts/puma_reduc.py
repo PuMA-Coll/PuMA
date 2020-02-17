@@ -42,6 +42,10 @@ def set_argparse():
             help='seed for the topocentric folding period in sec')
     parser.add_argument('--par_dirname', default='/opt/pulsar/tempo/tzpar/', type=str,
             help='path to directory containing .par file')
+    parser.add_argument('--start', default=0.0, type=float,
+            help='The folding start time as a fraction of the full obs')
+    parser.add_argument('--end', default=1.0, type=float,
+            help='The folding end time as a fraction of the full obs')
 
     return parser.parse_args()
 
@@ -80,7 +84,8 @@ if __name__ == '__main__':
     start = time.time()
 
     obs = Observation()
-    ierr = obs.set_params2reduc(ftype=args.ftype, path_to_dir=args.folder, par_dirname=args.par_dirname, ptopo=args.ptopo)
+    ierr = obs.set_params2reduc(ftype=args.ftype, path_to_dir=args.folder, par_dirname=args.par_dirname, 
+    	ptopo=args.ptopo, start=args.start, end=args.end)
     ierr = obs.do_reduc()
     if ierr != 0: sys.exit(1)
 	

@@ -88,6 +88,8 @@ class Observation(object):
                 '-n', self.params2reduc['nbins'],
                 '-mask', self.maskname,
                 '-ncpus', self.params2reduc['ncores'],
+                '-start', self.params2reduc['start'],
+                '-end', self.params2reduc['end'],
                 '-noxwin']
 
         # do_dm_search
@@ -129,11 +131,13 @@ class Observation(object):
         return prepfold_args, ierr
 
 
-    def set_params2reduc(self, ftype='timing', path_to_dir=os.environ['PWD'], par_dirname=DEFAULT_PAR_DIRNAME, ptopo=1.0, ncores=1):
+    def set_params2reduc(self, ftype='timing', path_to_dir=os.environ['PWD'], par_dirname=DEFAULT_PAR_DIRNAME, ptopo=1.0, ncores=1, start=0.0, end=1.0):
     
         self.params2reduc['ftype'] = ftype
         self.path_to_dir = path_to_dir
         self.par_dirname = par_dirname
+        self.start = str(start)
+        self.end = str(end)
         if self.params2reduc['ftype'] == 'search': self.params2reduc['ptopo'] = str(ptopo)
         
         ierr = 0
