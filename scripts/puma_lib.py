@@ -7,15 +7,21 @@ import sigproc
 import glob
 import subprocess
 
+import parfile
+
 class Observation(object):
     """ This is the main class that represents an observation from a single antenna."""
 
     DEFAULT_PAR_DIRNAME = '/opt/pulsar/tempo/tzpar/'
     DEFAULT_CONFIG_DIRNAME = '/opt/pulsar/puma/config/'
+    DEFAULT_TIMING_DIRNAME = DEFAULT_CONFIG_DIRNAME + 'timing/'
 
-    def __init__(self, path2dir=os.environ['PWD']):
+    def __init__(self, path2dir=os.environ['PWD'], pname=''):
         self.path_to_dir = path2dir
-        self.pname, self.antenna, self.mjd, self.nchans = self.get_pulsar_parameters()
+        if pname != '': 
+            self.pname = pname
+        else:
+            self.pname, self.antenna, self.mjd, self.nchans = self.get_pulsar_parameters()
         self.glitch = False
         self.red_alert = False
         self.blue_alert = False
@@ -28,7 +34,7 @@ class Observation(object):
 
     def get_pulsar_parameters(self):
         # select .fil file
-        fils = glob.glob(self.path_to_dir + '/*.fil')      
+        fils = glob.glob(self.path_to_dir + '/*.fil')
         fil = fils[0]
 
         # grab name of pulsar from the .fil with sigproc function read_header (dictionary)
@@ -272,5 +278,50 @@ class Observation(object):
         self.red_alert = False
         if abs(self.jump) > thresh and err_P/P_eph < thresh:
             self.red_alert = True
+
+        return ierr
+
+
+    def do_toas(self, mode='add', pfd_dirname=os.environ['PWD'], par_dirname=DEFAULT_PAR_DIRNAME,
+                std_dirname=DEFAULT_TIMING_DIRNAME, tim_dirname='', n_subints=1):
+
+        def do_single_toa(pfd, par_fname, std_fname, n_subints=1, tim_fname):
+            ierr = 0
+            try:
+                # change pfd header
+                coord = pulsar_par.RAJ + pulsar_par.DECJ
+                subprocess.call(['psredit',
+                    '-c', 'coord=' + coord, '-c', 'name=' + self.pname,
+                    '-c', 'obs:projid=PuMA', '-c', 'be:name=Ettus-SDR',
+                    '-m', pfd])
+                # define arguments for call to pat
+                line = '-A PGS -f "tempo2" -s ' + std_fname + ' -jFD -j "T ' + str(n_subints) + '" '
+                # call to pat to get toa
+                subprocess.call(['pat ' + line + pfd + '>> ' + tim_fname], shell=True)
+            except Exception:
+                ierr = -1
+            return ierr
+            
+
+        ierr = 0
+        
+        pfds = glob.glob(pfd_dirname + '/*.pfd')
+
+        # filenames
+        tim_fname = tim_dirname + self.pname + '.tim'
+        par_fname = parfile.psr_par(par_dirname + '/' + self.pname + '.par')
+        std_fname = stf_dirname + '/' + self.pname + '.pfd.std'
+
+        # computing toa for observations(s)
+        if mode == 'all':
+            # first remove old .tim
+            subprocess.call(['rm -f', tim_fname])
+            for pfd in pfds:
+                do_single_toa(pfd, par_fname, std_fname, n_subints, tim_fname)
+        elif mode == 'add':
+            do_single_toa(pfds[0], par_fname, std_fname, n_subints, tim_fname)
+        else:
+            print('\n ERROR: unknonw mode for computing toa(s) \n')
+            ierr = -1
 
         return ierr
