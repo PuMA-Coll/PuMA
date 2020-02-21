@@ -285,15 +285,15 @@ class Observation(object):
     def do_toas(self, mode='add', pfd_dirname=os.environ['PWD'], par_dirname=DEFAULT_PAR_DIRNAME,
                 std_dirname=DEFAULT_TIMING_DIRNAME, tim_dirname='', n_subints=1):
 
-        def do_single_toa(pfd, par_fname, std_fname, n_subints=1, tim_fname):
+        def do_single_toa(pfd, pulsar_par, std_fname, n_subints, tim_fname):
             ierr = 0
             try:
                 # change pfd header
                 coord = pulsar_par.RAJ + pulsar_par.DECJ
                 subprocess.call(['psredit',
-                    '-c', 'coord=' + coord, '-c', 'name=' + self.pname,
-                    '-c', 'obs:projid=PuMA', '-c', 'be:name=Ettus-SDR',
-                    '-m', pfd])
+                    '-c', 'coord=' + coord, '-c', 'name=' + self.pname, '-m', pfd])
+                subprocess.call(['psredit',
+                    '-c', 'obs:projid=PuMA', '-c', 'be:name=Ettus-SDR', '-m', pfd])
                 # define arguments for call to pat
                 line = '-A PGS -f "tempo2" -s ' + std_fname + ' -jFD -j "T ' + str(n_subints) + '" '
                 # call to pat to get toa
@@ -305,21 +305,21 @@ class Observation(object):
 
         ierr = 0
         
-        pfds = glob.glob(pfd_dirname + '/*.pfd')
+        pfds = glob.glob(pfd_dirname + '/*timing*.pfd')
 
         # filenames
-        tim_fname = tim_dirname + self.pname + '.tim'
-        par_fname = parfile.psr_par(par_dirname + '/' + self.pname + '.par')
-        std_fname = stf_dirname + '/' + self.pname + '.pfd.std'
+        tim_fname = tim_dirname + '/' + self.pname + '.tim'
+        pulsar_par = parfile.psr_par(par_dirname + '/' + self.pname + '.par')
+        std_fname = std_dirname + '/' + self.pname + '.pfd.std'
 
         # computing toa for observations(s)
         if mode == 'all':
             # first remove old .tim
             subprocess.call(['rm -f', tim_fname])
             for pfd in pfds:
-                do_single_toa(pfd, par_fname, std_fname, n_subints, tim_fname)
+                do_single_toa(pfd, pulsar_par, std_fname, n_subints, tim_fname)
         elif mode == 'add':
-            do_single_toa(pfds[0], par_fname, std_fname, n_subints, tim_fname)
+            do_single_toa(pfds[0], pulsar_par, std_fname, n_subints, tim_fname)
         else:
             print('\n ERROR: unknonw mode for computing toa(s) \n')
             ierr = -1

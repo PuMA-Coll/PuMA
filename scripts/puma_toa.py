@@ -14,21 +14,12 @@ import time
 from puma_lib import *
 
 
-
-
-
-parser = argparse.ArgumentParser()
-parser.add_argument("name", action='store', type=str, help="write name of the pulsar")
-parser.add_argument("--s", action='store', type=str, help="choose subintegration number", default='5')
-args = parser.parse_args()
-
-
 def set_argparse():
     # add arguments
     parser = argparse.ArgumentParser(prog='puma_toa.py',
             formatter_class=argparse.ArgumentDefaultsHelpFormatter,
             description='calculating TOA(s) using pat')
-    parser.add_argument('--pname', default='', type=str
+    parser.add_argument('--pname', default='', type=str,
             help='name of pulsar')
     parser.add_argument('--mode', default='add', type=str,
             help='mode to calculate TOA(s). Options are: add and all. `add` appends TOA to .tim file and `all` creates a new set of TOA(s)')
@@ -77,7 +68,7 @@ def check_cli_arguments(args):
     return ierr
 
 
-if __name__ = '__main__':
+if __name__ == '__main__':
     
     # get cli-arguments
     args = set_argparse()
