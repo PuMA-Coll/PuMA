@@ -309,13 +309,14 @@ class Observation(object):
 
         # filenames
         tim_fname = tim_dirname + '/' + self.pname + '.tim'
-        pulsar_par = parfile.psr_par(par_dirname + '/' + self.pname + '.par')
+        par_fname = par_dirname + self.pname + '.par'
+        pulsar_par = parfile.psr_par(par_fname)
         std_fname = std_dirname + '/' + self.pname + '.pfd.std'
 
         # computing toa for observations(s)
         if mode == 'all':
             # first remove old .tim
-            subprocess.call(['rm -f', tim_fname])
+            subprocess.call(['rm', '-f', tim_fname])
             for pfd in pfds:
                 do_single_toa(pfd, pulsar_par, std_fname, n_subints, tim_fname)
         elif mode == 'add':
