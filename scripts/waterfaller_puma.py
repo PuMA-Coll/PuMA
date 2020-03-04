@@ -304,23 +304,37 @@ def main():
                             maskfn=options.maskfile, \
                             bandpass_corr=options.bandpass_corr)
 
-    # FGLA edition starts:
+    # FGLA edition start:
     nbinlim = np.int(options.duration/data.dt)
     data_out = np.array(data.data[..., :nbinlim])
     Dedisp_ts = data_out.sum(axis=0)
     times = (np.arange(data.numspectra)*data.dt + start)[..., :nbinlim]
 
-    beg = 0
-    for it in range(50):
+
+# plot all single pulses with the pulse 'centered'
+    beg = 250 #offset
+    n_pulses = 938 # Delta_t/period
+    n_points_per = 305
+    pulse = np.empty([n_pulses,n_points_per-100])
+    for it in range(n_pulses):
        plt.clf()
        print(it)
        plt.title('Vela_singlepulse ' +  str(it))
        plt.xlabel('t [s]')
-       plt.ylim(-10,20)
-       end = beg + 305 # 305 * dt = Period of Vela
-       plt.plot(times[beg:end],Dedisp_ts[beg:end])
+      # plt.ylim(-10,20)
+       if it%2 ==0:
+          end = beg + n_points_per  # 305.5 * dt = Period of Vela
+          pulse[it] = Dedisp_ts[beg+50:end-50]
+          plt.plot(times[beg+50:end-50], pulse[it])
+       else:
+          end = beg + n_points_per + 1
+          pulse[it] = Dedisp_ts[beg+50:end-51]
+          plt.plot(times[beg+50:end-51],pulse[it])
+      # plt.plot(times[beg:end],Dedisp_ts[beg:end])
        beg = end
-       plt.savefig('pulse_' + str(it) + '.png')
+      # plt.savefig('pulse_' + str(it) + '.png')
+       plt.savefig('pulse_'+ str(it).zfill(4) +'.png') 
+    np.savetxt("pulses.csv", pulse, delimiter=",")
 
     #plot_waterfall(data, start, options.duration, integrate_ts=options.integrate_ts, \
     #               integrate_spec=options.integrate_spec, show_cb=options.show_cb, 
