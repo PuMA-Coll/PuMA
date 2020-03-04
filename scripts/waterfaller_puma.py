@@ -304,7 +304,7 @@ def main():
                             maskfn=options.maskfile, \
                             bandpass_corr=options.bandpass_corr)
 
-    # FGLA edition start:
+    # FGLA edition starts:
     nbinlim = np.int(options.duration/data.dt)
     data_out = np.array(data.data[..., :nbinlim])
     Dedisp_ts = data_out.sum(axis=0)
