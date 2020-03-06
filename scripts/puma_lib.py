@@ -291,9 +291,8 @@ class Observation(object):
                 lines = f.readlines()
                 f.close()
                 for line in lines:
-                    l = line.strip().split()
-                    if l[0] == 'RAJ': RAJ = l[1]
-                    if l[0] == 'DECJ': DECJ = l[1]
+                    if 'RAJ' in line: RAJ = line.strip.split()[1]
+                    if 'DECJ' in line: DECJ = line.strip.split()[1]
                 # change pfd header
                 coord = RAJ + DECJ
                 subprocess.call(['psredit',
