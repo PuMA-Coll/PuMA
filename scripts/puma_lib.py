@@ -6,6 +6,9 @@ from ConfigParser import SafeConfigParser
 import sigproc
 import glob
 import subprocess
+import numpy as np
+
+import rfifind
 
 class Observation(object):
     """ This is the main class that represents an observation from a single antenna."""
@@ -135,7 +138,7 @@ class Observation(object):
         return prepfold_args, ierr
 
 
-    def set_params2reduc(self, ftype='timing', path_to_dir=os.environ['PWD'], par_dirname=DEFAULT_PAR_DIRNAME, ptopo=1.0, ncores=1, start=0.0, end=1.0):
+    def set_params2reduc(self, ftype='timing', path_to_dir=os.environ['PWD'], par_dirname=DEFAULT_PAR_DIRNAME, ptopo=1.0, ncores=2, start=0.0, end=1.0):
     
         self.params2reduc['ftype'] = ftype
         self.path_to_dir = path_to_dir
@@ -262,6 +265,8 @@ class Observation(object):
             self.set_params2reduc(ftype='par', path_to_dir=path_to_dir, par_dirname=par_dirname, ncores=ncores)
             ierr = self.do_reduc()
             if ierr != 0: sys.exit(1)
+        else:
+            self.maskname = glob.glob('*.mask')[0]
 
         # Check for glitch
         P_eph, err_P, ierr = self.read_bestprof('timing')
@@ -285,14 +290,15 @@ class Observation(object):
 
         def do_single_toa(pfd, par_fname, std_fname, n_subints, tim_fname):
             ierr = 0
+
             try:
                 # get RAJ DECJ from .par
                 f = open(par_fname)
                 lines = f.readlines()
                 f.close()
                 for line in lines:
-                    if 'RAJ' in line: RAJ = line.strip.split()[1]
-                    if 'DECJ' in line: DECJ = line.strip.split()[1]
+                    if 'RAJ' in line: RAJ = line.strip().split()[1]
+                    if 'DECJ' in line: DECJ = line.strip().split()[1]
                 # change pfd header
                 coord = RAJ + DECJ
                 subprocess.call(['psredit',
@@ -329,4 +335,20 @@ class Observation(object):
             print('\n ERROR: unknonw mode for computing toa(s) \n')
             ierr = -1
 
+        return ierr
+
+    def get_mask_percentage(self, maskname=''):
+        
+        ierr = 0
+        if os.path.isfile(maskname) is False:
+            ierr = -1
+            print('Mask not found')
+            return ierr
+
+        maskrfi = rfifind.rfifind(maskname)
+        maskrfi.read_bytemask()
+        maskarr = maskrfi.bytemask
+        nbad = float(np.count_nonzero(maskarr))
+        ntot = float(len(maskrfi.goodints)) * float(len(maskrfi.freqs))
+        self.gti_percentage = (1.0 - nbad/ntot) * 100
         return ierr
