@@ -16,7 +16,7 @@ def move_observation(path_to_obs='', dest_path=''):
 
     ierr = 0
 
-    if os.path.isfolder(path_to_obs) is False:
+    if os.path.isdir(path_to_obs) is False:
         print('\n FATAL ERROR: path_to_obs does not exist')
         ierr = -1
         return ierr
@@ -34,9 +34,13 @@ def move_observation(path_to_obs='', dest_path=''):
         pulsar_name = fil_fname.split('_')[1]
         antenna = fil_fname.split('_')[2]
 
+    # add antenna to the observation folder name
+    new_path_to_obs = path_to_obs + '_' + antenna
+    shutil.move(path_to_obs, new_path_to_obs)
+
     # now try to create folder with pulsar name in dest_path
     # else, just move files inside that folder
-    pulsar_folder_name = dest_path + '/' + pulsar_name + '_' + antenna
+    pulsar_folder_name = dest_path + '/' + pulsar_name
     try:
         os.mkdir(pulsar_folder_name)
     except Exception:
@@ -44,7 +48,7 @@ def move_observation(path_to_obs='', dest_path=''):
 
     # move obs data to newly created folder
     try:
-        shutil.move(path_to_obs, pulsar_folder_name)
+        shutil.move(new_path_to_obs, pulsar_folder_name)
     except Exception as e:
         print(e)
         ierr = -1
@@ -59,7 +63,7 @@ def move_observations(obs_folder='', dest_path=''):
 
     ierr = 0
 
-    if os.path.isfolder(obs_folder) is False:
+    if os.path.isdir(obs_folder) is False:
         print('\n FATAL ERROR: obs_folder does not exist')
         ierr = -1
         return ierr
