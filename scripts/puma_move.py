@@ -18,13 +18,11 @@ import subprocess
 # --------------------------------------------------------
 #                        IDEAS
 # --------------------------------------------------------
-# 07/02/2020
-# Treat each observation data as a python class such as:
-# raw-data, mask, pfd, observation-data for glitches and
-# more.
-# Advantages: easy to access once its created and store in
-# different formats (hdf5)
-# --------------------------------------------------------
+# April 2020
+# The acquisition soft stores all observations in a single 
+# folder. We move them according to a folder containing all 
+# the observations for each object. 
+# -------------------------------------------------------.
 
 
 def set_argparse():

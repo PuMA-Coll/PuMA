@@ -58,7 +58,7 @@ def write_pugliS_info(path2db,obs):
    """ Write information"""
    fname = path2db + obs.pname + '.txt'
 
-   order = ['pname', 'mjd', 'antenna', 'nchans', 'red_alert', 'blue_alert', 'dotpar_filename', 'jump' ]
+   order = ['pname', 'mjd', 'antenna', 'nchans', 'red_alert', 'blue_alert', 'dotpar_filename', 'jump', 'gti_percentage']
 
    if os.path.isfile(fname) is False:
       f = open(fname, 'w')
@@ -107,6 +107,9 @@ if __name__ == '__main__':
 
    if obs.red_alert or obs.blue_alert:
       obs.glitch = True
+
+   # calculate good time interval percentage
+   obs.get_mask_percentage(obs.maskname)   
 
    # write observation info
    path2db = args.path2pugliese + 'database/'

@@ -22,20 +22,23 @@ def move_observation(path_to_obs='', dest_path=''):
         return ierr
 
     # skel: path_to_obs = '.../upload/date', dest_path = '.../'
+    print(path_to_obs)
 
     # grab pulsar name from *.iar if it exist, else use the *.fil file
-    if os.path.isfile(path_to_obs + '*.iar'):
-        iar_fname = glob.glob('*.iar')[0]
-        pulsar_name = iar_fname.split('_')[0]
+    if os.path.isfile(glob.glob(path_to_obs + '/*.iar')[0]):
+        iar_fname = glob.glob(path_to_obs + '/*.iar')[0]
+        pulsar_name = iar_fname.split('_')[0].split('/')[-1]
         antenna = iar_fname.split('_')[1].split('.')[0]
 
-    elif os.path.isfile(path_to_obs + '*.fil'):
-        fil_fname = glob.glob('*.fil')[0]
-        pulsar_name = fil_fname.split('_')[1]
+    # This elif has not been tested for absolute paths! TO CHECK
+    elif os.path.isfile(glob.glob(path_to_obs + '/*.fil')[0]):
+        fil_fname = glob.glob(path_to_obs + '/*.fil')[0]
+        pulsar_name = fil_fname.split('_')[1].split('/')[-1]
         antenna = fil_fname.split('_')[2]
 
     # add antenna to the observation folder name
     new_path_to_obs = path_to_obs + '_' + antenna
+
     shutil.move(path_to_obs, new_path_to_obs)
 
     # now try to create folder with pulsar name in dest_path
@@ -44,11 +47,11 @@ def move_observation(path_to_obs='', dest_path=''):
     try:
         os.mkdir(pulsar_folder_name)
     except Exception:
-        print('pulsar folder already exists')
+        print('pulsar folder for {} already exists'.format(pulsar_name))
 
     # move obs data to newly created folder
     try:
-        shutil.move(new_path_to_obs, pulsar_folder_name)
+        shutil.move(new_path_to_obs, pulsar_folder_name+'/')
     except Exception as e:
         print(e)
         ierr = -1
@@ -74,5 +77,3 @@ def move_observations(obs_folder='', dest_path=''):
         move_observation(path_to_obs, dest_path)
 
 
-
-    
