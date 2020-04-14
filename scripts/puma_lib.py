@@ -1,6 +1,7 @@
 import os
 import sys
 sys.path.insert(1,os.path.join(sys.path[0], '/opt/pulsar/puma/scripts/'))
+import shutil
 
 from ConfigParser import SafeConfigParser
 import sigproc
@@ -288,7 +289,7 @@ class Observation(object):
     def do_toas(self, mode='add', pfd_dirname=os.environ['PWD'], par_dirname=DEFAULT_PAR_DIRNAME,
                 std_dirname=DEFAULT_TIMING_DIRNAME, tim_dirname='', n_subints=1):
 
-        def do_single_toa(pfd, par_fname, std_fname, n_subints, tim_fname):
+        def do_single_toa(pfd, pfd_dirname, par_fname, std_fname, n_subints, tim_fname):
             ierr = 0
 
             try:
@@ -305,10 +306,29 @@ class Observation(object):
                     '-c', 'coord=' + coord, '-c', 'name=' + self.pname, '-m', pfd])
                 subprocess.call(['psredit',
                     '-c', 'obs:projid=PuMA', '-c', 'be:name=Ettus-SDR', '-m', pfd])
+
+                # before calling pat to get TOAs, move *_par* files to a temporary
+                # folder, then run the pat line, bring back *_par* files and remove
+                # tmp folder
+                path_to_tmp_folder = os.mkdir(path=pfd_dirname + '/tmp')
+                # move *_par* files to tmp folder
+                files = glob.glob(pfd_dirname + '/*_par*')
+                for file in files:
+                    shutil.move(file, path_to_tmp_folder)
+
                 # define arguments for call to pat
                 line = '-A PGS -f "tempo2" -s ' + std_fname + ' -jFD -j "T ' + str(n_subints) + '" '
                 # call to pat to get toa
                 subprocess.call(['pat ' + line + pfd + '>> ' + tim_fname], shell=True)
+
+                # move back files in the tmp folder
+                files = glob.glob(path_to_tmp_folder + '/*')
+                for file in files:
+                    shutil.move(file, pfd_dirname)
+
+                # if everything went well, just remove tmp folder
+                # os.rmdir(path_to_tmp_folder)
+
             except Exception:
                 ierr = -1
             return ierr
@@ -328,14 +348,15 @@ class Observation(object):
             # first remove old .tim
             subprocess.call(['rm', '-f', tim_fname])
             for pfd in pfds:
-                do_single_toa(pfd, par_fname, std_fname, n_subints, tim_fname)
+                do_single_toa(pfd, pfd_dirname, par_fname, std_fname, n_subints, tim_fname)
         elif mode == 'add':
-            do_single_toa(pfds[0], par_fname, std_fname, n_subints, tim_fname)
+            do_single_toa(pfds[0], pfd_dirname, par_fname, std_fname, n_subints, tim_fname)
         else:
             print('\n ERROR: unknonw mode for computing toa(s) \n')
             ierr = -1
 
         return ierr
+
 
     def get_mask_percentage(self, maskname=''):
         
