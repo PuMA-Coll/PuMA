@@ -58,7 +58,7 @@ def write_pugliS_info(path2db,obs):
    """ Write information"""
    fname = path2db + obs.pname + '.txt'
 
-   order = ['pname', 'mjd', 'antenna', 'nchans', 'red_alert', 'blue_alert', 'dotpar_filename', 'jump', 'gti_percentage']
+   order = ['pname', 'mjd', 'antenna', 'nchans', 'red_alert', 'blue_alert', 'dotpar_filename', 'jump', 'gti_percentage', 'nfils']
 
    if os.path.isfile(fname) is False:
       f = open(fname, 'w')

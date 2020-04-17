@@ -155,14 +155,14 @@ class Observation(object):
         fils = glob.glob(self.path_to_dir + '/*.fil')
         fils.sort()
         # - count how many fils are in the dir
-        nfils = len(fils)
+        self.nfils = len(fils) 
         
         # warning if there are more than one fil
-        if nfils <= 0:
+        if self.nfils <= 0:
             print('\n ERROR: no *.fil(s) found in ' + self.path_to_dir + '\n')
             ierr = -1
             return ierr
-        elif nfils > 1:
+        elif self.nfils > 1:
             print('\n WARNING: more than one fil found in the folder. I will fold them all. \n')
 
         # grab name of pulsar from the .fil with sigproc function read_header (dictionary)
