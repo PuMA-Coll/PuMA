@@ -96,6 +96,7 @@ if __name__ == '__main__':
 
    # non-glitching pulsar
    obs.glitch = False
+   obs.jump = 0
 
    # calculate good time interval percentage
    obs.get_mask_percentage(obs.maskname)   

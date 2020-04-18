@@ -340,7 +340,7 @@ class Observation(object):
         pfds = glob.glob(pfd_dirname + '/*timing*.pfd')
 
         # filenames
-        tim_fname = tim_dirname + '/' + self.pname + '.tim'
+        tim_fname = tim_dirname + '/' + self.pname + self.antenna + '.tim'
         par_fname = par_dirname + self.pname + '.par'
         std_fname = std_dirname + '/' + self.pname + '.pfd.std'
 
