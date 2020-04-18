@@ -7,7 +7,7 @@
 import os
 import sys
 import argparse
-from pugliS_utils import *
+from puma_utils import *
 
 from ConfigParser import SafeConfigParser
 import glob
@@ -15,14 +15,14 @@ import sigproc
 import subprocess
 
 
-# --------------------------------------------------------
+# ---------------------------------------------------------------
 #                        IDEAS
-# --------------------------------------------------------
+# ---------------------------------------------------------------
 # April 2020
-# The acquisition soft stores all observations in a single 
-# folder. We move them according to a folder containing all 
-# the observations for each object. 
-# -------------------------------------------------------.
+# The acquisition soft stores all observations in a single folder. 
+# We move them to a folder that contains all the observations for 
+# each object. Once in the folder, we run the reduction pipeline.
+# ---------------------------------------------------------------
 
 
 def set_argparse():
@@ -67,7 +67,7 @@ if __name__ == '__main__':
     
     print('\n Start moving folders')
 
-    ierr = move_observations(obs_folder=args.obs_folder, dest_path=args.dest_path)
+    ierr = process_observations(obs_folder=args.obs_folder, dest_path=args.dest_path)
 
     if ierr != 0: sys.exit(1)
 	
