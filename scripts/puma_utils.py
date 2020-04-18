@@ -26,17 +26,18 @@ def move_observation(path_to_obs='', dest_path=''):
     # skel: path_to_obs = '.../upload/date', dest_path = '.../'
     print(path_to_obs)
 
-    # grab pulsar name from *.iar if it exist, else use the *.fil file
-    if os.path.isfile(glob.glob(path_to_obs + '/*.iar')[0]):
-        iar_fname = glob.glob(path_to_obs + '/*.iar')[0]
-        pulsar_name = iar_fname.split('_')[0].split('/')[-1]
-        antenna = iar_fname.split('_')[1].split('.')[0]
+    # grab pulsar name and antenna from *.iar file if it exist, else use the *.fil file
+    if len(glob.glob(path_to_obs + '/*.iar')) > 0:
+        if os.path.isfile(glob.glob(path_to_obs + '/*.iar')[0]):
+            iar_fname = glob.glob(path_to_obs + '/*.iar')[0]
+            pulsar_name = iar_fname.split('_')[0].split('/')[-1]
+            antenna = iar_fname.split('_')[1].split('.')[0]
 
-    # This elif has not been tested for absolute paths! TO CHECK
-    elif os.path.isfile(glob.glob(path_to_obs + '/*.fil')[0]):
-        fil_fname = glob.glob(path_to_obs + '/*.fil')[0]
-        pulsar_name = fil_fname.split('_')[1].split('/')[-1]
-        antenna = fil_fname.split('_')[2]
+    elif len(glob.glob(path_to_obs + '/*.fil')) > 0:
+        if os.path.isfile(glob.glob(path_to_obs + '/*.fil')[0]):
+            fil_fname = glob.glob(path_to_obs + '/*.fil')[0]
+            pulsar_name = fil_fname.split('_')[1].split('/')[-1]
+            antenna = fil_fname.split('_')[2]
 
     # add antenna to the observation folder name
     new_path_to_obs = path_to_obs + '_' + antenna
