@@ -87,6 +87,9 @@ if __name__ == '__main__':
    # read relevant information from the .fil
    obs = Observation(args.folder)
 
+   # reduce using PRESTO (timing mode only)
+   obs.do_reduc()
+
    # calculate TOAs --> USING DEFAULT VALUES, CHECK!
    obs.do_toas()
 
