@@ -208,6 +208,7 @@ class Observation(object):
             return ierr
         return ierr
 
+
     def do_reduc(self):
 
         ierr = 0
@@ -250,7 +251,7 @@ class Observation(object):
         return float(P_topo), float(err_P_topo), ierr
 
 
-    def do_glitch_search(self, path_to_dir=os.environ['PWD'], par_dirname=DEFAULT_PAR_DIRNAME, thresh=1.0e-8, ncores=1):
+    def do_glitch_search(self, path_to_dir=os.environ['PWD'], par_dirname=DEFAULT_PAR_DIRNAME, thresh=1.0e-8, ncores=2):
         
         ierr = 0
 
