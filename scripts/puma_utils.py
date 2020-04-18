@@ -12,7 +12,7 @@ def move_observation(path_to_obs='', dest_path=''):
     '''
     This function moves all files from an observation done by each
     antenna into the database folder for later reduction. It also 
-    returns the pulsar name.
+    returns the pulsar name and the new reduction folder.
     '''
 
     ierr = 0
@@ -20,7 +20,7 @@ def move_observation(path_to_obs='', dest_path=''):
     if os.path.isdir(path_to_obs) is False:
         print('\n FATAL ERROR: path_to_obs does not exist')
         ierr = -1
-        return ierr,'NN'
+        return ierr, 'NN', 'No path'
 
     # skel: path_to_obs = '.../upload/date', dest_path = '.../'
     print(path_to_obs)
@@ -53,12 +53,11 @@ def move_observation(path_to_obs='', dest_path=''):
     # move obs data to newly created folder
     try:
         shutil.move(new_path_to_obs, pulsar_folder_name+'/')
+        return ierr, pulsar_name, new_path_to_obs
     except Exception as e:
         print(e)
         ierr = -1
-        return ierr,pulsar_name
-
-    return ierr,pulsar_name
+        return ierr, pulsar_name, new_path_to_obs
 
 
 def process_observations(obs_folder='', dest_path=''):
@@ -78,13 +77,16 @@ def process_observations(obs_folder='', dest_path=''):
     observations = glob.glob(obs_folder+'/*')
 
     for path_to_obs in observations:
-        ierr, pname = move_observation(path_to_obs, dest_path)
+        ierr, pname, reduction_path = move_observation(path_to_obs, dest_path)
 
-        if pname == 'J0437-4715':
-            #pipe_reduc
+        if ierr = 0:
+            if pname == 'J0437-4715':
+                #pipe_reduc(reduction_path)
 
-        else:
-            #pipe_pugliS
+            else:
+                #pipe_pugliS(reduction_path)
 
+
+    #
 
 
