@@ -7,6 +7,7 @@ import sys
 import glob
 import shutil
 
+#need to import pipe_pugliS and pipe_reduc?
 
 def move_observation(path_to_obs='', dest_path=''):
     '''
