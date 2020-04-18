@@ -65,7 +65,7 @@ if __name__ == '__main__':
     ierr = check_cli_arguments(args)
     if ierr != 0: sys.exit(1)
     
-    print('\n Start moving folders')
+    print('\n Start moving folders and processing observations')
 
     ierr = process_observations(obs_folder=args.obs_folder, dest_path=args.dest_path)
 
