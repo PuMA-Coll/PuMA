@@ -80,11 +80,12 @@ def process_observations(obs_folder='', dest_path=''):
     for path_to_obs in observations:
         ierr, pname, reduction_path = move_observation(path_to_obs, dest_path)
 
-        if ierr == 0:
-            if pname == 'J0437-4715':
+        # TO COMPLETE:
+        #if ierr == 0:
+            #if pname == 'J0437-4715':
                 #pipe_reduc(reduction_path)
 
-            else:
+            #else:
                 #pipe_pugliS(reduction_path)
 
 
