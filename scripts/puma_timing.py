@@ -6,6 +6,7 @@
 # April 2020
 
 # BORRAR LAS QUE NO SE USEN
+import argparse
 import numpy as np
 import shutil
 
@@ -65,8 +66,8 @@ if __name__ == '__main__':
     start = time.time()
 
     # file where timing residuals will be stored (use .tim file as reference)
-    res_fname = tim_fname.split('.ti')[0].split('/')[-1] + '.res'
-    log_fname = tim_fname.split('.ti')[0].split('/')[-1] + '.log'
+    res_fname = args.tim_fname.split('.ti')[0].split('/')[-1] + '.res'
+    log_fname = args.tim_fname.split('.ti')[0].split('/')[-1] + '.log'
 
     # Una posibilidad es algo de la forma: 
     # 'tempo2 -output general2 -s "{bat} {post} {err} \n" > ' + res_fname
