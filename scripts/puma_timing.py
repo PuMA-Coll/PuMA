@@ -7,6 +7,7 @@
 
 # BORRAR LAS QUE NO SE USEN
 import argparse
+import time
 import numpy as np
 import shutil
 
@@ -72,7 +73,7 @@ if __name__ == '__main__':
     # Una posibilidad es algo de la forma: 
     # 'tempo2 -output general2 -s "{bat} {post} {err} \n" > ' + res_fname
     # Pero el formato no queda del todo bien. 
-    line = '-residuals -us -f ' + par_fname + ' ' + tim_fname + ' > ' + log_fname
+    line = '-residuals -us -f ' + args.par_fname + ' ' + args.tim_fname + ' > ' + log_fname
 
     # call tempo2 and store the output residuals and the log (fitting information)
     subprocess.call( 'tempo2 ' + line, shell=True )
