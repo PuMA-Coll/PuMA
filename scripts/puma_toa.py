@@ -82,8 +82,9 @@ if __name__ == '__main__':
     obs = Observation(path2dir=args.pfd_dirname, pname=args.pname)
    
     # obs.antenna not defined previously, this is a quick amend!
-    obs.antenna = path2dir.split('/')[-1]
-    
+    dirname = args.pfd_dirname
+    obs.antenna = dirname.split('/')[-1]
+
     ierr = obs.do_toas(mode=args.mode, pfd_dirname=args.pfd_dirname, par_dirname=args.par_dirname,
             std_dirname=args.std_dirname, tim_dirname=args.tim_dirname, n_subints=args.n_subints)
     if ierr != 0: sys.exit(1)
