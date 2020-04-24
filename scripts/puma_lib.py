@@ -292,7 +292,6 @@ class Observation(object):
 
         def do_single_toa(pfd, pfd_dirname, par_fname, std_fname, n_subints, tim_fname):
             ierr = 0
-
             try:
                 # get RAJ DECJ from .par
                 f = open(par_fname)
@@ -311,21 +310,31 @@ class Observation(object):
                 # before calling pat to get TOAs, move *_par* files to a temporary
                 # folder, then run the pat line, bring back *_par* files and remove
                 # tmp folder
-                path_to_tmp_folder = os.mkdir(path=pfd_dirname + '/tmp')
+                #path_to_tmp_folder = os.mkdir(path=pfd_dirname + '/tmp')
+		path_to_tmp_folder = pfd_dirname + '/tmp'
+		# ESTA LINEA TRAE PROBLEMAS!
+		#os.mkdir(path_to_tmp_folder) 
                 # move *_par* files to tmp folder
-                files = glob.glob(pfd_dirname + '/*_par*')
-                for file in files:
-                    shutil.move(file, path_to_tmp_folder)
+		try:
+                    files = glob.glob(pfd_dirname + '/*_par*')
+                    for file in files:
+                        shutil.move(file, path_to_tmp_folder)
+		except:
+		    pass
+
 
                 # define arguments for call to pat
-                line = '-A PGS -f "tempo2" -s ' + std_fname + ' -jFD -j "T ' + str(n_subints) + '" '
+                line = '-A PGS -f \"tempo2\" -s ' + std_fname + ' -jFD -j \"T ' + str(n_subints) + '\" '
                 # call to pat to get toa
-                subprocess.call(['pat ' + line + pfd + '>> ' + tim_fname], shell=True)
+                subprocess.call(['pat ' + line + pfd + ' >> ' + tim_fname], shell=True)
 
                 # move back files in the tmp folder
-                files = glob.glob(path_to_tmp_folder + '/*')
-                for file in files:
-                    shutil.move(file, pfd_dirname)
+		try:
+                    files = glob.glob(path_to_tmp_folder + '/*')
+                    for file in files:
+                        shutil.move(file, pfd_dirname)
+		except:
+		    pass
 
                 # if everything went well, just remove tmp folder
                 # os.rmdir(path_to_tmp_folder)
@@ -340,7 +349,7 @@ class Observation(object):
         pfds = glob.glob(pfd_dirname + '/*timing*.pfd')
 
         # filenames
-        tim_fname = tim_dirname + '/' + self.pname + self.antenna + '.tim'
+        tim_fname = tim_dirname + '/' + self.pname + '_' +  self.antenna + '.tim'
         par_fname = par_dirname + self.pname + '.par'
         std_fname = std_dirname + '/' + self.pname + '.pfd.std'
 
