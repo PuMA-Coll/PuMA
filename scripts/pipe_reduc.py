@@ -69,7 +69,7 @@ def write_obs_info(path2db,obs):
    f.close()
 
    
-def do_pipe_reduc(folder, path2pugliese):
+def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/'):
 
    start = time.time()
 
@@ -82,7 +82,7 @@ def do_pipe_reduc(folder, path2pugliese):
 
    # calculate TOAs
    tim_folder = path2pugliese + '/tims/'
-   obs.do_toas(pfd_dirname = folder, tim_dirname = tim_folder)
+   obs.do_toas(pfd_dirname=folder, tim_dirname=tim_folder)
 
    # non-glitching pulsar
    obs.glitch = False

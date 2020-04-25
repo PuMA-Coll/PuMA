@@ -7,6 +7,7 @@ import sys
 import glob
 import shutil
 
+
 #need to import pipe_pugliS and pipe_reduc?
 
 def copy_db(path2ini, path2end):
@@ -74,41 +75,11 @@ def move_observation(path_to_obs='', dest_path=''):
    # move obs data to newly created folder
    try:
       shutil.move(new_path_to_obs, pulsar_folder_name+'/')
-      return ierr, pulsar_name, new_path_to_obs
+      return ierr, pulsar_name, pulsar_folder_name+'/'
    except Exception as e:
       print(e)
       ierr = -1
-      return ierr, pulsar_name, new_path_to_obs
+      return ierr, pulsar_name, pulsar_folder_name+'/'
 
-
-def process_observations(obs_folder='', dest_path=''):
-   '''
-   This function moves multiple observations contained within a single folder.
-   It calls move_observation for each of these sub-folders and then the 
-   appropriate reduction pipeline.
-   '''
-
-   ierr = 0
-
-   if os.path.isdir(obs_folder) is False:
-      print('\n FATAL ERROR: obs_folder does not exist')
-      ierr = -1
-      return ierr
-
-   observations = glob.glob(obs_folder+'/*')
-
-   for path_to_obs in observations:
-      ierr, pname, reduction_path = move_observation(path_to_obs, dest_path)
-
-      # TO COMPLETE:
-      #if ierr == 0:
-         #if pname == 'J0437-4715':
-            #pipe_reduc(reduction_path)
-
-         #else:
-            #pipe_pugliS(reduction_path)
-
-
-   #
 
 

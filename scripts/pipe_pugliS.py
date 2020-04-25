@@ -79,7 +79,7 @@ def write_pugliS_info(path2db,obs):
    f.close()
 
 
-def do_puglis(folder, thresh, path2pugliese):
+def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/shared/PuGli-S/'):
 
    start = time.time()
 
@@ -129,5 +129,5 @@ if __name__ == '__main__':
    ierr = check_cli_arguments(args)
    if ierr != 0: sys.exit(1)
 
-   do_puglis(args.folder, args.thresh, args.path2pugliese)
+   do_pipe_puglis(args.folder, args.thresh, args.path2pugliese)
 
