@@ -79,6 +79,10 @@ def process_observations(obs_folder='', dest_path=''):
       ierr, pname, reduction_path = move_observation(path_to_obs, dest_path)
 
       if ierr == 0:
+         # calibration sources are not reduced with the pipelines
+         if pname == 'testSource':
+            continue
+
          # pipeline for non-glitching (ms) pulsars:
          if pname == 'J0437-4715':
             # important: make sub-folders for each separate observation
