@@ -15,6 +15,7 @@ import sigproc
 import subprocess
 
 from puma_lib import Observation
+from puma_utils import *
 
 
 def set_argparse():
@@ -77,6 +78,45 @@ def write_pugliS_info(path2db,obs):
    f.write(line)
    f.close()
 
+
+def do_puglis(folder, thresh, path2pugliese):
+
+   start = time.time()
+
+	# read relevant information from the .fil
+   obs = Observation(folder)
+
+   # search for glitches (code red)
+   obs.do_glitch_search(thresh=thresh)
+   if obs.red_alert: send_alert('red')
+
+   # search for glitches (code blue)
+   # obs.do_timing(thresh)  --> TOAs, llamada a Tempo2
+   # if blue_alert: send_alert('blue')
+
+   if obs.red_alert or obs.blue_alert:
+      obs.glitch = True
+
+   # calculate good time interval percentage
+   obs.get_mask_percentage(obs.maskname)   
+
+   # write observation info
+   path2db = path2pugliese + 'database/'
+   write_pugliS_info(path2db, obs)
+
+   # copy files for visualization and analysis
+   copy_db(folder, path2pugliese)   
+
+   # call updater for webpage
+   # (puglieseweb_update)
+
+   # exit with success printing duration
+   end = time.time()
+   hours, rem = divmod(end-start, 3600)
+   minutes, seconds = divmod(rem, 60)
+   print('\n Reduction process completed in {:0>2}:{:0>2}:{:05.2f}\n'.format(int(hours), int(minutes), seconds))
+
+
    
 #==================================================================================
 
@@ -89,40 +129,5 @@ if __name__ == '__main__':
    ierr = check_cli_arguments(args)
    if ierr != 0: sys.exit(1)
 
-   start = time.time()
+   do_puglis(args.folder, args.thresh, args.path2pugliese)
 
-   # move observations to destination folder par_dirname
-   # (to complete)
-
-   # read relevant information from the .fil
-   obs = Observation(args.folder)
-
-   # search for glitches (code red)
-   obs.do_glitch_search(thresh=args.thresh)
-   if obs.red_alert: send_alert('red')
-
-   # search for glitches (code blue)
-   #obs.do_glitch_search(thresh)
-   # if blue_alert: send_alert('blue')
-
-   if obs.red_alert or obs.blue_alert:
-      obs.glitch = True
-
-   # calculate good time interval percentage
-   obs.get_mask_percentage(obs.maskname)   
-
-   # write observation info
-   path2db = args.path2pugliese + 'database/'
-   write_pugliS_info(path2db, obs)
-
-   # copy files for visualization in ...
-   # (to do)
-
-   # call updater for webpage
-   # (puglieseweb_update)
-
-   # exit with success printing duration
-   end = time.time()
-   hours, rem = divmod(end-start, 3600)
-   minutes, seconds = divmod(rem, 60)
-   print('\n Reduction process completed in {:0>2}:{:0>2}:{:05.2f}\n'.format(int(hours), int(minutes), seconds))
