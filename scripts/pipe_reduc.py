@@ -15,6 +15,7 @@ import sigproc
 import subprocess
 
 from puma_lib import Observation
+from puma_utils import *
 
 
 def set_argparse():
@@ -48,7 +49,7 @@ def write_obs_info(path2db,obs):
    fname = path2db + obs.pname + '.txt'
 
    # Use the same order as for glitching pulsars for consistency in a single database.
-   order = ['pname', 'mjd', 'antenna', 'nchans', 'red_alert', 'blue_alert', 'dotpar_filename', 'jump', 'gti_percentage', 'nfils']
+   order = ['pname', 'mjd', 'antenna', 'nchans', 'dotpar_filename', 'jump', 'gti_percentage', 'nfils']
 
    if os.path.isfile(fname) is False:
       f = open(fname, 'w')
@@ -68,6 +69,46 @@ def write_obs_info(path2db,obs):
    f.close()
 
    
+def do_pipe_reduc(folder, path2pugliese):
+
+   start = time.time()
+
+   # read relevant information from the .fil
+   obs = Observation(folder)
+
+   # reduce using PRESTO (timing mode only)
+   obs.set_params2reduc()
+   obs.do_reduc()
+
+   # calculate TOAs
+   tim_folder = path2pugliese + '/tims/'
+   obs.do_toas(pfd_dirname = folder, tim_dirname = tim_folder)
+
+   # non-glitching pulsar
+   obs.glitch = False
+   obs.jump = 0
+
+   # calculate good time interval percentage
+   obs.get_mask_percentage(obs.maskname)   
+
+   # write observation info
+   path2db = path2pugliese + 'database/'
+   write_obs_info(path2db, obs)
+  
+   # copy files for visualization and analysis
+   copy_db(folder, path2pugliese)   
+
+   # call updater for webpage
+   # (puglieseweb_update)
+
+   # exit with success printing duration
+   end = time.time()
+   hours, rem = divmod(end-start, 3600)
+   minutes, seconds = divmod(rem, 60)
+   print('\n Reduction process completed in {:0>2}:{:0>2}:{:05.2f}\n'.format(int(hours), int(minutes), seconds))
+
+
+   
 #==================================================================================
 
 if __name__ == '__main__':
@@ -79,40 +120,4 @@ if __name__ == '__main__':
    ierr = check_cli_arguments(args)
    if ierr != 0: sys.exit(1)
 
-   start = time.time()
-
-   # move observations to destination folder par_dirname
-   # (to complete)
-
-   # read relevant information from the .fil
-   obs = Observation(args.folder)
-
-   # reduce using PRESTO (timing mode only)
-   obs.set_params2reduc()
-   obs.do_reduc()
-
-   # calculate TOAs --> USING DEFAULT VALUES, CHECK!
-   obs.do_toas()
-
-   # non-glitching pulsar
-   obs.glitch = False
-   obs.jump = 0
-
-   # calculate good time interval percentage
-   obs.get_mask_percentage(obs.maskname)   
-
-   # write observation info
-   path2db = args.path2pugliese + 'database/'
-   write_obs_info(path2db, obs)
-
-   # copy files for visualization in ...
-   # (to do)
-
-   # call updater for webpage
-   # (puglieseweb_update)
-
-   # exit with success printing duration
-   end = time.time()
-   hours, rem = divmod(end-start, 3600)
-   minutes, seconds = divmod(rem, 60)
-   print('\n Reduction process completed in {:0>2}:{:0>2}:{:05.2f}\n'.format(int(hours), int(minutes), seconds))
+   do_pipe_reduc(args.folder, args.path2pugliese)
