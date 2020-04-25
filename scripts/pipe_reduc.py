@@ -77,7 +77,7 @@ def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/'):
    obs = Observation(folder)
 
    # reduce using PRESTO (timing mode only)
-   obs.set_params2reduc()
+   obs.set_params2reduc(path_to_dir=folder)
    obs.do_reduc()
 
    # calculate TOAs

@@ -87,7 +87,7 @@ def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/sh
    obs = Observation(folder)
 
    # search for glitches (code red)
-   obs.do_glitch_search(thresh=thresh)
+   obs.do_glitch_search(thresh=thresh, path_to_dir=folder)
    if obs.red_alert: send_alert('red')
 
    # search for glitches (code blue)
