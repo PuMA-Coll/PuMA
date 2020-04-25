@@ -73,13 +73,14 @@ def move_observation(path_to_obs='', dest_path=''):
       print('pulsar folder for {} already exists'.format(pulsar_name))
 
    # move obs data to newly created folder
+   path_to_reduc = pulsar_folder_name + '/' + path_to_obs.split('/')[-1] + '/'
    try:
       shutil.move(new_path_to_obs, pulsar_folder_name+'/')
-      return ierr, pulsar_name, pulsar_folder_name+'/'
+      return ierr, pulsar_name, path_to_reduc
    except Exception as e:
       print(e)
       ierr = -1
-      return ierr, pulsar_name, pulsar_folder_name+'/'
+      return ierr, pulsar_name, path_to_reduc
 
 
 
