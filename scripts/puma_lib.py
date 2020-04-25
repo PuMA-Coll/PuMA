@@ -233,7 +233,7 @@ class Observation(object):
 
         ierr = 0
         try:
-            filename = glob.glob('*'+ftype+'*.bestprof')[0]
+            filename = glob.glob(self.path_to_dir + '/*'+ftype+'*.bestprof')[0]
         except Exception:
             print('\n FATAL ERROR: could not find bestprofile for ',ftype,'\n')
             ierr = -1
