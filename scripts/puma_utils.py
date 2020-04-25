@@ -14,7 +14,7 @@ def copy_db(path2ini, path2end):
    Copy files useful for database (.ps converted to png, and pfdfiles)
    '''
    path2pngs = path2end + 'last_obs/'
-   path2pdfs =  path2end + 'pfds/' 
+   path2pfds =  path2end + 'pfds/' 
 
    ps_mask = glob.glob(path2ini + '/*mask*.ps')[0]
    pngfile = ps_mask.split('.')[-2] + '.png'

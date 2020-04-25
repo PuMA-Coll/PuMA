@@ -32,6 +32,7 @@ class Observation(object):
         self.dotpar_filename = self.par_dirname + self.pname + '.par'
         self.was_reduced = False
         self.params2reduc = {}
+        self.nfils = 1
 
 
     def get_pulsar_parameters(self):
