@@ -17,7 +17,7 @@ def copy_db(path2ini, path2end):
    path2pfds =  path2end + 'pfds/' 
 
    ps_mask = glob.glob(path2ini + '/*mask*.ps')[0]
-   pngfile = ps_mask.split('.')[-2] + '.png'
+   pngfile = ps_mask[:-2] + 'png'
    os.system('convert ' + ps_mask + ' ' + pngfile)
 
    png_files = glob.glob(path2ini + '/*.png') 
