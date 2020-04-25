@@ -132,7 +132,7 @@ class Observation(object):
                 '-nopdsearch'))
 
         # add output filename
-        output = 'prepfold_' + self.params2reduc['ftype'] + '_' + self.params2reduc['date']
+        output = 'prepfold_' + self.params2reduc['ftype'] + '_' + self.antenna + '_' + self.params2reduc['date']
         prepfold_args.extend(('-o', output, '-filterbank'))
         prepfold_args.extend(self.params2reduc['fils'])
 
