@@ -60,7 +60,10 @@ def move_observation(path_to_obs='', dest_path=''):
       return ierr, 'NN', 'No path'
 
    # add antenna to the observation folder name
-   new_path_to_obs = path_to_obs + '_' + antenna
+   if (path_to_obs[-2:] == 'A1' or path_to_obs[-2:] == 'A2'):
+      new_path_to_obs = path_to_obs
+   else:
+      new_path_to_obs = path_to_obs + '_' + antenna
 
    shutil.move(path_to_obs, new_path_to_obs)
 
