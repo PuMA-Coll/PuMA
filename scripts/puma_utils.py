@@ -64,8 +64,7 @@ def move_observation(path_to_obs='', dest_path=''):
       new_path_to_obs = path_to_obs
    else:
       new_path_to_obs = path_to_obs + '_' + antenna
-
-   shutil.move(path_to_obs, new_path_to_obs)
+      shutil.move(path_to_obs, new_path_to_obs)
 
    # now try to create folder with pulsar name in dest_path
    # else, just move files inside that folder
