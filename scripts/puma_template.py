@@ -5,7 +5,7 @@
 # This script generates new templates from existing observation.
 # Version: 0.1
 # Date: 11/3/19
-# author: Luciano Combi
+# author: Luciano Combi, Eduardo Gutierrez
 
 # We will need to execute shell scripts
 
@@ -15,32 +15,21 @@ import glob
 import os
 import psrchive
 
-# Open pfds.
+# Search for the highest S/N observation
 
-pfdtype = '*tim*.pfd'
-pfds = glob.glob(pfdtype)
-
-# Basic Labeling
-
-pulsar= 'B0833-45'
-telescope = 'IAR2'
-
-for pfd in pfds:
+snr_max = 0.0
+pfd_max = ''
+for pfd in glob.glob("*pfd", recursive=True):
     arch = psrchive.Archive_load(pfd)
-    arch.set_telescope(telescope)
-    arch.set_source(pulsar)
-    arch.unload()
+    snr_string = subprocess.check_output(['psrstat','-j','pF','-c','snr',arch.get_filename()])
+    snr = float(snr_string[snr_string.index('snr')+4:-1])
+    if snr > snr_max:
+        snr_max = snr
+        pfd_max = pfd
 
-# Add pfds and form a super pfd:
+print('The best observation has S/N = ', snr_max)
+arch = psrchive.Archive_load(pfd_max)
 
-sumpfds = './timing/'+pulsar+'.pfd'
-shutil.copy(pfds[0],sumpfds)
+# Make a smooth profile with the best observation
 
-for pfd in pfds:
-    arch= psrchive.Archive_load(pfd)
-    if arch.get_nchan() == 64:
-        subprocess.check_output(['psradd', '-F','-P',pfd,sumpfds,'-o',sumpfds])
-
-# Make a smooth profile
-
-subprocess.check_output(['psrsmooth', '-n','-e','std',sumpfds])
+subprocess.check_output(['psrsmooth','-n','-e','std',pfd])
