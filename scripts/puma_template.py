@@ -17,9 +17,11 @@ import psrchive
 
 # Search for the highest S/N observation
 
+pwd = os.getcwd()
 snr_max = 0.0
 pfd_max = ''
-for pfd in glob.glob("*pfd", recursive=True):
+pfds = [pfd for x in os.walk('.') for pfd in glob.glob(os.path.join(x[0], '*.pfd'))]
+for pfd in pfds:
     arch = psrchive.Archive_load(pfd)
     snr_string = subprocess.check_output(['psrstat','-j','pF','-c','snr',arch.get_filename()])
     snr = float(snr_string[snr_string.index('snr')+4:-1])
@@ -27,9 +29,10 @@ for pfd in glob.glob("*pfd", recursive=True):
         snr_max = snr
         pfd_max = pfd
 
-print('The best observation has S/N = ', snr_max)
+print('The best observation has S/N = '+str(snr_max)+'\n')
 arch = psrchive.Archive_load(pfd_max)
 
 # Make a smooth profile with the best observation
 
-subprocess.check_output(['psrsmooth','-n','-e','std',pfd])
+subprocess.check_output(['psrsmooth', '-n', '-e', 'std', pfd])
+subprocess.check_output(['mv', arch.get_filename() + '.std', pwd])
