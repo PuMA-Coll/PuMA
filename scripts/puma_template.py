@@ -29,10 +29,11 @@ for pfd in pfds:
         snr_max = snr
         pfd_max = pfd
 
-print('The best observation has S/N = '+str(snr_max)+'\n')
+aux_index = pfd_max.index('20')
+print('The best observation is from ' + pfd_max[aux_index:aux_index+8] + ' and has S/N = '+str(snr_max)+'\n')
 arch = psrchive.Archive_load(pfd_max)
 
 # Make a smooth profile with the best observation
 
-subprocess.check_output(['psrsmooth', '-n', '-e', 'std', pfd])
-subprocess.check_output(['mv', arch.get_filename() + '.std', pwd])
+subprocess.check_output(['psrsmooth', '-n', '-e', 'std', pfd_max])
+subprocess.check_output(['mv', os.getcwd()+arch.get_filename()[1:] + '.std', pwd])
