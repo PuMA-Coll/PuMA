@@ -18,6 +18,8 @@ class Observation(object):
     DEFAULT_CONFIG_DIRNAME = '/opt/pulsar/puma/config/'
     DEFAULT_TIMING_DIRNAME = DEFAULT_CONFIG_DIRNAME + 'timing/'
 
+    DEFAULT_THRESHOLD_FOR_REDUC = 1000000  # 1 Mb in bytes
+
     def __init__(self, path2dir=os.environ['PWD'], pname=''):
         self.path_to_dir = path2dir
         if pname != '': 
@@ -33,6 +35,7 @@ class Observation(object):
         self.was_reduced = False
         self.params2reduc = {}
         self.nfils = 1
+        self.nempty = 0
 
 
     def get_pulsar_parameters(self):
@@ -155,8 +158,12 @@ class Observation(object):
         # - grab name of .fils
         fils = glob.glob(self.path_to_dir + '/*.fil')
         fils.sort()
+        # just use the ones that have a size above the threshold
+        fils2reduc = [fil for fil in fils if os.stat(fil).st_size > DEFAULT_THRESHOLD_FOR_REDUC]
+
         # - count how many fils are in the dir
-        self.nfils = len(fils) 
+        self.nfils = len(fils2reduc)
+        self.nempty = len(fils) - nfils
         
         # warning if there are more than one fil
         if self.nfils <= 0:
@@ -189,7 +196,7 @@ class Observation(object):
         self.params2reduc['gvoutput'] = configfile.getboolean('main', 'gvoutput')
         self.params2reduc['movephase'] = configfile.getboolean('main', 'movephase')
         self.params2reduc['date'] = fil_dic['rawdatafile'][-19:-4]
-        self.params2reduc['fils'] = fils
+        self.params2reduc['fils'] = fils2reduc
         self.params2reduc['ncores'] = str(ncores)
 
         self.params2reduc['nbins'] = configfile.get('parameters', 'nbins')
