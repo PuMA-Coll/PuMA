@@ -14,7 +14,7 @@ import rfifind
 class Observation(object):
     """ This is the main class that represents an observation from a single antenna."""
 
-    DEFAULT_PAR_DIRNAME = '/opt/pulsar/tempo/tzpar/'
+    DEFAULT_PAR_DIRNAME = '/opt/pulsar/puma/pardir/'
     DEFAULT_CONFIG_DIRNAME = '/opt/pulsar/puma/config/'
     DEFAULT_TIMING_DIRNAME = DEFAULT_CONFIG_DIRNAME + 'timing/'
 
