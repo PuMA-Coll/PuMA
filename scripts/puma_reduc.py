@@ -40,7 +40,7 @@ def set_argparse():
             help='ABSOLUTE PATH where observations are stored and where output will be created')
     parser.add_argument('--ptopo', default=None, type=str,
             help='seed for the topocentric folding period in sec')
-    parser.add_argument('--par_dirname', default='/opt/pulsar/tempo/tzpar/', type=str,
+    parser.add_argument('--par_dirname', default='/opt/pulsar/puma/pardir', type=str,
             help='path to directory containing .par file')
     parser.add_argument('--start', default=0.0, type=float,
             help='The folding start time as a fraction of the full obs')
