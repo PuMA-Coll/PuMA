@@ -1,0 +1,51 @@
+PSRJ            J0942-5552
+PSRB            B0940-55
+NAME            B0940-55
+RAJ             09:42:15.83              9.000e-02
+DECJ            -55:52:52.3              9.000e-01
+ELONG           184.73
+ELAT            -62.34
+DM              180.2                    5.000e-01
+PEPOCH          46800.00
+F0              1.50519105458            1.400e-10
+F1              -5.1778E-14              1.200e-17
+P0              0.66436748807            6.000e-11
+P1              2.2854E-14               5.000e-18
+DIST_DM         0.41
+DIST_DM1        3.77
+SURVEY          mol1,mol2,pks1,pks70,pksm
+S400            55
+S1400           10.0                     1.000e+00
+W50             11
+W10             49
+POSEPOCH        46800.00
+DMEPOCH         46800.00
+DIST_AMN        0.1
+DIST_AMX        1.1
+DIST_A          0.3
+AGE             4.61e+05
+SPINDX          -2.64                    5.000e-02
+RM              -61.9                    2.000e-01
+TAU_SC          5.717E-05                1.500e-07
+DATE            1969
+DIST            0.30
+DIST1           0.30
+PMERR_PA        147.136
+EDOTD2          3.4e+34
+R_LUM           4.95
+R_LUM14         0.90
+BSURF           3.94e+12
+B_LC            1.26e+02
+SI414           1.36
+EDOT            3.1e+33
+RAJD            145.56596
+DECJD           -55.88119
+OSURVEY         000010045011
+DMSINB          -7.01
+GL              278.57
+GB              -2.23
+XX              -0.30
+YY              8.46
+ZZ              -0.01
+EPHVER          2
+UNITS           TDB

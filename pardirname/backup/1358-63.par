@@ -1,0 +1,50 @@
+PSRJ            J1401-6357
+PSRB            B1358-63
+NAME            B1358-63
+RAJ             14:01:52.48              2.000e-02
+DECJ            -63:57:45.54             1.900e-01
+ELONG           236.03
+ELAT            -47.38
+DM              98.0                     5.000e-01
+PEPOCH          46800.0
+F0              1.186535716141           2.000e-11
+F1              -2.35477E-14             1.200e-18
+P0              0.842789632370           1.400e-11
+P1              1.67258E-14              8.000e-19
+DIST_DM         1.76
+DIST_DM1        1.98
+SURVEY          mol2,pks1,pks70,pksmb,htr
+S400            34
+S600            16
+S1400           6.2                      6.000e-01
+W50             10
+W10             19
+POSEPOCH        46916
+DMEPOCH         46800.00
+DIST_AMN        1.2
+DIST_AMX        2.5
+DIST_A          1.8
+AGE             7.98e+05
+RM              62                       4.000e+00
+DATE            1978
+DIST            1.80
+DIST1           1.80
+PMERR_PA        -93.071
+EDOTD2          3.4e+32
+R_LUM           110.16
+R_LUM14         20.09
+BSURF           3.8e+12
+B_LC            5.95e+01
+SI414           1.36
+EDOT            1.1e+33
+RAJD            210.46867
+DECJD           -63.96265
+OSURVEY         000010045010
+DMSINB          -3.66
+GL              310.57
+GB              -2.14
+XX              -1.37
+YY              7.33
+ZZ              -0.07
+EPHVER          2
+UNITS           TDB

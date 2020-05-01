@@ -1,0 +1,23 @@
+PSRJ	J1357-62
+PSRB           B1353-62
+ELONG          234.2960967486575040025220673   
+ELAT           -46.3385324361940580048524474   
+F0             2.1941325190404533478        0.00000481421736229078   
+PEPOCH         47899.999852514572389       
+POSEPOCH       47899.999852514572389       
+DM             416.79996122460316302        0.39999996278752701729   
+TRES           10000         
+EPHVER         2                           
+NE_SW          4                           
+#CLK            TT(TAI)
+UNITS          TDB
+TIMEEPH        FB90
+DILATEFREQ     N
+PLANET_SHAPIRO N
+T2CMETHOD      TEMPO
+NE_SW          9.961
+CORRECT_TROPOSPHERE  N
+EPHEM          DE405
+NITS           1
+NTOA           0
+CHI2R          10000 0

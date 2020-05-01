@@ -1,0 +1,25 @@
+PSRJ	J1651-5255
+PSRB           B1647-528
+ELONG          258.1819553965152640173652543   
+ELAT           -30.1891108528984379970327989   
+F0             1.1229218406009179592        0.00000000050438136840   
+F1             -2.6101736624040046641e-15    1.8914301901478442347e-17
+PEPOCH         43558.757987138203724       
+POSEPOCH       43558.757987138203724       
+DM             163.9999847428860771        
+EDOT           115712064.39265323162       
+TRES           10000         
+EPHVER         2                           
+NE_SW          4                           
+#CLK            TT(TAI)
+UNITS          TDB
+TIMEEPH        FB90
+DILATEFREQ     N
+PLANET_SHAPIRO N
+T2CMETHOD      TEMPO
+NE_SW          9.961
+CORRECT_TROPOSPHERE  N
+EPHEM          DE405
+NITS           1
+NTOA           0
+CHI2R          10000 0
