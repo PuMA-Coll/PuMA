@@ -22,6 +22,8 @@ def copy_db(pname, path2ini, path2end):
    try:
       os.mkdir(path2pngs)
       os.mkdir(path2pfds)
+   except Exception:
+      print('pulsar database directory already exists')
 
    ps_mask = glob.glob(path2ini + '/*mask*.ps')[0]
    pngfile = ps_mask[:-2] + 'png'
