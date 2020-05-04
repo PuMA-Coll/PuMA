@@ -96,7 +96,7 @@ def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/'):
    write_obs_info(path2db, obs)
   
    # copy files for visualization and analysis
-   copy_db(folder, path2pugliese)   
+   copy_db(obs.pname, folder, path2pugliese)   
 
    # call updater for webpage
    # (puglieseweb_update)

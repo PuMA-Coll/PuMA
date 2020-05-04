@@ -105,7 +105,7 @@ def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/sh
    write_pugliS_info(path2db, obs)
 
    # copy files for visualization and analysis
-   copy_db(folder, path2pugliese)   
+   copy_db(obs.pname, folder, path2pugliese)   
 
    # call updater for webpage
    # (puglieseweb_update)

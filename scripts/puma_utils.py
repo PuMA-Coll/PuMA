@@ -10,11 +10,12 @@ import shutil
 
 #need to import pipe_pugliS and pipe_reduc?
 
-def copy_db(path2ini, path2end):
+def copy_db(pname, path2ini, path2end):
    '''
-   Copy files useful for database (.ps converted to png, and pfdfiles)
+   Copy files useful for database (.ps converted to png, pfd and polycos)
    '''
-   path2pngs = path2end + 'last_obs/'
+   path2last = path2end + 'last_obs/'
+   path2pngs = path2end + 'pngs/'
    path2pfds =  path2end + 'pfds/' 
 
    ps_mask = glob.glob(path2ini + '/*mask*.ps')[0]
@@ -23,12 +24,23 @@ def copy_db(path2ini, path2end):
 
    png_files = glob.glob(path2ini + '/*.png') 
    pfd_files = glob.glob(path2ini + '/*.pfd') 
+   polycos_files = glob.glob(path2ini + '/*.polycos') 
 
-   for png_file in png_files:
-      shutil.copy(png_file, path2pngs)
+   # Copy all png files
+   for png in png_files:
+      shutil.copy(png, path2pngs)
+      # Make a copy in last_obs directory taking out the date information
+      if 'mask' in png:
+         shutil.copy(png, path2last + 'mask_' + pname + png.split('_')[-1])
+      else:
+         shutil.copy(png, path2last + pname + '.png' )
 
-   for pfd_file in pfd_files:
-      shutil.copy(pfd_file, path2pfds)
+   # Copy pfds and polycos
+   for pfd in pfd_files:
+      shutil.copy(pfd, path2pfds)
+
+   for polycos in polycos_files:
+      shutil.copy(polycos, path2pfds)
 
 
 def move_observation(path_to_obs='', dest_path=''):
