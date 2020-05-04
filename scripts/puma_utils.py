@@ -15,15 +15,13 @@ def copy_db(pname, path2ini, path2end):
    Copy files useful for database (.ps converted to png, pfd and polycos)
    '''
    
-   path2last = path2end + 'last_obs/'
-   path2pngs = path2end + 'pngs/' + pname + '/'
-   path2pfds =  path2end + 'pfds/' + pname + '/'
+   path2last = path2end + '/last_obs/'
+   path2pngs = path2end + '/' + pname + '/pngs/'
+   path2pfds = path2end + '/' + pname + '/pfds/' 
+   
    # Create the specific directory for the pulsar if it does not exist
-   try:
-      os.mkdir(path2pngs)
-      os.mkdir(path2pfds)
-   except Exception:
-      print('pulsar database directory already exists')
+   os.makedirs(path2pngs, exist_ok=True)
+   os.makedirs(path2pfds, exist_ok=True)
 
    ps_mask = glob.glob(path2ini + '/*mask*.ps')[0]
    pngfile = ps_mask[:-2] + 'png'
