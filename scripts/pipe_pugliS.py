@@ -91,6 +91,9 @@ def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/sh
    if obs.red_alert: send_alert('red')
 
    # search for glitches (code blue)
+   # calculate TOAs
+   tim_folder = path2pugliese + '/tims/'
+   obs.do_toas(pfd_dirname=folder, tim_dirname=tim_folder)
    # obs.do_timing(thresh)  --> TOAs, llamada a Tempo2
    # if blue_alert: send_alert('blue')
 
