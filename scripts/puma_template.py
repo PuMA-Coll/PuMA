@@ -24,7 +24,6 @@ pfds = [pfd for x in os.walk('.') for pfd in glob.glob(os.path.join(x[0], '*.pfd
 
 if pfds == []:
     print('There are no pfds in this folder!')
-    sys.exit(1)
 
 else:
     for pfd in pfds:
