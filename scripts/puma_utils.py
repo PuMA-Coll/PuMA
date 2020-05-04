@@ -44,7 +44,7 @@ def copy_db(pname, path2ini, path2end):
             shutil.copy(png, path2last + pname + '_par.png' )
          elif 'timing' in png:
             shutil.copy(png, path2last + pname + '_timing.png' )
-         else
+         else:
             print('What is this file: ' + png + '?!')
 
    # Copy pfds and polycos
