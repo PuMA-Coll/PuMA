@@ -1,5 +1,21 @@
-import os, sys
+import os, sys, subprocess
+import pandas as pd
+
 dbg = False
+
+def pandasANDtext(PSR):
+    # leer los ascii actuales como pandas
+    df = pd.read_csv(PSR+'.txt', delim_whitespace=True)
+
+    # guardar los pandas como json
+    df.to_json(PSR+'.json')
+
+    # leer los json como pandas
+    df = pd.read_json(PSR+'.json')
+
+def CreateThumbnail(file):
+    subprocess.call(['convert', '-thumbnail 500',
+                    file, file+'.thumb.jpg'])
 
 def get_observed_pulsars(path):
     pulsars = [d for d in os.listdir(path) if os.path.isdir(os.path.join(path, d))]
