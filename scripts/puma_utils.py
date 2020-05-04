@@ -40,7 +40,12 @@ def copy_db(pname, path2ini, path2end):
       if 'mask' in png:
          shutil.copy(png, path2last + 'mask_' + pname + png.split('_')[-1])
       else:
-         shutil.copy(png, path2last + pname + '.png' )
+         if 'par' in png:
+            shutil.copy(png, path2last + pname + '_par.png' )
+         elif 'timing' in png:
+            shutil.copy(png, path2last + pname + '_timing.png' )
+         else
+            print('What is this file: ' + png + '?!')
 
    # Copy pfds and polycos
    for pfd in pfd_files:
