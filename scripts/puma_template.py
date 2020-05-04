@@ -36,4 +36,7 @@ arch = psrchive.Archive_load(pfd_max)
 # Make a smooth profile with the best observation
 
 subprocess.check_output(['psrsmooth', '-n', '-e', 'std', pfd_max])
-subprocess.check_output(['mv', os.getcwd()+arch.get_filename()[1:] + '.std', pwd])
+fname = arch.get_filename()[1:] + '.std'
+new_fname = 'J' + fname.split('_')[-1]
+subprocess.check_output(['mv', os.getcwd()+arch.get_filename()[1:] + '.std', pwd + '/' + new_fname])
+
