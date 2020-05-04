@@ -159,11 +159,11 @@ class Observation(object):
         fils = glob.glob(self.path_to_dir + '/*.fil')
         fils.sort()
         # just use the ones that have a size above the threshold
-        fils2reduc = [fil for fil in fils if os.stat(fil).st_size > DEFAULT_THRESHOLD_FOR_REDUC]
+        fils2reduc = [fil for fil in fils if os.stat(fil).st_size > self.DEFAULT_THRESHOLD_FOR_REDUC]
 
         # - count how many fils are in the dir
         self.nfils = len(fils2reduc)
-        self.nempty = len(fils) - nfils
+        self.nempty = len(fils) - self.nfils
         
         # warning if there are more than one fil
         if self.nfils <= 0:
@@ -318,10 +318,11 @@ class Observation(object):
                 # before calling pat to get TOAs, move *_par* files to a temporary
                 # folder, then run the pat line, bring back *_par* files and remove
                 # tmp folder
-                #path_to_tmp_folder = os.mkdir(path=pfd_dirname + '/tmp')
-		path_to_tmp_folder = pfd_dirname + '/tmp'
-		# ESTA LINEA TRAE PROBLEMAS!
-		#os.mkdir(path_to_tmp_folder) 
+                path_to_tmp_folder = pfd_dirname + '/tmp/'
+                try:
+                    os.mkdir(path_to_tmp_folder) 
+                except:
+                    pass
                 # move *_par* files to tmp folder
 		try:
                     files = glob.glob(pfd_dirname + '/*_par*')
@@ -341,6 +342,7 @@ class Observation(object):
                     files = glob.glob(path_to_tmp_folder + '/*')
                     for file in files:
                         shutil.move(file, pfd_dirname)
+                    os.rmdir(path_to_tmp_folder)
 		except:
 		    pass
 
@@ -379,9 +381,12 @@ class Observation(object):
     def get_mask_percentage(self, maskname=''):
         
         ierr = 0
+ 
+        print('\n Getting GTI from mask: {}\n'.format(maskname))
+
         if os.path.isfile(maskname) is False:
             ierr = -1
-            print('Mask not found')
+            print('\nMask {} not found, cannot get_mask_percentage\n\n'.format(maskname))
             return ierr
 
         maskrfi = rfifind.rfifind(maskname)
