@@ -80,7 +80,8 @@ def process_observations(obs_folder='', dest_path=''):
 
       if ierr == 0:
          # calibration sources are not reduced with the pipelines
-         if (pname == 'testSource' or pname == 'cal'):
+         #if (pname == 'testSource' or pname == 'cal' or pname == 'bla'):
+         if (pname[0] != 'J'):
             continue
 
          # pipeline for non-glitching (ms) pulsars:
