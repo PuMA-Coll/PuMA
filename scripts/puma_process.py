@@ -85,7 +85,7 @@ def process_observations(obs_folder='', dest_path=''):
             continue
 
          # pipeline for non-glitching (ms) pulsars:
-         if pname == 'J0437-4715':
+         if pname == 'J0437-4715' or pname == 'J2241-5236':
             # important: make sub-folders for each separate observation
             fils = glob.glob(reduction_path + '/*.fil')
             for i in range(len(fils)):
