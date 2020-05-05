@@ -49,7 +49,7 @@ def write_obs_info(path2db,obs):
    fname = path2db + obs.pname + '.txt'
 
    # Use the same order as for glitching pulsars for consistency in a single database.
-   order = ['pname', 'mjd', 'antenna', 'nchans', 'dotpar_filename', 'jump', 'gti_percentage', 'nfils', 'nempty']
+   order = ['pname', 'mjd', 'path_to_dir', 'antenna', 'nchans', 'dotpar_filename', 'jump', 'gti_percentage', 'nfils', 'nempty']
 
    if os.path.isfile(fname) is False:
       f = open(fname, 'w')
