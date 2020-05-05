@@ -80,12 +80,12 @@ class Observation(object):
             elif len(masks) == 0:
                 print('WARNING: No mask in the folder. I will make one for you')
                 subprocess.check_call(rfifind, cwd=self.path_to_dir)
-                self.maskname = output+'_rfifind.mask'
+                self.maskname = self.path_to_dir + '/' + output+'_rfifind.mask'
             else:
                 self.maskname = masks[0]
         else:
             subprocess.check_call(rfifind, cwd=self.path_to_dir)
-            self.maskname = output + '_rfifind.mask'
+            self.maskname = self.path_to_dir + '/' + output + '_rfifind.mask'
 
         return ierr
 
