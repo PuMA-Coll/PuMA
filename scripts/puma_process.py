@@ -30,9 +30,9 @@ import subprocess
 
 def set_argparse():
    # add arguments
-   parser = argparse.ArgumentParser(prog='puma_move.py',
+   parser = argparse.ArgumentParser(prog='puma_process.py',
          formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-         description='moving observations to reduction folder')
+         description='moves observations to reduction folder and applies a reduction pipeline')
    parser.add_argument('--obs_folder', default='/home/jovyan/work/shared/upload/', type=str,
          help='ABSOLUTE PATH to folder containing all the folders for each specific observation')
    parser.add_argument('--dest_path', default='/home/jovyan/work/shared/', type=str,
@@ -85,7 +85,7 @@ def process_observations(obs_folder='', dest_path=''):
             continue
 
          # pipeline for non-glitching (ms) pulsars:
-         if pname == 'J0437-4715':
+         if pname == 'J0437-4715' or pname == 'J2241-5236':
             # important: make sub-folders for each separate observation
             fils = glob.glob(reduction_path + '/*.fil')
             for i in range(len(fils)):
