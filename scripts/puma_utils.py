@@ -38,7 +38,9 @@ def copy_db(pname, path2ini, path2end):
       shutil.copy(png, path2pngs)
       # Make a copy in last_obs directory taking out the date information
       if 'mask' in png:
-         shutil.copy(png, path2last + 'mask_' + pname + png.split('_')[-1])
+         # Only the first page of the mask is needed
+         if '-0' in png:
+            shutil.copy(png, path2last + pname + '_mask.png' )
       else:
          if 'par' in png:
             shutil.copy(png, path2last + pname + '_par.png' )
