@@ -3,6 +3,7 @@ import pandas as pd
 
 dbg = False
 
+
 def pandasANDtext(PSR):
     # leer los ascii actuales como pandas
     df = pd.read_csv(PSR+'.txt', delim_whitespace=True)
@@ -13,21 +14,26 @@ def pandasANDtext(PSR):
     # leer los json como pandas
     df = pd.read_json(PSR+'.json')
 
+
 def CreateThumbnail(file):
     subprocess.call(['convert', '-thumbnail 500',
                     file, file+'.thumb.jpg'])
+
 
 def get_observed_pulsars(path):
     pulsars = [d for d in os.listdir(path) if os.path.isdir(os.path.join(path, d))]
     pulsars.sort()
     return pulsars
 
+
 def get_dates(PSR,path):
     files = os.listdir(path+'/'+PSR+'/')
     dates = []
     for file in files:
-        if 'mask_' in file: dates.append(file[5:13])
+        if 'mask_' in file:
+            dates.append(file[5:13])
     return dates
+
 
 def get_bypsr(PSR,DBPATH):
     if dbg: print(PSR)
@@ -46,18 +52,22 @@ def get_bypsr(PSR,DBPATH):
         lines += '<br> \n'
     lines += '<p> \n'
     lines += '</article> \n'
-    if dbg: print()
+
+    if dbg:
+        print()
+
     return lines
 
-def write_bypsr(pulsars,HEADER,FOOTER,WEBPATH,DBPATH):
+
+def write_bypsr(pulsars, HEADER, FOOTER, WEBPATH, DBPATH):
     header = open(WEBPATH+HEADER).readlines()
     footer = open(WEBPATH+FOOTER).readlines()
 
     content = ''
     for psr in pulsars:
-        content += get_bypsr(psr,DBPATH)
+        content += get_bypsr(psr, DBPATH)
 
-    file = open(WEBPATH+'by_psr.html','w')
+    file = open(WEBPATH+'by_psr.html', 'w')
     file.writelines(header)
     file.writelines(content)
     file.writelines(footer)
@@ -65,11 +75,13 @@ def write_bypsr(pulsars,HEADER,FOOTER,WEBPATH,DBPATH):
     return 0
 
 
-def get_lastobs(PSR,DBPATH):
-    if dbg: print(PSR)
-    #FUTURE: READ THIS INFO FROM DATABASE
+def get_lastobs(PSR, DBPATH):
+    if dbg:
+        print(PSR)
+
+    # FUTURE: READ THIS INFO FROM DATABASE
     LAST_DATE = '2020/01/10'
-    LAST_EXP  = '2.75'
+    LAST_EXP = '2.75'
 
     lines = "<!-- "+PSR+" --> \n"
     lines += '<article class="box page-content"><header><h2>'+PSR+'</h2></header> \n'
@@ -90,10 +102,14 @@ def get_lastobs(PSR,DBPATH):
     lines += '</div></div></section> \n'
     lines += '</div></div> \n'
     lines += '</article> \n'
-    if dbg: print()
+
+    if dbg:
+        print()
+
     return lines
 
-def write_lastobs(pulsars,HEADER,FOOTER,WEBPATH,DBPATH):
+
+def write_lastobs(pulsars, HEADER, FOOTER, WEBPATH, DBPATH):
     header = open(WEBPATH+HEADER).readlines()
     footer = open(WEBPATH+FOOTER).readlines()
 
@@ -101,7 +117,7 @@ def write_lastobs(pulsars,HEADER,FOOTER,WEBPATH,DBPATH):
     for psr in pulsars:
         content += get_lastobs(psr,DBPATH)
 
-    file = open(WEBPATH+'last_obs.html','w')
+    file = open(WEBPATH+'last_obs_2.html', 'w')
     file.writelines(header)
     file.writelines(content)
     file.writelines(footer)
@@ -109,38 +125,43 @@ def write_lastobs(pulsars,HEADER,FOOTER,WEBPATH,DBPATH):
     return 0
 
 
-#RUN MAIN CODE
+# RUN MAIN CODE
 if __name__ == "__main__":
 
     WEBPATH = "/home/fgarcia/github/puma/puglieseweb/"
-    DBPATH  = WEBPATH+'database/'
+    DBPATH = WEBPATH+'database/'
     # DBPATH/database/PSRNAME/mask_DATE.png presto_DATE.png tempo.png
     # DBPATH/last_obs/PSRNAME/mask.png presto.png tempo.png
 
-    dbg=False
+    dbg = False
     print()
     print('READING PULSARS FROM DB AT '+DBPATH)
     pulsars = get_observed_pulsars(DBPATH)
     print()
 
-    #by_psr.html
-    HEADER  = 'by_psr_header.txt'
-    FOOTER  = 'by_psr_footer.txt'
+    # by_psr.html
+    HEADER = 'by_psr_header.txt'
+    FOOTER = 'by_psr_footer.txt'
     print('-----------------')
     print('START by_psr.html')
-    if write_bypsr(pulsars,HEADER,FOOTER,WEBPATH,DBPATH)==0: print('WRITTEN by_psr.html')
-    else: print('ERROR by_psr.html')
+    if write_bypsr(pulsars, HEADER, FOOTER, WEBPATH, DBPATH) == 0:
+        print('WRITTEN by_psr.html')
+    else:
+        print('ERROR by_psr.html')
     print()
 
-    #last_obs.html
-    HEADER  = 'last_obs_header.txt'
-    FOOTER  = 'last_obs_footer.txt'
+    # last_obs.html
+    HEADER = 'last_obs_header.txt'
+    FOOTER = 'last_obs_footer.txt'
     print('-------------------')
     print('START last_obs.html')
-    if write_lastobs(pulsars,HEADER,FOOTER,WEBPATH,DBPATH)==0: print('WRITTEN last_obs.html')
-    else: print('ERROR last_obs.html')
+    if write_lastobs(pulsars, HEADER, FOOTER, WEBPATH, DBPATH) == 0:
+        print('WRITTEN last_obs.html')
+    else:
+        print('ERROR last_obs.html')
     print()
-    #EXIT PROGRAM
+
+    # EXIT PROGRAM
     print()
     print('FINISHED UPDATING WEBPAGE AT '+WEBPATH)
     print()

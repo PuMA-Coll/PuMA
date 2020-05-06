@@ -11,3 +11,11 @@ __pycache__/
 
 *.sh
 *.iar
+
+
+# Files in PuglieseWeb
+
+puglieseweb/antena1tlmy.txt
+puglieseweb/antena2tlmy.txt
+puglieseweb/tiempo.shtml
+pugliseweb/last_obs/*
