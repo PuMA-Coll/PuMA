@@ -49,7 +49,7 @@ def make_plot(par_fname='', tim_fname='', output_dir=''):
     rms_min, rms_max = calc_residuals_errorbars(n_obs=timing.nobs, rms=rms)
 
     i = np.argsort(t)
-    P.errorbar(t[i], res[i]*1e6, yerr=errs[i], fmt='x')
+    P.errorbar(t[i], res[i]*1e6, yerr=errs[i], fmt='x', marker=".")
         
     #P.legend(unique,numpoints=1,bbox_to_anchor=(1.1,1.1))
     P.xlabel('MJD'); P.ylabel('res [us]')
@@ -59,7 +59,7 @@ def make_plot(par_fname='', tim_fname='', output_dir=''):
     pname = tim_fname.split('.tim')[0].split('/')[-1]
     plot_output = output_dir + '/' + pname + '_tempo.png'
     print('Saving plot to ' + plot_output)
-    P.savefig(plot_output, marker=".", bbox_inches='tight')
+    P.savefig(plot_output, bbox_inches='tight')
 
 
 #=========================================================================
