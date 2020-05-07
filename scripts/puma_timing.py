@@ -18,6 +18,7 @@ import math
 import os
 import scipy.stats
 
+
 def set_argparse():
     # add arguments
     parser = argparse.ArgumentParser(prog='puma_timing.py',
@@ -48,32 +49,16 @@ def check_cli_arguments(args):
     return ierr
 
 
-if __name__ == '__main__':
+def calc_residuals(par_fname='', tim_fname=''):
 
     #tim_fname = tim_dirname + '/' + self.pname + self.antenna + '.tim'
     #par_fname = par_dirname + self.pname + '.par'
 
-    #tim_fname = '/home/jovyan/work/shared/PuGli-S/tims/J0437-4715_A1.tim'  
-    #par_fname = '/opt/pulsar/puma/config/timing//J0437-4715.par'
-    #puma_timing.py --par_fname='/opt/pulsar/puma/config/timing//J0437-4715.par' --tim_fname='/home/jovyan/work/shared/PuGli-S/tims/J0437-4715_A1.tim'  
-
-    # get cli-arguments
-    args = set_argparse()
-
-    # check arguments
-    ierr = check_cli_arguments(args)
-    if ierr != 0: sys.exit(1)
-    
-    start = time.time()
-
     # file where timing residuals will be stored (use .tim file as reference)
-    res_fname = args.tim_fname.split('.ti')[0].split('/')[-1] + '.res'
-    log_fname = args.tim_fname.split('.ti')[0].split('/')[-1] + '.log'
+    res_fname = tim_fname.split('.ti')[0].split('/')[-1] + '.res'
+    log_fname = tim_fname.split('.ti')[0].split('/')[-1] + '.log'
 
-    # Una posibilidad es algo de la forma: 
-    # 'tempo2 -output general2 -s "{bat} {post} {err} \n" > ' + res_fname
-    # Pero el formato no queda del todo bien. 
-    line = '-residuals -us -f ' + args.par_fname + ' ' + args.tim_fname + ' > ' + log_fname
+    line = '-residuals -us -f ' + par_fname + ' ' + tim_fname + ' > ' + log_fname
 
     # call tempo2 and store the output residuals and the log (fitting information)
     subprocess.call( 'tempo2 ' + line, shell=True )
@@ -92,21 +77,47 @@ if __name__ == '__main__':
     rms_max = round( math.sqrt( (n_obs / prob_16 )) * rms, 4)
     print rms, rms_min, rms_max
 
-    # use the tempo2 library instead
-    #import libstempo as tempo2
-    #timing = t2.tempopulsar(parfile = par_fname, timfile = tim_fname)
+
+def make_plot(par_fname='', tim_fname=''):
+
+    import libstempo as T2
+    import libstempo.plot as LP
+
+    timing = T2.tempopulsar(parfile = par_fname, timfile = tim_fname)
     #residuals = timing.residuals()
     #n_obs = timing.nobs 
 
-    # We can plot TOAs vs. residuals, but we should first sort the arrays; otherwise the array 
-    # follow the order in the tim file, which may not be chronological.
+    # Plot residuals vs MJD
+    LP.plotres(timing, alpha=0.2)
 
-    # get sorted array of indices
-    #i = np.argsort(timing.toas())
-    # use numpy fancy indexing to order residuals 
-    #P.errorbar(timing.toas()[i],timing.residuals()[i],yerr=1e-6*timing.toaerrs[i],fmt='.',alpha=0.2)
+    # Save
+    pname = tim_fname.split('.tim')[0].split('/')[-1]
+    plot_output = pname + '_tempo.png'
+    print('Saving plot to ' + plot_output)
+    LP.savefig(plot_output, bbox_inches='tight')
+    #LP.show()
+
+
+if __name__ == '__main__':
+
+    # get cli-arguments
+    args = set_argparse()
+
+    # check arguments
+    ierr = check_cli_arguments(args)
+    if ierr != 0: sys.exit(1)
+
+    # file where timing residuals will be stored (use .tim file as reference)
+    res_fname = args.tim_fname.split('.tim')[0].split('/')[-1] + '.res'
+    log_fname = args.tim_fname.split('.tim')[0].split('/')[-1] + '.log'
     
-    # Even simpler!
-    #import libstempo.plot as LP
-    #import matplotlib.pyplot as P
-    #LP.plotres(timing,alpha=0.2)
+    print('Calculating residuals')
+    calc_residuals(par_fname=args.par_fname, tim_fname=args.tim_fname)
+
+    print('Making residuals plot')
+    make_plot(par_fname=args.par_fname, tim_fname=args.tim_fname)
+
+
+    #tim_fname = '/home/jovyan/work/shared/PuGli-S/tims/J0437-4715_A1.tim'  
+    #par_fname = '/opt/pulsar/puma/config/timing//J0437-4715.par'
+    #puma_timing.py --par_fname='/opt/pulsar/puma/config/timing//J0437-4715.par' --tim_fname='/home/jovyan/work/shared/PuGli-S/tims/J0437-4715_A1.tim'  
