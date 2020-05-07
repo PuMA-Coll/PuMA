@@ -16,6 +16,7 @@ import subprocess
 
 from puma_lib import Observation
 from puma_utils import *
+from puma_timing import make_plot
 
 
 def set_argparse():
@@ -90,11 +91,17 @@ def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/sh
    obs.do_glitch_search(thresh=thresh, path_to_dir=folder)
    if obs.red_alert: send_alert('red')
 
-   # search for glitches (code blue)
    # calculate TOAs
    tim_folder = path2pugliese + '/tims/'
-   obs.do_toas(pfd_dirname=folder, tim_dirname=tim_folder)
-   # obs.do_timing(thresh)  --> TOAs, llamada a Tempo2
+   obs.do_toas(pfd_dirname=folder, tim_dirname=tim_folder)        
+   
+   #plot TOAs and save in PuGli-S database
+   tim_fname = tim_folder + obs.pname + '_' +  obs.antenna + '.tim'
+   output_dir = path2pugliese + '/' + obs.pname + '/'
+   make_plot(par_fname=obs.dotpar_filename, tim_fname=tim_fname, output_dir=output_dir)
+   
+   # search for glitches (code blue)
+   # obs.do_timing(thresh)
    # if blue_alert: send_alert('blue')
 
    if obs.red_alert or obs.blue_alert:

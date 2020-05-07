@@ -44,7 +44,7 @@ def make_plot(par_fname='', tim_fname='', output_dir=''):
 
     print("Plotting {0} points.".format(timing.nobs))
 
-    meanres = math.sqrt(np.mean(res**2)) * 1e6
+    #meanres = math.sqrt(np.mean(res**2)) * 1e6
     rms = timing.rms()*1e6    # convert to us
     rms_min, rms_max = calc_residuals_errorbars(n_obs=timing.nobs, rms=rms)
 
@@ -53,7 +53,7 @@ def make_plot(par_fname='', tim_fname='', output_dir=''):
         
     #P.legend(unique,numpoints=1,bbox_to_anchor=(1.1,1.1))
     P.xlabel('MJD'); P.ylabel('res [us]')
-    P.title("{0} - rms res = {1:.2f} us".format(timing.name,meanres))
+    P.title("{0} - rms res = {1:.2f} us".format(timing.name,rms)) #,meanres))
 
     # Save
     pname = tim_fname.split('.tim')[0].split('/')[-1]
