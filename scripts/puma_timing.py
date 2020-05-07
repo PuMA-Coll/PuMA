@@ -75,7 +75,7 @@ def calc_residuals(par_fname='', tim_fname=''):
     timing = T2.tempopulsar(parfile = par_fname, timfile = tim_fname)
     residuals = timing.residuals()
     n_obs = timing.nobs 
-    n_obs = len(residuals) 
+    #n_obs = len(residuals) 
     prob_84 = scipy.stats.chi2.ppf( 0.84, n_obs)
     prob_16 = scipy.stats.chi2.ppf( 0.16, n_obs)    
     rms_min = round( math.sqrt( (n_obs / prob_84 )) * rms, 4) 
@@ -84,21 +84,30 @@ def calc_residuals(par_fname='', tim_fname=''):
 
 
 def make_plot(par_fname='', tim_fname=''):
+    """Plot residuals."""
 
-    import libstempo.plot as LP
+    import matplotlib.pyplot as P
 
     timing = T2.tempopulsar(parfile = par_fname, timfile = tim_fname)
-    #residuals = timing.residuals()
-    #n_obs = timing.nobs 
 
-    # Plot residuals vs MJD
-    LP.plotres(timing, alpha=0.2)
+    res, t, errs = timing.residuals(), timing.toas(), timing.toaerrs
+
+    print("Plotting {0} points.".format(timing.nobs))
+
+    meanres = math.sqrt(np.mean(res**2)) / 1e-6
+    
+    i = np.argsort(t)
+    P.errorbar(t[i],res[i]/1e-6,yerr=errs[i],fmt='x')
+        
+    #P.legend(unique,numpoints=1,bbox_to_anchor=(1.1,1.1))
+    P.xlabel('MJD'); P.ylabel('res [us]')
+    P.title("{0} - rms res = {1:.2f} us".format(timing.name,meanres))
 
     # Save
     pname = tim_fname.split('.tim')[0].split('/')[-1]
     plot_output = pname + '_tempo.png'
     print('Saving plot to ' + plot_output)
-    LP.savefig(plot_output, bbox_inches='tight')
+    P.savefig(plot_output, bbox_inches='tight')
     #LP.show()
 
 
