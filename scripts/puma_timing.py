@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 #
 # PuMA timing
 # Python script for obtaining time of arrivals
@@ -80,7 +80,7 @@ def calc_residuals(par_fname='', tim_fname=''):
     prob_16 = scipy.stats.chi2.ppf( 0.16, n_obs)    
     rms_min = round( math.sqrt( (n_obs / prob_84 )) * rms, 4) 
     rms_max = round( math.sqrt( (n_obs / prob_16 )) * rms, 4)
-    print rms, rms_min, rms_max
+    print(rms, rms_min, rms_max)
 
 
 def make_plot(par_fname='', tim_fname=''):
