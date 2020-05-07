@@ -59,7 +59,7 @@ def make_plot(par_fname='', tim_fname='', output_dir=''):
     pname = tim_fname.split('.tim')[0].split('/')[-1]
     plot_output = output_dir + '/' + pname + '_tempo.png'
     print('Saving plot to ' + plot_output)
-    P.savefig(plot_output, bbox_inches='tight')
+    P.savefig(plot_output, marker=".", bbox_inches='tight')
 
 
 #=========================================================================
