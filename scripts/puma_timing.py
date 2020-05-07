@@ -39,8 +39,8 @@ def make_plot(par_fname='', tim_fname='', output_dir=''):
 
     print('Saving residuals to ' + res_fname)
 
-    residuals_array = np.vstack((t, residuals, errs)).T
-    np.savetxt(res_fname, residuals_array)    
+    residuals_array = np.vstack((t, res, errs)).T
+    np.savetxt(res_fname, residuals_array, header='MJD[day]  res[us]    err[us]')    
 
     print("Plotting {0} points.".format(timing.nobs))
 
