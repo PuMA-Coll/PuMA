@@ -18,6 +18,8 @@ import math
 import os
 import scipy.stats
 
+import libstempo as T2
+
 
 def set_argparse():
     # add arguments
@@ -70,6 +72,9 @@ def calc_residuals(par_fname='', tim_fname=''):
     rms = np.genfromtxt ( log_fname, comments="none", dtype=float, skip_header=18, max_rows=1, usecols=(10) )  
 
     # calculate the rms+- delta_rms(1 sigma) --> (not the errorbars, rather rms_min and rms_max) 
+    timing = T2.tempopulsar(parfile = par_fname, timfile = tim_fname)
+    residuals = timing.residuals()
+    n_obs = timing.nobs 
     n_obs = len(residuals) 
     prob_84 = scipy.stats.chi2.ppf( 0.84, n_obs)
     prob_16 = scipy.stats.chi2.ppf( 0.16, n_obs)    
@@ -80,7 +85,6 @@ def calc_residuals(par_fname='', tim_fname=''):
 
 def make_plot(par_fname='', tim_fname=''):
 
-    import libstempo as T2
     import libstempo.plot as LP
 
     timing = T2.tempopulsar(parfile = par_fname, timfile = tim_fname)
