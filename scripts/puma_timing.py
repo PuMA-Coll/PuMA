@@ -82,11 +82,11 @@ def set_argparse():
 
 def check_cli_arguments(args):
     ierr = 0
-    if os.path.isabs(args.par_dirname) is False:
+    if os.path.isabs(args.par_fname) is False:
         print('\n FATAL ERROR: .par file path is not absolute\n')
         ierr = -1
         return ierr
-    if os.path.isabs(args.tim_dirname) is False:
+    if os.path.isabs(args.tim_fname) is False:
         print('\n FATAL ERROR: .tim file path is not absolute\n')
         ierr = -1
         return ierr
@@ -106,4 +106,4 @@ if __name__ == '__main__':
 
     #tim_fname = '/home/jovyan/work/shared/PuGli-S/tims/J0437-4715_A1.tim'  
     #par_fname = '/opt/pulsar/puma/config/timing//J0437-4715.par'
-    #puma_timing.py --par_fname='/opt/pulsar/puma/config/timing//J0437-4715.par' --tim_fname='/home/jovyan/work/shared/PuGli-S/tims/J0437-4715_A1.tim'  
+    puma_timing.py --par_fname='/opt/pulsar/puma/config/timing//J0437-4715.par' --tim_fname='/home/jovyan/work/shared/PuGli-S/tims/J0437-4715_A1.tim'  
