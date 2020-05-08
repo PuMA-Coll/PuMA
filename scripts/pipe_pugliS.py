@@ -79,7 +79,7 @@ def write_pugliS_info_ascii(path2db,obs):
    f.write(line)
    f.close()
 
-def write_obs_info_jason(path2db,obs):
+def write_pugliS_info_jason(path2db,obs):
    """ Write information inf jason format"""
    pass
    
