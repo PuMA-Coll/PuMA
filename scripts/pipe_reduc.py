@@ -45,8 +45,8 @@ def check_cli_arguments(args):
    return ierr
 
 
-def write_obs_info(path2db,obs):
-   """ Write information"""
+def write_obs_info_ascii(path2db,obs):
+   """ Write information inf ascii format"""
    fname = path2db + obs.pname + '.txt'
 
    # Use the same order as for glitching pulsars for consistency in a single database.
@@ -69,6 +69,9 @@ def write_obs_info(path2db,obs):
    f.write(line)
    f.close()
 
+def write_obs_info_jason(path2db,obs):
+   """ Write information inf jason format"""
+   pass
    
 def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/'):
 
@@ -94,11 +97,12 @@ def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/'):
 
    # write observation info
    path2db = path2pugliese + 'database/'
-   write_obs_info(path2db, obs)
+   write_obs_info_ascii(path2db, obs)
+   write_obs_info_jason(path2db, obs)
   
    # copy files for visualization and analysis
    copy_db(obs.pname, folder, path2pugliese)   
-   
+
    # plot TOAs and save in PuGli-S database
    tim_fname = tim_folder + obs.pname + '_' +  obs.antenna + '.tim'
    output_dir = path2pugliese + '/' + obs.pname + '/'

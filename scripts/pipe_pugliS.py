@@ -56,7 +56,7 @@ def send_alert(alert_type):
       print('\n \x1b[34;1m glitch blue alert \x1b[0m \n')
 
 
-def write_pugliS_info(path2db,obs):
+def write_pugliS_info_ascii(path2db,obs):
    """ Write information"""
    fname = path2db + obs.pname + '.txt'
 
@@ -79,6 +79,10 @@ def write_pugliS_info(path2db,obs):
    f.write(line)
    f.close()
 
+def write_obs_info_jason(path2db,obs):
+   """ Write information inf jason format"""
+   pass
+   
 
 def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/shared/PuGli-S/'):
 
@@ -95,7 +99,6 @@ def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/sh
    tim_folder = path2pugliese + '/tims/'
    obs.do_toas(pfd_dirname=folder, tim_dirname=tim_folder)        
    
-
    # search for glitches (code blue)
    # obs.do_timing(thresh)
    # if blue_alert: send_alert('blue')
@@ -108,7 +111,9 @@ def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/sh
 
    # write observation info
    path2db = path2pugliese + 'database/'
-   write_pugliS_info(path2db, obs)
+   write_pugliS_info_ascii(path2db, obs)   
+   write_pugliS_info_jason(path2db, obs)
+
 
    # copy files for visualization and analysis
    copy_db(obs.pname, folder, path2pugliese)   
@@ -117,7 +122,7 @@ def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/sh
    tim_fname = tim_folder + obs.pname + '_' +  obs.antenna + '.tim'
    output_dir = path2pugliese + '/' + obs.pname + '/'
    make_plot(par_fname=obs.dotpar_filename, tim_fname=tim_fname, output_dir=output_dir)
-   
+
    # call updater for webpage
    # (puglieseweb_update)
 
