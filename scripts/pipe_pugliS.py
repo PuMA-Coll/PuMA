@@ -84,7 +84,7 @@ def write_pugliS_info_jason(path2db,obs):
    pass
    
 
-def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/shared/PuGli-S/', repro=False):
+def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/shared/PuGli-S/'):
 
    start = time.time()
 
@@ -145,6 +145,5 @@ if __name__ == '__main__':
    ierr = check_cli_arguments(args)
    if ierr != 0: sys.exit(1)
 
-   repro = True
-   do_pipe_puglis(args.folder, args.thresh, args.path2pugliese, repro)
+   do_pipe_puglis(args.folder, args.thresh, args.path2pugliese)
 
