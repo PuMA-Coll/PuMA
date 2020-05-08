@@ -16,7 +16,7 @@ import subprocess
 
 from puma_lib import Observation
 from puma_utils import *
-from puma_timing import make_plot
+from puma_timing import plot_residuals
 
 
 def set_argparse():
