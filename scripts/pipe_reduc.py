@@ -73,7 +73,7 @@ def write_obs_info_jason(path2db,obs):
    """ Write information inf jason format"""
    pass
    
-def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/'):
+def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/', repro=False):
 
    start = time.time()
 
@@ -130,4 +130,5 @@ if __name__ == '__main__':
    ierr = check_cli_arguments(args)
    if ierr != 0: sys.exit(1)
 
-   do_pipe_reduc(args.folder, args.path2pugliese)
+   repro = True
+   do_pipe_reduc(args.folder, args.path2pugliese, repro)
