@@ -1,0 +1,100 @@
+This program comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it
+under conditions of GPL license.
+
+[tempo2Util.C:360] Warning: [CLK3] no clock corrections available for clock UTC(iar1) for MJD 58671.6
+[tempo2Util.C:360] Warning: [CLK4] Trying assuming UTC = UTC(iar1)
+[tempo2Util.C:360] Warning: [CLK9] ... ok, using stated approximation 
+[tempo2Util.C:365] Warning: [DUP1] duplicated warnings have been suppressed.
+[tempo2Util.C:360] Warning: [CLK6] Proceeding assuming UTC =  UTC(iar1)
+[tempo2Util.C:361] [TROP2] Assume standard atmospheric pressure (no data) for site iar1 at MJD 58671.6
+[tempo2Util.C:361] [TROP1] Assume zero zenith wet delay (no data) for site iar1  at MJD 58671.6
+[TKfit.C:327] SVD nparams=1 nconst=0 ndata=100
+[tempo2.C:562] Complete fit
+
+
+Results for PSR J0437-4715
+
+
+RMS pre-fit residual = 7.600 (us), RMS post-fit residual = 7.600 (us)
+Fit Chisq = 1.642e+04	Chisqr/nfree = 16421.32/99 = 165.872	pre/post = 1
+Number of fit parameters: 1
+Number of points in fit = 100
+Offset: -1.71032e-06 7.63793e-07 offset_e*sqrt(n) = 7.63793e-06 n = 100
+
+
+PARAMETER       Pre-fit                   Post-fit                  Uncertainty   Difference   Fit
+---------------------------------------------------------------------------------------------------
+RAJ (rad)       1.20979650945913          1.20979650945913          0             0             N
+RAJ (hms)       04:37:15.8961748          04:37:15.8961748          0             0            
+DECJ (rad)      -0.824712241535847        -0.824712241535847        0             0             N
+DECJ (dms)      -47:15:09.11071           -47:15:09.11071           0             0            
+F0 (s^-1)       173.687945812184          173.687945812184          0             0             N
+F1 (s^-2)       -1.72835883796672e-15     -1.72835883796672e-15     0             0             N
+PEPOCH (MJD)    54500                     54500                     0             0             N
+POSEPOCH (MJD)  54500                     54500                     0             0             N
+DMEPOCH (MJD)   54500                     54500                     0             0             N
+DM (cm^-3 pc)   2.64468035761471          2.64468035761471          0             0             N
+DM1 (cm^-3 pc y -0.000162172559485641     -0.000162172559485641     0             0             N
+DM2 (cm^-3 pc y -1.44372675891869e-05     -1.44372675891869e-05     0             0             N
+PMRA (mas/yr)   121.441439655758          121.441439655758          0             0             N
+PMDEC (mas/yr)  -71.4752923882397         -71.4752923882397         0             0             N
+PX (mas)        6.44084515683105          6.44084515683105          0             0             N
+SINI            0.694637086307904         0.694637086307904         0             0             N
+PB (d)          5.74104585392637          5.74104585392637          0             0             N
+T0 (MJD)        54530.1726263544          54530.1726263544          0             0             N
+A1 (lt-s)       3.36671475534694          3.36671475534694          0             0             N
+OM (deg)        1.38292520988328          1.38292520988328          0             0             N
+ECC             1.91813467318559e-05      1.91813467318559e-05      0             0             N
+PBDOT           3.72378903259663e-12      3.72378903259663e-12      0             0             N
+XDOT            4.15169668155886e-15      4.15169668155886e-15      0             0             N
+OMDOT (deg/yr)  0.0135415930193173        0.0135415930193173        0             0             N
+M2              0.200489910177773         0.200489910177773         0             0             N
+START (MJD)     50189.998316609           58597.7051534821          0             8407.7        N
+FINISH (MJD)    55620.1970470777          58974.7832500884          0             3354.6        N
+TZRMJD          52904.7710197126          58756.3266033477          0             5851.6        N
+TZRFRQ (MHz)    1405                      1414.875                  0             9.875         N
+TZRSITE         iar1                     
+KOM             207.798369574882          207.798369574882          0             0             N
+KIN             136.001695269198          136.001695269198          0             0             N
+TRES            0.958                     7.59964509696955          0             6.6416        N
+EPHVER          TEMPO2                    TEMPO2                    0             0             N
+NE_SW (cm^-3)   4                         4                         0             0             N
+---------------------------------------------------------------------------------------------------
+[textOutput.C:273] Notice: Parameter uncertainties multiplied by sqrt(red. chisq)
+
+
+Derived parameters:
+
+P0 (s)      = 0.00575745193671264       0            
+P1          = 5.72920756961813e-20      0            
+tau_c (Myr) = 1593.3
+bs (G)      = 5.8118e+08
+
+Binary model: T2
+Mass function                  = 0.001243138917 
+Minimum, median and maximum companion mass: 0.1403 < 0.1637 < 0.3516 solar masses
+Pulsar Mass (annual orbital parallax): 1.27357 (+/- 0) Msun.
+
+Parallax distance is 155.259 (+/- 0) pc.
+Pbdot distance is 155.633 (+/- 0) pc.
+MTOT derived from sin i and m2 = 1.4741079998726
+Total proper motion = 140.91 +/- 0 mas/yr
+Total time span = 377.076 days = 1.032 years
+
+Tempo2 usage
+Units:                 TCB (tempo2)
+Time ephemeris:        IF99 (tempo2)
+Troposphere corr.?     Yes (tempo2)
+Dilate freq?           Yes (tempo2)
+Electron density (1AU) 4
+Solar system ephem     DE421
+Time scale             TT(BIPM2015)
+Binary model           T2
+Notice: There were 5 warnings. Summaries are shown below, check logs for full details.
+Warning #1: [CLK3] no clock corrections available for clock UTC(iar1) for MJD 58671.6
+Warning #2: [CLK4] Trying assuming UTC = UTC(iar1)
+Warning #3: [CLK9] ... ok, using stated approximation 
+Warning #4: [DUP1] duplicated warnings have been suppressed.
+Warning #5: [CLK6] Proceeding assuming UTC =  UTC(iar1)
+Finishing off: time taken = 2.47 (s)

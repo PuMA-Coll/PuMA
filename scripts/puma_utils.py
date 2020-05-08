@@ -6,7 +6,7 @@ import os
 import sys
 import glob
 import shutil
-
+import pandas as pd
 
 #need to import pipe_pugliS and pipe_reduc?
 
@@ -132,7 +132,7 @@ def write_pugliS_info_jason_new(path2db,obs):
 
 #WE HAVE TO CHECK IF AND OBSID EXISTS TO REPLACE IT INSTEAD OF APPEND
 
-   df_new = df.append(obs.__dict__)
+   df_new = df.append(obs.__dict__, ignore_index=True)
 
    # guardar los pandas como json
    df_new.to_json(PSR+'_new.json')
