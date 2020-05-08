@@ -315,43 +315,56 @@ def main():
     Dedisp_ts = data_out.sum(axis=0)
     times = (np.arange(data.numspectra)*data.dt + start)[..., :nbinlim]
 
+    # we write the original time and intensty vectors into two csv files
+    np.savetxt('times.csv',times,delimiter=',')
+    np.savetxt('original.csv',Dedisp_ts,delimiter=',')
 
+#### interpolate method, now applied in other script    
 
     # Number of pulses to dump:
-    npulses = 1000
+#    npulses = 1000
 
 
 
     # Create new vector of times for perfect match of period:
-    Period = 0.0894072725212666
-    new_nbins = 1220
-    new_dt = Period / new_nbins
+#    Period = 0.0894072725212666
+#    new_nbins = 1220
+#    new_dt = Period / new_nbins
 
-    new_times = np.zeros(new_nbins * npulses)
-    new_times[0] = times[0]
-    for i in range(1,len(new_times)):
-        new_times[i] = new_times[i-1] + new_dt
+#    new_times = np.zeros(new_nbins * npulses)
+#    new_times[0] = times[0]
+#    for i in range(1,len(new_times)):
+#        new_times[i] = new_times[i-1] + new_dt
 
     # Cannot ask for too many pulses:
-    if new_times[-1] > times[-1]:
-        print("Too many pulses!")
-        exit()
+#    if new_times[-1] > times[-1]:
+#        print("Too many pulses!")
+#        exit()
 
 
 
     # Interpolate data to new_times:
-    new_data = np.interp( new_times, times, Dedisp_ts )
+#    new_data = np.interp( new_times, times, Dedisp_ts )
 
 
 
     # Plot the pulses:
-    for i in range(npulses):
-        plt.clf()
-        plt.ylim(-10,30)
-        beg_plot = i*new_nbins
-        end_plot = beg_plot + 305 #new_nbins
-        plt.plot(new_times[beg_plot:end_plot], new_data[beg_plot:end_plot])
-        plt.savefig('pulse_' + str(i) + '.png')
+#    for i in range(npulses):
+#        plt.clf()
+#        plt.ylim(-10,30)
+#        beg_plot = i*new_nbins
+#        end_plot = beg_plot + 305 #new_nbins
+#        plt.plot(new_times[beg_plot:end_plot], new_data[beg_plot:end_plot])
+#        plt.savefig('pulse_' + str(i).zfill(6) + '.png')
+
+
+    #write table
+#    pulse = np.empty([npulses,new_nbins])
+#    for i in range(npulses):
+#        beg = i*new_nbins
+#        end = beg + new_nbins - 1
+#        pulse[i]=new_data[beg:end]
+#    np.savetxt('pulses.csv',pulse,delimiter=',')
 
 
 # OLD METHOD: Using original time bins
