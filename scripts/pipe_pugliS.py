@@ -95,10 +95,6 @@ def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/sh
    tim_folder = path2pugliese + '/tims/'
    obs.do_toas(pfd_dirname=folder, tim_dirname=tim_folder)        
    
-   #plot TOAs and save in PuGli-S database
-   tim_fname = tim_folder + obs.pname + '_' +  obs.antenna + '.tim'
-   output_dir = path2pugliese + '/' + obs.pname + '/'
-   make_plot(par_fname=obs.dotpar_filename, tim_fname=tim_fname, output_dir=output_dir)
 
    # search for glitches (code blue)
    # obs.do_timing(thresh)
@@ -117,6 +113,11 @@ def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/sh
    # copy files for visualization and analysis
    copy_db(obs.pname, folder, path2pugliese)   
 
+   #plot TOAs and save in PuGli-S database
+   tim_fname = tim_folder + obs.pname + '_' +  obs.antenna + '.tim'
+   output_dir = path2pugliese + '/' + obs.pname + '/'
+   make_plot(par_fname=obs.dotpar_filename, tim_fname=tim_fname, output_dir=output_dir)
+   
    # call updater for webpage
    # (puglieseweb_update)
 
