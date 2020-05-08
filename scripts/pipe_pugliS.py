@@ -82,34 +82,6 @@ def write_pugliS_info_ascii(path2db,obs):
    f.close()
 
 
-def write_pugliS_info_jason(path2db,obs):
-   """ Copy Information from ASCII to JSON"""
-   PSR = path2db + obs.pname
-   # leer los ascii actuales como pandas
-   df = pd.read_csv(PSR+'.txt', delim_whitespace=True)
-   # guardar los pandas como json
-   df.to_json(PSR+'.json')
-   return
-
-
-def write_pugliS_info_jason_new(path2db,obs):
-   """ Write information in JSON format"""
-   PSR = path2db + obs.pname
-
-   try:
-       df = pd.read_json(PSR+'_new.json')
-   except:
-       df = pd.DataFrame()
-
-#WE HAVE TO CHECK IF AND OBSID EXISTS TO REPLACE IT INSTEAD OF APPEND
-
-   df_new = df.append(obs.__dict__)
-
-   # guardar los pandas como json
-   df_new.to_json(PSR+'_new.json')
-   return
-
-
 def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/shared/PuGli-S/'):
 
    start = time.time()
