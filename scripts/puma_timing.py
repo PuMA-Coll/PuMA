@@ -29,7 +29,7 @@ def calc_residuals_errorbars(rms, n_obs):
     return rms_min, rms_max
 
 
-def make_plot(par_fname='', tim_fname='', output_dir=''):
+def plot_residuals(par_fname='', tim_fname='', output_dir=''):
     """Plot residuals."""
 
     # file where timing residuals will be stored (use .tim file as reference)
@@ -105,7 +105,7 @@ if __name__ == '__main__':
     ierr = check_cli_arguments(args)
     if ierr != 0: sys.exit(1)
     
-    make_plot(par_fname=args.par_fname, tim_fname=args.tim_fname, output_dir=args.output_dir)
+    plot_residuals(par_fname=args.par_fname, tim_fname=args.tim_fname, output_dir=args.output_dir)
 
     #tim_fname = '/home/jovyan/work/shared/PuGli-S/tims/J0437-4715_A1.tim'  
     #par_fname = '/opt/pulsar/puma/config/timing//J0437-4715.par'
