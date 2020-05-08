@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 #
 # PuMA timing
 # Python script for obtaining and plotting residuals
@@ -13,7 +13,10 @@ import os
 
 import scipy.stats
 import libstempo as T2
-import matplotlib.pyplot as P
+
+import matplotlib
+matplotlib.use('TKAgg', warn=False, force=True)
+from matplotlib import pyplot as P
 
 
 def calc_residuals_errorbars(rms, n_obs):

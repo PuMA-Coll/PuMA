@@ -16,7 +16,7 @@ import subprocess
 
 from puma_lib import Observation
 from puma_utils import *
-#from puma_timing import make_plot
+from puma_timing import make_plot
 
 
 def set_argparse():
@@ -86,9 +86,9 @@ def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/'):
    obs.do_toas(pfd_dirname=folder, tim_dirname=tim_folder)
 
    # plot TOAs and save in PuGli-S database
-   #tim_fname = tim_folder + obs.pname + '_' +  obs.antenna + '.tim'
-   #output_dir = path2pugliese + '/' + obs.pname + '/'
-   #make_plot(par_fname=obs.dotpar_filename, tim_fname=tim_fname, output_dir=output_dir)
+   tim_fname = tim_folder + obs.pname + '_' +  obs.antenna + '.tim'
+   output_dir = path2pugliese + '/' + obs.pname + '/'
+   make_plot(par_fname=obs.dotpar_filename, tim_fname=tim_fname, output_dir=output_dir)
    
    # non-glitching pulsar
    obs.glitch = False
