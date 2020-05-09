@@ -8,7 +8,6 @@ import glob
 import shutil
 import pandas as pd
 
-#need to import pipe_pugliS and pipe_reduc?
 
 def copy_db(pname, path2ini, path2end):
    '''

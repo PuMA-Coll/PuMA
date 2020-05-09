@@ -315,40 +315,36 @@ class Observation(object):
                 subprocess.call(['psredit',
                     '-c', 'obs:projid=PuMA', '-c', 'be:name=Ettus-SDR', '-m', pfd])
 
-                # before calling pat to get TOAs, move *_par* files to a temporary
-                # folder, then run the pat line, bring back *_par* files and remove
-                # tmp folder
+                # before calling pat to get TOAs, move *_par* files to a temp folder, 
+                # run pat, and then bring back *_par* files and remove the tmp folder
                 path_to_tmp_folder = pfd_dirname + '/tmp/'
                 try:
                     os.mkdir(path_to_tmp_folder) 
                 except:
                     pass
+
                 # move *_par* files to tmp folder
-		try:
+                try:
                     files = glob.glob(pfd_dirname + '/*_par*')
                     for file in files:
                         shutil.move(file, path_to_tmp_folder)
-		except:
-		    pass
-
+                except:   
+                    pass
 
                 # define arguments for call to pat
                 line = '-A PGS -f \"tempo2\" -s ' + std_fname + ' -jFD -j \"T ' + str(n_subints) + '\" '
-                # call to pat to get toa
+                # call pat to get toa
                 subprocess.call(['pat ' + line + pfd + ' >> ' + tim_fname], shell=True)
 
                 # move back files in the tmp folder
-		try:
+                try:
                     files = glob.glob(path_to_tmp_folder + '/*')
                     for file in files:
                         shutil.move(file, pfd_dirname)
                     os.rmdir(path_to_tmp_folder)
-		except:
-		    pass
-
-                # if everything went well, just remove tmp folder
-                # os.rmdir(path_to_tmp_folder)
-
+                except:
+                    pass
+               
             except Exception:
                 ierr = -1
             return ierr
