@@ -37,6 +37,19 @@ class Observation(object):
         self.nfils = 1
         self.nempty = 0
 
+        # get RAJ DECJ from .par, but first initiate to empty strings
+        self.RAJ, self.DECJ = '', ''
+        f = open(self.dotpar_filename)
+        lines = f.readlines()
+        f.close()
+        for line in lines:
+            if 'RAJ' in line: self.RAJ = line.strip().split()[1]
+            if 'DECJ' in line: self.DECJ = line.strip().split()[1]
+        # if RAJ and DECJ were not found in .par file, do manually from pname
+        if (len(RAJ) + len(DECJ)) == 0:
+            RAJ = self.pname[1:3] + ':' + self.pname[3:5] + ':00.0000'
+            DECJ = self.pname[5:8] + ':' + self.pname[8:10] + ':00.0000'
+
 
     def get_pulsar_parameters(self):
         # select .fil file
@@ -299,24 +312,9 @@ class Observation(object):
                 std_dirname=DEFAULT_TIMING_DIRNAME, tim_dirname='', n_subints=1):
 
         def do_single_toa(pfd, pfd_dirname, par_fname, std_fname, n_subints, tim_fname):
-            #ierr = 0
-            #try:
-            # get RAJ DECJ from .par
-            f = open(par_fname)
-            lines = f.readlines()
-            f.close()
-            # initiate to empty strings:
-            RAJ, DECJ = '', ''
-            for line in lines:
-                if 'RAJ' in line: RAJ = line.strip().split()[1]
-                if 'DECJ' in line: DECJ = line.strip().split()[1]
-            # if RAJ and DECJ were not found in .par file, do manually from pname:
-            if (len(RAJ) + len(DECJ)) == 0:
-                RAJ = self.pname[1:3] + ':' + self.pname[3:5] + ':00.0000'
-                DECJ = self.pname[5:8] + ':' + self.pname[8:10] + ':00.0000'
-            
+            ierr = 0
             # change pfd header
-            coord = RAJ + DECJ
+            coord = self.RAJ + self.DECJ
             subprocess.call(['psredit',
                 '-c', 'coord=' + coord, '-c', 'name=' + self.pname, '-m', pfd])
             subprocess.call(['psredit',
