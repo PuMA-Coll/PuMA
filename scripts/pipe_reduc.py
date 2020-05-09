@@ -105,7 +105,7 @@ def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/'):
 
    # plot TOAs and save in PuGli-S database
    tim_fname = tim_folder + obs.pname + '_' +  obs.antenna + '.tim'
-   output_dir = path2pugliese + '/' + obs.pname + '/'
+   output_dir = path2pugliese + '/' + obs.pname + '/pngs/'
    plot_residuals(par_fname=obs.dotpar_filename, tim_fname=tim_fname, output_dir=output_dir)
    
    # call updater for webpage

@@ -120,7 +120,7 @@ def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/sh
 
    #plot TOAs and save in PuGli-S database
    tim_fname = tim_folder + obs.pname + '_' +  obs.antenna + '.tim'
-   output_dir = path2pugliese + '/' + obs.pname + '/'
+   output_dir = path2pugliese + '/' + obs.pname + '/pngs/'
    plot_residuals(par_fname=obs.dotpar_filename, tim_fname=tim_fname, output_dir=output_dir)
 
    # call updater for webpage
