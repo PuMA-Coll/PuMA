@@ -9,6 +9,8 @@ sys.path.insert(1,os.path.join(sys.path[0], '/opt/pulsar/puma/scripts/'))
 import time
 import argparse
 
+import pandas as pd
+
 from ConfigParser import SafeConfigParser
 import glob
 import sigproc
@@ -79,10 +81,6 @@ def write_pugliS_info_ascii(path2db,obs):
    f.write(line)
    f.close()
 
-def write_pugliS_info_jason(path2db,obs):
-   """ Write information inf jason format"""
-   pass
-   
 
 def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/shared/PuGli-S/'):
 
@@ -97,8 +95,8 @@ def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/sh
 
    # calculate TOAs
    tim_folder = path2pugliese + '/tims/'
-   obs.do_toas(pfd_dirname=folder, tim_dirname=tim_folder)        
-   
+   obs.do_toas(pfd_dirname=folder, tim_dirname=tim_folder)
+
    # search for glitches (code blue)
    # obs.do_timing(thresh)
    # if blue_alert: send_alert('blue')
@@ -107,16 +105,15 @@ def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/sh
       obs.glitch = True
 
    # calculate good time interval percentage
-   obs.get_mask_percentage(obs.maskname)   
+   obs.get_mask_percentage(obs.maskname)
 
    # write observation info
    path2db = path2pugliese + 'database/'
-   write_pugliS_info_ascii(path2db, obs)   
+   write_pugliS_info_ascii(path2db, obs)
    write_pugliS_info_jason(path2db, obs)
 
-
    # copy files for visualization and analysis
-   copy_db(obs.pname, folder, path2pugliese)   
+   copy_db(obs.pname, folder, path2pugliese)
 
    #plot TOAs and save in PuGli-S database
    tim_fname = tim_folder + obs.pname + '_' +  obs.antenna + '.tim'
@@ -125,6 +122,11 @@ def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/sh
 
    # call updater for webpage
    # (puglieseweb_update)
+   try:
+       write_pugliS_info_jason_new(path2db,obs)
+   except:
+       print('\n JASON_NEW FAILED')
+
 
    # exit with success printing duration
    end = time.time()
@@ -133,7 +135,7 @@ def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/sh
    print('\n Reduction process completed in {:0>2}:{:0>2}:{:05.2f}\n'.format(int(hours), int(minutes), seconds))
 
 
-   
+
 #==================================================================================
 
 if __name__ == '__main__':
@@ -146,4 +148,3 @@ if __name__ == '__main__':
    if ierr != 0: sys.exit(1)
 
    do_pipe_puglis(args.folder, args.thresh, args.path2pugliese)
-

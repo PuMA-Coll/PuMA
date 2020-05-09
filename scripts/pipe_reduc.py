@@ -98,8 +98,9 @@ def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/'):
    # write observation info
    path2db = path2pugliese + 'database/'
    write_obs_info_ascii(path2db, obs)
-   write_obs_info_jason(path2db, obs)
-  
+   #write_pugliS_info_jason(path2db, obs)
+   write_pugliS_info_jason_new(path2db, obs)
+ 
    # copy files for visualization and analysis
    copy_db(obs.pname, folder, path2pugliese)   
 
