@@ -299,55 +299,57 @@ class Observation(object):
                 std_dirname=DEFAULT_TIMING_DIRNAME, tim_dirname='', n_subints=1):
 
         def do_single_toa(pfd, pfd_dirname, par_fname, std_fname, n_subints, tim_fname):
-            ierr = 0
+            #ierr = 0
+            #try:
+            # get RAJ DECJ from .par
+            f = open(par_fname)
+            lines = f.readlines()
+            f.close()
+            for line in lines:
+                if 'RAJ' in line: RAJ = line.strip().split()[1]
+                if 'DECJ' in line: DECJ = line.strip().split()[1]
+            # change pfd header
+            coord = RAJ + DECJ
+            subprocess.call(['psredit',
+                '-c', 'coord=' + coord, '-c', 'name=' + self.pname, '-m', pfd])
+            subprocess.call(['psredit',
+                '-c', 'obs:projid=PuMA', '-c', 'be:name=Ettus-SDR', '-m', pfd])
+
+            # before calling pat to get TOAs, move *_par* files to a temp folder, 
+            # run pat, and then bring back *_par* files and remove the tmp folder
+            path_to_tmp_folder = pfd_dirname + '/tmp/'
             try:
-                # get RAJ DECJ from .par
-                f = open(par_fname)
-                lines = f.readlines()
-                f.close()
-                for line in lines:
-                    if 'RAJ' in line: RAJ = line.strip().split()[1]
-                    if 'DECJ' in line: DECJ = line.strip().split()[1]
-                # change pfd header
-                coord = RAJ + DECJ
-                subprocess.call(['psredit',
-                    '-c', 'coord=' + coord, '-c', 'name=' + self.pname, '-m', pfd])
-                subprocess.call(['psredit',
-                    '-c', 'obs:projid=PuMA', '-c', 'be:name=Ettus-SDR', '-m', pfd])
+                print('creating ' + path_to_tmp_folder)
+                os.mkdir(path_to_tmp_folder) 
+            except:
+                pass
 
-                # before calling pat to get TOAs, move *_par* files to a temp folder, 
-                # run pat, and then bring back *_par* files and remove the tmp folder
-                path_to_tmp_folder = pfd_dirname + '/tmp/'
-                try:
-                    os.mkdir(path_to_tmp_folder) 
-                except:
-                    pass
+            # move *_par* files to tmp folder
+            try:
+                files = glob.glob(pfd_dirname + '/*_par*')
+                print('moving ' + files + 'to' + path_to_tmp_folder)
+                for file in files:
+                    shutil.move(file, path_to_tmp_folder)
+            except:   
+                pass
 
-                # move *_par* files to tmp folder
-                try:
-                    files = glob.glob(pfd_dirname + '/*_par*')
-                    for file in files:
-                        shutil.move(file, path_to_tmp_folder)
-                except:   
-                    pass
+            # define arguments for call to pat
+            line = '-A PGS -f \"tempo2\" -s ' + std_fname + ' -jFD -j \"T ' + str(n_subints) + '\" '
+            # call pat to get toa
+            print('pat ' + line + pfd + ' >> ' + tim_fname)
+            subprocess.call(['pat ' + line + pfd + ' >> ' + tim_fname], shell=True)
 
-                # define arguments for call to pat
-                line = '-A PGS -f \"tempo2\" -s ' + std_fname + ' -jFD -j \"T ' + str(n_subints) + '\" '
-                # call pat to get toa
-                print('pat ' + line + pfd + ' >> ' + tim_fname)
-                subprocess.call(['pat ' + line + pfd + ' >> ' + tim_fname], shell=True)
-
-                # move back files in the tmp folder
-                try:
-                    files = glob.glob(path_to_tmp_folder + '/*')
-                    for file in files:
-                        shutil.move(file, pfd_dirname)
-                    os.rmdir(path_to_tmp_folder)
-                except:
-                    pass
-               
-            except Exception:
-                ierr = -1
+            # move back files in the tmp folder
+            try:
+                files = glob.glob(path_to_tmp_folder + '/*')
+                for file in files:
+                    shutil.move(file, pfd_dirname)
+                os.rmdir(path_to_tmp_folder)
+            except:
+                pass
+           
+            #except Exception:
+            #    ierr = -1
             return ierr
             
 
