@@ -312,8 +312,8 @@ class Observation(object):
                 if 'DECJ' in line: DECJ = line.strip().split()[1]
             # if RAJ and DECJ were not found in .par file, do manually from pname:
             if (len(RAJ) + len(DECJ)) == 0:
-                RAJ = self.pname[1:3] + ':' + self.pname[3:5] + ':00.00'
-                DECJ = self.pname[6:8] + ':' + self.pname[8:10] + ':00.00'
+                RAJ = self.pname[1:3] + ':' + self.pname[3:5] + ':00.0000'
+                DECJ = self.pname[5:8] + ':' + self.pname[8:10] + ':00.0000'
             
             # change pfd header
             coord = RAJ + DECJ
