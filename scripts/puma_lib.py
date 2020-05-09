@@ -305,9 +305,16 @@ class Observation(object):
             f = open(par_fname)
             lines = f.readlines()
             f.close()
+            # initiate to empty strings:
+            RAJ, DECJ = '', ''
             for line in lines:
                 if 'RAJ' in line: RAJ = line.strip().split()[1]
                 if 'DECJ' in line: DECJ = line.strip().split()[1]
+            # if RAJ and DECJ were not found in .par file, do manually from pname:
+            if (len(RAJ) + len(DECJ)) == 0:
+                RAJ = self.pname[1:3] + ':' + self.pname[3:5] + ':00.00'
+                DECJ = self.pname[6:8] + ':' + self.pname[8:10] + ':00.00'
+            
             # change pfd header
             coord = RAJ + DECJ
             subprocess.call(['psredit',
