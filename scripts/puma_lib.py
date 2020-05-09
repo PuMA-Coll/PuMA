@@ -367,12 +367,14 @@ class Observation(object):
         if mode == 'all':
             # first remove old .tim
             subprocess.call(['rm', '-f', tim_fname])
+            print('Creating tim file ' + tim_fname)
             for pfd in pfds:
                 do_single_toa(pfd, pfd_dirname, par_fname, std_fname, n_subints, tim_fname)
         elif mode == 'add':
+            print('Adding TOA to ' + tim_fname)
             do_single_toa(pfds[0], pfd_dirname, par_fname, std_fname, n_subints, tim_fname)
         else:
-            print('\n ERROR: unknonw mode for computing toa(s) \n')
+            print('\n ERROR: unknown mode for computing toa(s) \n')
             ierr = -1
 
         return ierr
