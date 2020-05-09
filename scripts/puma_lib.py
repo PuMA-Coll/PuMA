@@ -334,6 +334,7 @@ class Observation(object):
                 # define arguments for call to pat
                 line = '-A PGS -f \"tempo2\" -s ' + std_fname + ' -jFD -j \"T ' + str(n_subints) + '\" '
                 # call pat to get toa
+                print('pat ' + line + pfd + ' >> ' + tim_fname)
                 subprocess.call(['pat ' + line + pfd + ' >> ' + tim_fname], shell=True)
 
                 # move back files in the tmp folder
