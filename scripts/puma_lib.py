@@ -46,7 +46,7 @@ class Observation(object):
             if 'RAJ' in line: self.RAJ = line.strip().split()[1]
             if 'DECJ' in line: self.DECJ = line.strip().split()[1]
         # if RAJ and DECJ were not found in .par file, do manually from pname
-        if (len(RAJ) + len(DECJ)) == 0:
+        if (len(self.RAJ) + len(self.DECJ)) == 0:
             RAJ = self.pname[1:3] + ':' + self.pname[3:5] + ':00.0000'
             DECJ = self.pname[5:8] + ':' + self.pname[8:10] + ':00.0000'
 
