@@ -84,6 +84,8 @@ def set_argparse():
             help='absolute path to .tim file')
     parser.add_argument('--output_dir', default=os.environ['PWD'], type=str,
             help='absolute path where the plot will be saved')
+    parser.add_argument('--copy2last', default=False, type=bool,
+            help='Do you want to make a copy in Pugli-S/last_obs?')
 
     return parser.parse_args()
 
@@ -114,4 +116,4 @@ if __name__ == '__main__':
 
     #tim_fname = '/home/jovyan/work/shared/PuGli-S/tims/J0437-4715_A1.tim'  
     #par_fname = '/opt/pulsar/puma/config/timing//J0437-4715.par'
-    #puma_timing.py --par_fname='/opt/pulsar/puma/config/timing//J0437-4715.par' --tim_fname='/home/jovyan/work/shared/PuGli-S/tims/J0437-4715_A1.tim'  
+    #puma_timing.py --par_fname='/opt/pulsar/puma/config/timing//J0437-4715.par' --tim_fname='/home/jovyan/work/shared/PuGli-S/tims/J0437-4715_A1.tim' --copy2last=True  
