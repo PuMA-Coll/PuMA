@@ -9,7 +9,7 @@ import shutil
 import pandas as pd
 
 
-def copy_db(pname, path2ini, path2end):
+def copy_db(pname, antenna, path2ini, path2end):
    '''
    Copy files useful for database (.ps converted to png, pfd and polycos)
    '''
@@ -42,9 +42,9 @@ def copy_db(pname, path2ini, path2end):
             shutil.copy(png, path2last + pname + '_mask.png' )
       else:
          if 'par' in png:
-            shutil.copy(png, path2last + pname + '_par.png' )
+            shutil.copy(png, path2last + pname + '_' + antenna + '_par.png' )
          elif 'timing' in png:
-            shutil.copy(png, path2last + pname + '_timing.png' )
+            shutil.copy(png, path2last + pname + '_' + antenna + '_timing.png' )
          else:
             print('What is this file: ' + png + '?!')
 

@@ -29,7 +29,7 @@ def calc_residuals_errorbars(rms, n_obs):
     return rms_min, rms_max
 
 
-def plot_residuals(par_fname='', tim_fname='', output_dir=''):
+def plot_residuals(par_fname='', tim_fname='', output_dir='', copy2last=False):
     """Plot residuals."""
 
     # file where timing residuals will be stored (use .tim file as reference)
@@ -59,11 +59,16 @@ def plot_residuals(par_fname='', tim_fname='', output_dir=''):
     P.title("{0} - rms res = {1:.2f} us".format(timing.name,rms)) #,meanres))
 
     # Save
-    pname = tim_fname.split('.tim')[0].split('/')[-1]
-    plot_output = output_dir + '/' + pname + '_tempo.png'
+    pname_A = tim_fname.split('.tim')[0].split('/')[-1]
+    plot_output = output_dir + '/' + pname_A + '_tempo.png'
     print('Saving plot to ' + plot_output)
     P.savefig(plot_output, bbox_inches='tight')
 
+    # Save a copy in last_obs if requested:
+    if copy2last: 
+        path2pugliese='/home/jovyan/work/shared/PuGli-S/'
+        path2last = path2pugliese + '/last_obs/'
+        shutil.copy(plot_output, path2last)
 
 #=========================================================================
 # BELOW IS JUST FOR RUNNING AS INDEPENDENT PROGRAM   
