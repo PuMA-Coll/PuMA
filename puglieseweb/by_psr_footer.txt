@@ -13,7 +13,7 @@
                 <!-- Copyright -->
                 <div id="copyright">
                     <ul class="menu">
-                        <li>2020 &nbsp; | &nbsp; PuMA Collaboration</li>
+                        <li>2020 &nbsp; | &nbsp; <a href="http://puma.iar.unlp.edu.ar">PuMA Collaboration</a></li>
                         <li>Design:
                             <a href="http://html5up.net">HTML5 UP</a>
                         </li>

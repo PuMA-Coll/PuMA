@@ -22,7 +22,7 @@
             <header id="header">
                 <div class="logo container">
                     <div>
-						<h4><a href="index.html" id="logo">PUGLI-S-: PUlsar Glitching Squad of PuMA collaboration</a></h4>
+						<h4><a href="index.html" id="logo">PUGLI-S-: PUlsar Glitching Squad</a></h4>
 						<h5>Last Observations</h5>
                     </div>
                 </div>
@@ -31,7 +31,7 @@
             <nav id="nav">
                 <ul>
                     <li style="white-space: nowrap;">
-                        <a href="index.html">INICIO</a>
+                        <a href="index.html">HOME</a>
                     </li>
                     <li style="white-space: nowrap;"  class="current">
                         <a href="last_obs.html">LAST OBSERVATIONS</a>
@@ -46,8 +46,8 @@
             </nav>
             <!-- Main -->
             <div id="main-wrapper">
-            <div id="main" class="container"> 
-            <!-- Content -->
-
- 
-
+            <div id="main" class="container">
+							<div class="row">
+                        <div class="12u">
+                            <div class="content">
+                                <!-- Content -->
