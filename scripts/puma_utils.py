@@ -41,7 +41,7 @@ def copy_db(pname, antenna, path2ini, path2end):
       if 'mask' in png:
          # Only the first page of the mask is needed
          if '-0' in png:
-            shutil.copy(png, path2last + pname + '_mask.png' )
+            shutil.copy(png, path2last + pname + '_' + antenna + '_mask.png' )
       else:
          if 'par' in png:
             shutil.copy(png, path2last + pname + '_' + antenna + '_par.png' )
