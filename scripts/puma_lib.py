@@ -8,6 +8,7 @@ import sigproc
 import glob
 import subprocess
 import numpy as np
+from datetime import datetime
 
 import rfifind
 
@@ -36,6 +37,7 @@ class Observation(object):
         self.params2reduc = {}
         self.nfils = 1
         self.nempty = 0
+        self.reduction_date = datetime.now()
 
         # get RAJ DECJ from .par, but first initiate to empty strings
         self.RAJ, self.DECJ = '', ''
@@ -401,4 +403,6 @@ class Observation(object):
         nbad = float(np.count_nonzero(maskarr))
         ntot = float(len(maskrfi.goodints)) * float(len(maskrfi.freqs))
         self.gti_percentage = (1.0 - nbad/ntot) * 100
+        self.obs_duration = float(len(maskrfi.goodints))*maskrfi.dtint
+
         return ierr
