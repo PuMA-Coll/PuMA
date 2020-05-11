@@ -32,8 +32,10 @@ def copy_db(pname, antenna, path2ini, path2end):
    pfd_files = glob.glob(path2ini + '/*.pfd') 
    polycos_files = glob.glob(path2ini + '/*.polycos') 
 
-   # Copy all png files
+   # Copy all png files and save their paths in a list of pngs
+   pngs = []
    for png in png_files:
+      pngs = pngs + [path2pngs + png]
       shutil.copy(png, path2pngs)
       # Make a copy in last_obs directory taking out the date information
       if 'mask' in png:
@@ -48,12 +50,18 @@ def copy_db(pname, antenna, path2ini, path2end):
          else:
             print('What is this file: ' + png + '?!')
 
-   # Copy pfds and polycos
+   # Copy pfds and polycos and save their paths in a list of pngs
+   pfds = []
    for pfd in pfd_files:
+      pfds = pfds + [path2pfds + pfd]
       shutil.copy(pfd, path2pfds)
 
+   polycoss = []
    for polycos in polycos_files:
+      polycoss = polycoss + [path2pfds + polycos]
       shutil.copy(polycos, path2pfds)
+
+   return pngs, pfds, polycoss
 
 
 def move_observation(path_to_obs='', dest_path=''):

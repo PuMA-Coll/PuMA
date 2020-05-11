@@ -113,7 +113,7 @@ def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/sh
    #write_pugliS_info_jason(path2db, obs)
 
    # copy files for visualization and analysis
-   copy_db(obs.pname, obs.antenna, folder, path2pugliese)
+   obs.pngs, obs.pfds, obs.polycos = copy_db(obs.pname, obs.antenna, folder, path2pugliese)
 
    #plot TOAs and save in PuGli-S database
    tim_fname = tim_folder + obs.pname + '_' +  obs.antenna + '.tim'

@@ -101,8 +101,8 @@ def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/'):
    #write_pugliS_info_jason(path2db, obs)
    write_pugliS_info_jason_new(path2db, obs)
  
-   # copy files for visualization and analysis
-   copy_db(obs.pname, obs.antenna, folder, path2pugliese)   
+   # copy files for visualization and analysis; also store the output paths in observation object
+   obs.pngs, obs.pfds, obs.polycos = copy_db(obs.pname, obs.antenna, folder, path2pugliese)   
 
    # plot TOAs and save in PuGli-S database
    tim_fname = tim_folder + obs.pname + '_' +  obs.antenna + '.tim'
