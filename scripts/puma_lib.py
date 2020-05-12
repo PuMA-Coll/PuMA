@@ -412,7 +412,7 @@ class Observation(object):
         return ierr
 
 
-    def calc_SN(self, pfd=''):
+    def calc_snr(self, pfd=''):
         """ calculate the S/N of the reduction"""
         ierr = 0
 
