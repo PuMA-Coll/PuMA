@@ -416,7 +416,7 @@ class Observation(object):
         """ calculate the S/N of the reduction"""
         ierr = 0
 
-        snr_string = subprocess.check_output(['psrstat','-j','pF','-c','-q','-Q','snr',pfd])
+        snr_string = subprocess.check_output(['psrstat','-j','pF','-Q','-q','-c','snr',pfd])
         snr = float(snr_string)
         if '_par' in pfd:
             self.snr_par = snr 
