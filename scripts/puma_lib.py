@@ -38,7 +38,7 @@ class Observation(object):
         self.params2reduc = {}
         self.nfils = 1
         self.nempty = 0
-        self.reduction_date = datetime.now()
+        self.reduction_time = datetime.now()
 
         # get RAJ DECJ from .par, but first initiate to empty strings
         self.RAJ, self.DECJ = '', ''

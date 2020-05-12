@@ -117,12 +117,12 @@ def move_observation(path_to_obs='', dest_path=''):
       ierr = -1
       return ierr, pulsar_name, path_to_reduc
 
-def write_pugliS_info_jason(path2db,obs):
+def write_pugliS_info_jason(path2pugliese,obs):
    """ Write information in JSON format"""
-   PSR = path2db + obs.pname
+   PSR = path2pugliese + '/' + obs.pname + '/' + obs.pname + '.json'
 
    try:
-       df = pd.read_json(PSR+'.json')
+       df = pd.read_json(PSR, orient='records')
    except:
        df = pd.DataFrame()
 
@@ -131,5 +131,5 @@ def write_pugliS_info_jason(path2db,obs):
    df_new = df.append(obs.__dict__, ignore_index=True)
 
    # guardar los pandas como json
-   df_new.to_json(path_or_buf=PSR+'.json', orient='records')
+   df_new.to_json(path_or_buf=PSR, orient='records', date_format='iso')
    return

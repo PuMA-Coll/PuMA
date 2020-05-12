@@ -128,7 +128,7 @@ def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/sh
    # call updater for webpage
    # (puglieseweb_update)
    try:
-       write_pugliS_info_jason(path2db,obs)
+       write_pugliS_info_jason(path2pugliese,obs)
    except:
        print('\n JASON_NEW FAILED')
 
