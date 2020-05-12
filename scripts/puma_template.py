@@ -28,7 +28,7 @@ if pfds == []:
 else:
     for pfd in pfds:
         arch = psrchive.Archive_load(pfd)
-        snr_string = subprocess.check_output(['psrstat','-j','pF','-c','-q','-Q','snr',arch.get_filename()])
+        snr_string = subprocess.check_output(['psrstat','-j','pF','-Q','-q','-c','snr',arch.get_filename()])
         snr = float(snr_string)
         if snr > snr_max:
             snr_max = snr
