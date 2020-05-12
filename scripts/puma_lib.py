@@ -20,7 +20,6 @@ class Observation(object):
     DEFAULT_PAR_DIRNAME = '/opt/pulsar/puma/pardir/'
     DEFAULT_CONFIG_DIRNAME = '/opt/pulsar/puma/config/'
     DEFAULT_TIMING_DIRNAME = DEFAULT_CONFIG_DIRNAME + 'timing/'
-
     DEFAULT_THRESHOLD_FOR_REDUC = 1000000  # 1 Mb in bytes
 
     def __init__(self, path2dir=os.environ['PWD'], pname=''):
