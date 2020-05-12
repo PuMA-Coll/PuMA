@@ -69,10 +69,6 @@ def write_obs_info_ascii(path2db,obs):
    f.write(line)
    f.close()
 
-def write_obs_info_jason(path2db,obs):
-   """ Write information inf jason format"""
-   pass
-   
 def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/'):
 
    start = time.time()
@@ -83,6 +79,10 @@ def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/'):
    # reduce using PRESTO (timing mode only)
    obs.set_params2reduc(path_to_dir=folder)
    obs.do_reduc()
+
+   # calculate signal-to-noise ratio
+   pfd = glob.glob(folder + '/*.pfd')[0]
+   obs.calc_snr(pfd=pfd)
 
    # calculate TOAs
    tim_folder = path2pugliese + '/tims/'
@@ -98,8 +98,7 @@ def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/'):
    # write observation info
    path2db = path2pugliese + 'database/'
    write_obs_info_ascii(path2db, obs)
-   #write_pugliS_info_jason(path2db, obs)
-   write_pugliS_info_jason_new(path2db, obs)
+   write_pugliS_info_jason(path2db, obs)
  
    # copy files for visualization and analysis; also store the output paths in observation object
    obs.pngs, obs.pfds, obs.polycos = copy_db(obs.pname, obs.antenna, folder, path2pugliese)   

@@ -93,6 +93,11 @@ def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/sh
    obs.do_glitch_search(thresh=thresh, path_to_dir=folder)
    if obs.red_alert: send_alert('red')
 
+   # calculate signal-to-noise ratio
+   pfds = glob.glob(folder + '/*.pfd')
+   for pfd in pfds:
+      obs.calc_snr(pfd=pfd)
+
    # calculate TOAs
    tim_folder = path2pugliese + '/tims/'
    obs.do_toas(pfd_dirname=folder, tim_dirname=tim_folder)
@@ -123,7 +128,7 @@ def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/sh
    # call updater for webpage
    # (puglieseweb_update)
    try:
-       write_pugliS_info_jason_new(path2db,obs)
+       write_pugliS_info_jason(path2db,obs)
    except:
        print('\n JASON_NEW FAILED')
 
