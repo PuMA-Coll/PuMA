@@ -84,6 +84,10 @@ def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/'):
    obs.set_params2reduc(path_to_dir=folder)
    obs.do_reduc()
 
+   # calculate signal-to-noise ratio
+   pfd = glob.glob(folder + '/*.pfd')[0]
+   obs.calc_snr(pfd=pfd)
+
    # calculate TOAs
    tim_folder = path2pugliese + '/tims/'
    obs.do_toas(pfd_dirname=folder, tim_dirname=tim_folder)

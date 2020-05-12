@@ -11,6 +11,8 @@ import numpy as np
 from datetime import datetime
 
 import rfifind
+import psrchive
+
 
 class Observation(object):
     """ This is the main class that represents an observation from a single antenna."""
@@ -26,7 +28,7 @@ class Observation(object):
         if pname != '': 
             self.pname = pname
         else:
-            self.pname, self.antenna, self.mjd, self.nchans = self.get_pulsar_parameters()
+            self.pname, self.antenna, self.mjd, self.nchans, self.obs_date = self.get_pulsar_parameters()
         self.glitch = False
         self.red_alert = False
         self.blue_alert = False
@@ -64,8 +66,10 @@ class Observation(object):
         antenna = fil_dic['source_name'][-2:]
         mjd = fil_dic['tstart']
         nchans = fil_dic['nchans']
+        obs_date = fil.split('_')[-2]
 
-        return pname, antenna, mjd, nchans
+        return pname, antenna, mjd, nchans, obs_date
+
 
     def do_rfi_search(self):
 
@@ -404,5 +408,22 @@ class Observation(object):
         ntot = float(len(maskrfi.goodints)) * float(len(maskrfi.freqs))
         self.gti_percentage = (1.0 - nbad/ntot) * 100
         self.obs_duration = float(len(maskrfi.goodints))*maskrfi.dtint
+
+        return ierr
+
+
+    def calc_SN(self, pfd=''):
+        """ calculate the S/N of the reduction"""
+        ierr = 0
+
+        snr_string = subprocess.check_output(['psrstat','-j','pF','-c','-q','-Q','snr',pfd])
+        snr = float(snr_string)
+        if '_par' in pfd:
+            self.snr_par = snr 
+        elif '_timing' in pfd:
+            self.snr_timing = snr
+        else:
+            print('What is that pfd? cannot calculate store the SNR in obs object')
+            ierr = -1
 
         return ierr
