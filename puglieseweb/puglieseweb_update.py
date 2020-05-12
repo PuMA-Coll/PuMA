@@ -1,4 +1,4 @@
-import os, sys, subprocess
+import os, sys, glob, subprocess
 import pandas as pd
 
 dbg = False
@@ -21,7 +21,8 @@ def CreateThumbnail(file):
 
 
 def get_observed_pulsars(path):
-    pulsars = [d for d in os.listdir(path) if os.path.isdir(os.path.join(path, d))]
+    #pulsars = [d for d in os.listdir(path) if os.path.isdir(os.path.join(path, d))]
+    pulsars = [d.strip().split('/')[0] for d in glob.glob('J*/')]
     pulsars.sort()
     return pulsars
 
@@ -75,33 +76,43 @@ def write_bypsr(pulsars, HEADER, FOOTER, WEBPATH, DBPATH):
     return 0
 
 
-def get_lastobs(PSR, DBPATH):
+def get_lastobs(PSR, antennas=None, dates=None, exps=None, rfis=None):
     if dbg:
         print(PSR)
 
+    df = pd.read_json(PSR+'_new.json')
+
+
+
     # FUTURE: READ THIS INFO FROM DATABASE
-    LAST_DATE = '2020/01/10'
-    LAST_EXP = '2.75'
+    antennas = ['A1','A2']
+    last_dates = ['2020/01/10','2020/03/10']
+    last_exps = [2.75,3.15]
+    last_rfis = [98.3,62.345]
 
     lines = "<!-- "+PSR+" --> \n"
-    lines += '<article class="box page-content"><header><h2>'+PSR+'</h2></header> \n'
-    lines += '<h3>Observed on '+LAST_DATE+' for a total of '+LAST_EXP+' hr</h3> \n'
-    lines += '<div class="row 200%"> <div class="12u"> \n'
-    lines += '<section class="box features"><div><div class="row"> \n'
+    lines+= '<article class="box page-content"><header><h2>J1740-3015</h2></header> \n'
 
-    lines += '<div class="3u 6u(mobile)"><section class="box feature"> \n'
-    lines += '<a href="last_obs/'+PSR+'/tempo.png"><img width="100%" src="last_obs/'+PSR+'/tempo.png" alt=""></a> \n'
-    lines += '</section></div> \n'
-    lines += '<div class="3u 6u(mobile)"><section class="box feature"> \n'
-    lines += '<a href="last_obs/'+PSR+'/presto.png"><img width="100%" src="last_obs/'+PSR+'/presto.png" alt=""></a> \n'
-    lines += '</section></div> \n'
-    lines += '<div class="3u 6u(mobile)"><section class="box feature"> \n'
-    lines += '<a href="last_obs/'+PSR+'/mask.png"><img width="100%" src="last_obs/'+PSR+'/mask.png" alt=""></a> \n'
-    lines += '</section></div> \n'
+    for ANT, DATE, EXP, RFI in zip(antennas,dates,exps,rfis):
+        lines+= f'<h3>{ANT}: observed on {DATE} for a total of {EXP} ks with {RFI} \% RFIs </h3> \n'
+        lines+= '<div class="row 200%"> <div class="12u"> \n'
+        lines+= '<section class="box features"><div><div class="row"> \n'
+        lines+= '<div class="3u 6u(mobile)"><section class="box feature"> \n'
+        lines+= '<a href="last_obs/'+PSR+'_'+ANT+'_par.png"><img width="100%" src="last_obs/'+PSR+'_'+ANT+'_par.jpg" alt=""></a> \n'
+        lines+= '</section></div> \n'
+        lines+= '<div class="3u 6u(mobile)"><section class="box feature"> \n'
+        lines+= '<a href="last_obs/'+PSR+'_'+ANT+'_timing.png"><img width="100%" src="last_obs/'+PSR+'_'+ANT+'_timing.jpg" alt=""></a> \n'
+        lines+= '</section></div> \n'
+        lines+= '<div class="3u 6u(mobile)"><section class="box feature"> \n'
+        lines+= '<a href="last_obs/'+PSR+'_'+ANT+'_mask.png"><img width="100%" src="last_obs/'+PSR+'_'+ANT+'_'+ANT+'_'+ANT+'_mask.jpg" alt=""></a> \n'
+        lines+= '</section></div> \n'
+        lines+= '<div class="3u 6u(mobile)"><section class="box feature"> \n'
+        lines+= '<a href="last_obs/'+PSR+'_'+ANT+'_tempo.png"><img width="100%" src="last_obs/'+PSR+'_'+ANT+'_'+ANT+'_'+ANT+'_'+ANT+'_tempo.jpg" alt=""></a> \n'
+        lines+= '</section></div> \n'
+        lines+= '</div></div></section> \n'
+        lines+= '</div></div> \n'
 
-    lines += '</div></div></section> \n'
-    lines += '</div></div> \n'
-    lines += '</article> \n'
+    lines+= '</article> \n'
 
     if dbg:
         print()
@@ -128,8 +139,8 @@ def write_lastobs(pulsars, HEADER, FOOTER, WEBPATH, DBPATH):
 # RUN MAIN CODE
 if __name__ == "__main__":
 
-    WEBPATH = "/home/fgarcia/github/puma/puglieseweb/"
-    DBPATH = WEBPATH+'database/'
+    WEBPATH = "/home/observacion/scratchdisk/PuGli-S/puglieseweb/"
+    DBPATH = WEBPATH+'../database/'
     # DBPATH/database/PSRNAME/mask_DATE.png presto_DATE.png tempo.png
     # DBPATH/last_obs/PSRNAME/mask.png presto.png tempo.png
 
