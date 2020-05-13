@@ -20,7 +20,6 @@ class Observation(object):
     DEFAULT_PAR_DIRNAME = '/opt/pulsar/puma/pardir/'
     DEFAULT_CONFIG_DIRNAME = '/opt/pulsar/puma/config/'
     DEFAULT_TIMING_DIRNAME = DEFAULT_CONFIG_DIRNAME + 'timing/'
-
     DEFAULT_THRESHOLD_FOR_REDUC = 1000000  # 1 Mb in bytes
 
     def __init__(self, path2dir=os.environ['PWD'], pname=''):
@@ -39,7 +38,7 @@ class Observation(object):
         self.params2reduc = {}
         self.nfils = 1
         self.nempty = 0
-        self.reduction_date = datetime.now()
+        self.reduction_time = datetime.now()
 
         # get RAJ DECJ from .par, but first initiate to empty strings
         self.RAJ, self.DECJ = '', ''

@@ -117,30 +117,19 @@ def move_observation(path_to_obs='', dest_path=''):
       ierr = -1
       return ierr, pulsar_name, path_to_reduc
 
-
-def write_pugliS_info_jason(path2db,obs):
-   """ Copy Information from ASCII to JSON"""
-   PSR = path2db + obs.pname
-   # leer los ascii actuales como pandas
-   df = pd.read_csv(PSR+'.txt', delim_whitespace=True)
-   # guardar los pandas como json
-   df.to_json(PSR+'.json')
-   return
-
-
-def write_pugliS_info_jason_new(path2db,obs):
+def write_pugliS_info_jason(path2pugliese,obs):
    """ Write information in JSON format"""
-   PSR = path2db + obs.pname
+   PSR = path2pugliese + '/' + obs.pname + '/' + obs.pname + '.json'
 
    try:
-       df = pd.read_json(PSR+'_new.json')
+       df = pd.read_json(PSR, orient='records')
    except:
        df = pd.DataFrame()
 
-#WE HAVE TO CHECK IF AND OBSID EXISTS TO REPLACE IT INSTEAD OF APPEND
+   #WE HAVE TO CHECK IF AND OBSID EXISTS TO REPLACE IT INSTEAD OF APPEND
 
    df_new = df.append(obs.__dict__, ignore_index=True)
 
    # guardar los pandas como json
-   df_new.to_json(PSR+'_new.json')
+   df_new.to_json(path_or_buf=PSR, orient='records', date_format='iso')
    return
