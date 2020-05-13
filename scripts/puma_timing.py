@@ -50,13 +50,15 @@ def plot_residuals(par_fname='', tim_fname='', output_dir='', copy2last=False):
     #meanres = math.sqrt(np.mean(res**2)) * 1e6
     rms = timing.rms()*1e6    # convert to us
     rms_min, rms_max = calc_residuals_errorbars(n_obs=timing.nobs, rms=rms)
+    rms_err = math.sqrt( (rms-rms_min)**2 + (rms-rms_max)**2 )/2 # APPROX! 
 
     i = np.argsort(t)
     P.errorbar(t[i], res[i]*1e6, yerr=errs[i], fmt='x', marker=".")
         
     #P.legend(unique,numpoints=1,bbox_to_anchor=(1.1,1.1))
     P.xlabel('MJD'); P.ylabel('res [us]')
-    P.title("{0} - rms res = {1:.2f} us".format(timing.name,rms)) #,meanres))
+    #P.title("{0} - rms res = {1:.2f} us".format(timing.name,rms)) #,meanres))
+    P.title("{0} , rms={1:.2f}+-{2:.2f} us , chisq_red={3:.2f}".format(timing.name,rms,rms_err,timing.chisq()))
 
     # Save
     pname_A = tim_fname.split('.tim')[0].split('/')[-1]
@@ -69,6 +71,7 @@ def plot_residuals(par_fname='', tim_fname='', output_dir='', copy2last=False):
         path2pugliese='/home/jovyan/work/shared/PuGli-S/'
         path2last = path2pugliese + '/last_obs/'
         shutil.copy(plot_output, path2last)
+
 
 #=========================================================================
 # BELOW IS JUST FOR RUNNING AS INDEPENDENT PROGRAM   
