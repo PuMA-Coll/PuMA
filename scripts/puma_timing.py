@@ -56,7 +56,7 @@ def plot_residuals(par_fname='', tim_fname='', output_dir='', copy2last=False, u
         ylabel = 'res [ms]'
         rms_title = '$ms'
 
-    rms = timing.rms()*us    # convert to units
+    rms = timing.rms()*un    # convert to units
     rms_min, rms_max = calc_residuals_errorbars(n_obs=timing.nobs, rms=rms)
     rms_err = math.sqrt( (rms-rms_min)**2 + (rms-rms_max)**2 )/2 # APPROX! 
 
