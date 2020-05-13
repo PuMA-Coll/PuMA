@@ -108,7 +108,7 @@ def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/'):
    output_dir = path2pugliese + '/' + obs.pname + '/pngs/'
    #par_fname = obs.dotpar_filename
    par_fname = '/opt/pulsar/puma/config/timing/' + obs.pname + '.par'
-   plot_residuals(par_fname=par_fname, tim_fname=tim_fname, output_dir=output_dir, copy2last=True)
+   plot_residuals(par_fname=par_fname, tim_fname=tim_fname, output_dir=output_dir, copy2last=True, units='us')
    
    # call updater for webpage
    # (puglieseweb_update)

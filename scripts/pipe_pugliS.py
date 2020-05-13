@@ -125,7 +125,7 @@ def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/sh
    output_dir = path2pugliese + '/' + obs.pname + '/pngs/'
    #par_fname = obs.dotpar_filename
    par_fname = '/opt/pulsar/puma/config/timing/' + obs.pname + '.par'
-   plot_residuals(par_fname=par_fname, tim_fname=tim_fname, output_dir=output_dir, copy2last=True)
+   plot_residuals(par_fname=par_fname, tim_fname=tim_fname, output_dir=output_dir, copy2last=True, units='ms')
 
    # call updater for webpage
    # (puglieseweb_update)
