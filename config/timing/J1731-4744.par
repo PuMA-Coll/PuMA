@@ -1,0 +1,65 @@
+PSRJ            J1731-4744
+PSRB            B1727-47
+NAME            B1727-47
+RAJ             17:31:42.160                  5.000e-03
+DECJ            -47:44:36.26                  6.000e-02
+ELONG           264.78
+ELAT            -24.43
+DM              123.056                       4.000e-03
+PEPOCH          50939.0000
+F0              1.20506786194                 6.000e-11
+F1              -0.237616E-12                 5.000e-18
+P0              0.82982878524                 5.000e-11
+P1              1.63626E-13                   4.000e-18
+DIST_DM         5.54
+DIST_DM1        2.79
+SURVEY          mol1,mol2,pks70,pkssw,htru_pks
+PMRA            73                            1.500e+01
+PMDEC           -132                          1.400e+01
+S200            424                           8.000e+00
+S400            190
+S1400           27                            3.000e+00
+W50             17.1
+W10             32
+POSEPOCH        53000
+DMEPOCH         55000
+F2              5.6E-24                       1.300e-24
+DIST_AMN        0.4
+DIST_AMX        0.7
+ASSOC           SNR:G343.0-6.0(RCW114)[skz+19]
+AGE             8.04e+04
+RM              -429.1                        5.000e-01
+TAU_SC          1.006E-04                     3.000e-07
+S3000           7                             2.000e+00
+TYPE            HE[sbc+19]
+NGLT            7
+DATE            1968
+DIST            0.70
+DIST1           0.70
+PMERR_PA        -56.556
+P1_I            1.64e-13
+AGE_I           8.04e+04
+BSURF_I         1.18e+13
+EDOT_I          1.13e+34
+EDOTD2          2.3e+34
+R_LUM           93.10
+R_LUM14         13.23
+PMTOT           151                           1.500e+01
+VTRANS          500.59
+BSURF           1.18e+13
+B_LC            1.93e+02
+SI414           1.56
+EDOT            1.1e+34
+RAJD            262.92567                     2.083e-05
+DECJD           -47.743406                    1.667e-05
+OSURVEY         000010104011
+DMSINB          -16.42
+GL              342.565
+GB              -7.669
+XX              -0.21
+YY              7.84
+ZZ              -0.09
+PML             -68                           1.500e+01
+PMB             -130                          1.500e+01
+EPHVER          2
+UNITS           TDB
