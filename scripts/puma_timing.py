@@ -79,6 +79,8 @@ def plot_residuals(par_fname='', tim_fname='', output_dir='', copy2last=False, u
         path2last = path2pugliese + '/last_obs/'
         shutil.copy(plot_output, path2last)
 
+    # Clear figure for possible future calls in a pipeline
+    P.clf()
 
 #=========================================================================
 # BELOW IS JUST FOR RUNNING AS INDEPENDENT PROGRAM   
