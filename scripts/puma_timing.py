@@ -58,7 +58,8 @@ def plot_residuals(par_fname='', tim_fname='', output_dir='', copy2last=False):
     #P.legend(unique,numpoints=1,bbox_to_anchor=(1.1,1.1))
     P.xlabel('MJD'); P.ylabel('res [us]')
     #P.title("{0} - rms res = {1:.2f} us".format(timing.name,rms)) #,meanres))
-    P.title("{0} , rms={1:.2f}+-{2:.2f} us , chisq_red={3:.2f}".format(timing.name,rms,rms_err,timing.chisq()))
+    #P.title("{0} , rms={1:.2f}+-{2:.2f} us , chisq_red={3:.2f}".format(timing.name,rms,rms_err,timing.chisq()))
+    P.title("{0} , $rms={1:.2f} \pm {2:.2f} \mu$s , $\chi^2_r={3:.2f}$".format(timing.name,rms,rms_err,timing.chisq()))
 
     # Save
     pname_A = tim_fname.split('.tim')[0].split('/')[-1]
