@@ -47,11 +47,11 @@ def plot_residuals(par_fname='', tim_fname='', output_dir='', copy2last=False, u
 
     print("Plotting {0} points.".format(timing.nobs))
 
-    if units == 'ms':
+    if units == 'us':
         un = 1e6
         ylabel = 'res [us]'
         rms_title = '\mu$s'
-    elif units == 'us':
+    elif units == 'ms':
         un = 1e3
         ylabel = 'res [ms]'
         rms_title = '$ms'
