@@ -35,7 +35,7 @@ def copy_db(pname, antenna, path2ini, path2end):
    # Copy all png files and save their paths in a list of pngs
    pngs = []
    for png in png_files:
-      pngs = pngs + [path2pngs + png]
+      pngs = pngs + [png]
       shutil.copy(png, path2pngs)
       # Make a copy in last_obs directory taking out the date information
       if 'mask' in png:
@@ -53,12 +53,12 @@ def copy_db(pname, antenna, path2ini, path2end):
    # Copy pfds and polycos and save their paths in a list of pngs
    pfds = []
    for pfd in pfd_files:
-      pfds = pfds + [path2pfds + pfd]
+      pfds = pfds + [pfd]
       shutil.copy(pfd, path2pfds)
 
    polycoss = []
    for polycos in polycos_files:
-      polycoss = polycoss + [path2pfds + polycos]
+      polycoss = polycoss + [polycos]
       shutil.copy(polycos, path2pfds)
 
    return pngs, pfds, polycoss
