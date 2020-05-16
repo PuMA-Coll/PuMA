@@ -105,7 +105,7 @@ def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/'):
 
    # plot TOAs and save in PuGli-S database
    tim_fname = tim_folder + obs.pname + '_' +  obs.antenna + '.tim'
-   output_dir = path2pugliese + '/' + obs.pname + '/pngs/'
+   output_dir = path2pugliese + '/' + obs.pname + '/'
    #par_fname = obs.dotpar_filename
    par_fname = '/opt/pulsar/puma/config/timing/' + obs.pname + '.par'
    plot_residuals(par_fname=par_fname, tim_fname=tim_fname, output_dir=output_dir, copy2last=True, units='us')
