@@ -27,6 +27,10 @@
 						<h5>Last Observations</h5>
                     </div>
                 </div>
+
+<h5> Disk space (last min)</h5>
+<embed width="380" height="120" src="diskspace.txt">
+
             </header>
             <!-- Nav -->
             <nav id="nav">
