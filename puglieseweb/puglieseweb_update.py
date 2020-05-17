@@ -22,7 +22,7 @@ def write_bypsr(pulsars, HEADER, FOOTER, WEBPATH, DBPATH):
 
     lines = ''
     for PSR in pulsars:
-        lines = "<!-- "+PSR+" --> \n"
+        lines += "<!-- "+PSR+" --> \n"
         lines += '<article class="box page-content"><header><h2><a href="'+PSR+'/'+PSR+'.html">'+PSR+'</a></h2></header> \n'
         lines += '<h3>Historical Tempo Plots</h3> \n'
         lines += '<h4>A1</h4><a href="'+PSR+'/'+PSR+'_A1_tempo.png"> \n'
@@ -49,7 +49,7 @@ def write_psr(PSR, HEADER, FOOTER, WEBPATH, DBPATH):
         return -1
 
     lines = "<!-- "+PSR+" --> \n"
-    lines += '<article class="box page-content"><header><h2><a href="'+PSR+'/'+PSR+'.html">'+PSR+'</a></h2></header> \n'
+    lines += '<article class="box page-content"><header><h2><a href="'+PSR+'.html">'+PSR+'</a></h2></header> \n'
     lines += '<h3>Historical Tempo Plots</h3> \n'
     lines += '<h4>A1</h4><a href="'+PSR+'_A1_tempo.png"> \n'
     lines += '<img width="30%" src="'+PSR+'_A1_tempo.png" alt="A1"></a> \n'
@@ -57,13 +57,14 @@ def write_psr(PSR, HEADER, FOOTER, WEBPATH, DBPATH):
     lines += '<img width="30%" src="'+PSR+'_A2_tempo.png" alt="A2"></a></article> \n'
 
     lines += "<article> \n"
-    lines += '<b>Date Antenna GTI Exposure SNR_par SNR_tim Glitch</b><br> \n'
+    lines += '<b>Date Antenna Nfils GTI Exposure SNR_par SNR_tim Glitch</b><br> \n'
 
     for idx in range(len(df)):
         antenna = df.antenna.loc[idx]
         gti = float(df.gti_percentage.loc[idx])
-        exp = float(df.obs_duration.loc[idx])/1000.
+        exp = float(df.obs_duration.loc[idx])/3600.
         date = df.obs_date.loc[idx]
+        nfils = df.nfils.loc[idx]
         try:
             snr_par = float(df.snr_par.loc[idx])
         except:
@@ -78,11 +79,17 @@ def write_psr(PSR, HEADER, FOOTER, WEBPATH, DBPATH):
         try:
             pngs = df.pngs[idx]
             pngs = [png.split('/')[-1] for png in pngs]
-            pngmask, pngtiming, pngpar = pngs
+            if len(pngs) == 3:
+                pngpar, pngtiming, pngmask = pngs
+            elif len(pngs) == 2:
+                pngtiming, pngmask = pngs
+                pngpar = ''
+            else:
+                pngmask, pngtiming, pngpar = '', '', ''
         except:
             pngmask, pngtiming, pngpar = '', '', ''
 
-        lines += '{} {} {} {} {} {} {} \n'.format(date, antenna, gti, exp, snr_par, snr_timing, glitch)
+        lines += '{} {} {} {:.2f}&percnt; {:.2f}hr {:.2f} {:.2f} {} \n'.format(date, antenna, nfils, gti, exp, snr_par, snr_timing, glitch)
         lines += '<a href="pngs/{}">MASK</a> <a href="pngs/{}">TIMING</a> <a href="pngs/{}">PAR</a><br>\n'.format(pngmask, pngtiming, pngpar)
 
     lines += '</article>\n\n'
@@ -115,8 +122,9 @@ def get_lastobs(PSR, DBPATH, antennas=['A1','A2']):
             continue
 
         gti = float(df.gti_percentage.loc[idx])
-        exp = float(df.obs_duration.loc[idx])/1000.
+        exp = float(df.obs_duration.loc[idx])/3600.
         date = df.obs_date.loc[idx]
+        nfils = df.nfils.loc[idx]
         try:
             snr_par = float(df.snr_par.loc[idx])
         except:
@@ -128,8 +136,8 @@ def get_lastobs(PSR, DBPATH, antennas=['A1','A2']):
 
         glitch = df.glitch[idx]
 
-        lines += '<h3>{}: observed on {} for a total of {:.2f} ks with {:.2f} &#37; GTI <br> \n'.format(antenna, date, exp, gti)
-        lines += '      SNR_par: {:.2f}  ;  SNR_timing: {:.2f}  ;   Glitch: {} </h3> \n'.format(snr_par, snr_timing, glitch)
+        lines += '<h3>{}: observed on {} for a total of {:.2f} hr with {:.2f} &#37; GTI <br> \n'.format(antenna, date, exp, gti)
+        lines += '      SNR_par: {:.2f}  ;  SNR_timing: {:.2f}  ;   Glitch: {}  ; Nfils: {} </h3> \n'.format(snr_par, snr_timing, glitch, nfils)
         lines += '<div class="row 200%"> <div class="12u"> \n'
         lines += '<section class="box features"><div><div class="row"> \n'
         lines += '<div class="3u 6u(mobile)"><section class="box feature"> \n'
