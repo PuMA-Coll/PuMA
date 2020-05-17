@@ -10,12 +10,12 @@
         <meta content="initial-scale=1" name="viewport">
         <meta content="user-scalable=yes,width=device-width,initial-scale=1" name="viewport">
         <title>Pugli-S- | PuMA Collaboration</title>
-				<link rel="icon" href="images/tab.png">
+				<link rel="icon" href="../images/tab.png">
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
-        <link rel="stylesheet" href="assets/css/main.css">
-        <!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+        <!--[if lte IE 8]><script src="../assets/js/ie/html5shiv.js"></script><![endif]-->
+        <link rel="stylesheet" href="../assets/css/main.css">
+        <!--[if lte IE 8]><link rel="stylesheet" href="../assets/css/ie8.css" /><![endif]-->
     </head>
     <body class="">
         <div id="page-wrapper">
@@ -23,7 +23,7 @@
             <header id="header">
                 <div class="logo container">
                     <div>
-						<h4><a href="index.html" id="logo">PUGLI-S-: PUlsar Glitching Squad</a></h4>
+						<h4><a href="../index.html" id="logo">PUGLI-S-: PUlsar Glitching Squad</a></h4>
 						<h5>Last Observations</h5>
                     </div>
                 </div>
@@ -36,7 +36,7 @@
             <nav id="nav">
                 <ul>
                     <li style="white-space: nowrap;">
-                        <a href="index.html">HOME</a>
+                        <a href="../index.html">HOME</a>
                     </li>
                     <li style="white-space: nowrap;"  class="current">
                         <a href="last_obs.html">LAST OBSERVATIONS</a>

@@ -17,18 +17,18 @@
                             <a href="http://html5up.net">HTML5 UP</a>
                         </li>
                     </ul>
-                    <a href="http://www.iar.unlp.edu.ar" target="_blank"><img src="images/iar-new.png" alt="IAR" height="50px"></a> &nbsp;&nbsp;
-                    <a href="https://rit.edu" target="_blank"><img src="images/rit-logo.png" alt="RIT" height="50px"></a> &nbsp;&nbsp;
+                    <a href="http://www.iar.unlp.edu.ar" target="_blank"><img src="../images/iar-new.png" alt="IAR" height="50px"></a> &nbsp;&nbsp;
+                    <a href="https://rit.edu" target="_blank"><img src="../images/rit-logo.png" alt="RIT" height="50px"></a> &nbsp;&nbsp;
                 </div>
             </footer>
         </div>
         <!-- Scripts -->
-        <script src="assets/js/jquery.min.js"></script>
-        <script src="assets/js/jquery.dropotron.min.js"></script>
-        <script src="assets/js/skel.min.js"></script>
-        <script src="assets/js/skel-viewport.min.js"></script>
-        <script src="assets/js/util.js"></script>
-        <!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
-        <script src="assets/js/main.js"></script>
+        <script src="../assets/js/jquery.min.js"></script>
+        <script src="../assets/js/jquery.dropotron.min.js"></script>
+        <script src="../assets/js/skel.min.js"></script>
+        <script src="../assets/js/skel-viewport.min.js"></script>
+        <script src="../assets/js/util.js"></script>
+        <!--[if lte IE 8]><script src="../assets/js/ie/respond.min.js"></script><![endif]-->
+        <script src="../assets/js/main.js"></script>
     </body>
 </html>
