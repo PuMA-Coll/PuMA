@@ -21,13 +21,13 @@ def write_bypsr(pulsars, HEADER, FOOTER, WEBPATH, DBPATH):
     footer = open(WEBPATH+FOOTER).readlines()
 
     lines = ''
-    for psr in pulsars:
+    for PSR in pulsars:
         lines = "<!-- "+PSR+" --> \n"
         lines += '<article class="box page-content"><header><h2><a href="'+PSR+'/'+PSR+'.html">'+PSR+'</a></h2></header> \n'
         lines += '<h3>Historical Tempo Plots</h3> \n'
-        lines += '<h4>A1</h4><a href="'+PSR+'/'+PSR+'_A1_tempo.jpg"> \n'
+        lines += '<h4>A1</h4><a href="'+PSR+'/'+PSR+'_A1_tempo.png"> \n'
         lines += '<img width="30%" src="'+PSR+'/'+PSR+'_A1_tempo.png" alt="A1"></a> \n'
-        lines += '<h4>A2</h4><a href="'+PSR+'/'+PSR+'_A2_tempo.jpg"> \n'
+        lines += '<h4>A2</h4><a href="'+PSR+'/'+PSR+'_A2_tempo.png"> \n'
         lines += '<img width="30%" src="'+PSR+'/'+PSR+'_A2_tempo.png" alt="A2"></a> \n'
         lines += '</article>\n\n'
 
@@ -51,10 +51,13 @@ def write_psr(PSR, HEADER, FOOTER, WEBPATH, DBPATH):
     lines = "<!-- "+PSR+" --> \n"
     lines += '<article class="box page-content"><header><h2><a href="'+PSR+'/'+PSR+'.html">'+PSR+'</a></h2></header> \n'
     lines += '<h3>Historical Tempo Plots</h3> \n'
-    lines += '<h4>A1</h4><a href="'+PSR+'/'+PSR+'_A1_tempo.jpg"> \n'
-    lines += '<img width="30%" src="'+PSR+'/'+PSR+'_A1_tempo.png" alt="A1"></a> \n'
-    lines += '<h4>A2</h4><a href="'+PSR+'/'+PSR+'_A2_tempo.jpg"> \n'
-    lines += '<img width="30%" src="'+PSR+'/'+PSR+'_A2_tempo.png" alt="A2"></a> \n'    
+    lines += '<h4>A1</h4><a href="'+PSR+'_A1_tempo.png"> \n'
+    lines += '<img width="30%" src="'+PSR+'_A1_tempo.png" alt="A1"></a> \n'
+    lines += '<h4>A2</h4><a href="'+PSR+'_A2_tempo.png"> \n'
+    lines += '<img width="30%" src="'+PSR+'_A2_tempo.png" alt="A2"></a></article> \n'
+
+    lines += "<article> \n"
+    lines += '<b>Date Antenna GTI Exposure SNR_par SNR_tim Glitch</b><br> \n'
 
     for idx in range(len(df)):
         antenna = df.antenna.loc[idx]
@@ -74,11 +77,14 @@ def write_psr(PSR, HEADER, FOOTER, WEBPATH, DBPATH):
 
         try:
             pngs = df.pngs[idx]
+            pngs = [png.split('/')[-1] for png in pngs]
+            pngmask, pngtiming, pngpar = pngs
         except:
-            pngs = ''
+            pngmask, pngtiming, pngpar = '', '', ''
 
-        lines += '{} {} {} {} {} {} {} <a href="{}">Plots</a><br>\n'.format(antenna, gti, exp, date, snr_par, snr_timing, glitch, pngs)
-        
+        lines += '{} {} {} {} {} {} {} \n'.format(date, antenna, gti, exp, snr_par, snr_timing, glitch)
+        lines += '<a href="pngs/{}">MASK</a> <a href="pngs/{}">TIMING</a> <a href="pngs/{}">PAR</a><br>\n'.format(pngmask, pngtiming, pngpar)
+
     lines += '</article>\n\n'
 
     file = open(DBPATH+'/'+PSR+'/'+PSR+'.html', 'w')
@@ -157,7 +163,7 @@ def write_lastobs(pulsars, HEADER, FOOTER, WEBPATH, DBPATH):
     for psr in pulsars:
         content += get_lastobs(psr,DBPATH)
 
-    file = open(DBPATH+'last_obs/last_obs.html', 'w')
+    file = open(DBPATH+'last_obs.html', 'w')
     file.writelines(header)
     file.writelines(content)
     file.writelines(footer)
@@ -179,8 +185,8 @@ if __name__ == "__main__":
     if dbg: print(pulsars)
 
     # PSR/PSR.html
-    HEADER = 'by_psr_header.txt'
-    FOOTER = 'by_psr_footer.txt'
+    HEADER = 'psr_header.txt'
+    FOOTER = 'psr_footer.txt'
     print('-----------------')
     print('START psr.html')
     for pulsar in pulsars:
@@ -191,6 +197,8 @@ if __name__ == "__main__":
     print()
     
     # by_psr.html
+    HEADER = 'by_psr_header.txt'
+    FOOTER = 'by_psr_footer.txt'
     print('-----------------')
     print('START by_psr.html')
     if write_bypsr(pulsars, HEADER, FOOTER, WEBPATH, DBPATH) == 0:
