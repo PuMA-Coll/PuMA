@@ -1,7 +1,7 @@
 import os, sys, glob, subprocess
 import pandas as pd
 
-dbg = False
+dbg = True
 
 
 def CreateThumbnail(file):
@@ -11,7 +11,7 @@ def CreateThumbnail(file):
 
 def get_observed_pulsars(path):
     #pulsars = [d for d in os.listdir(path) if os.path.isdir(os.path.join(path, d))]
-    pulsars = [d.strip().split('/')[0] for d in glob.glob('J*/')]
+    pulsars = [d.strip().split('/')[-2] for d in glob.glob(path+'/J*/')]
     pulsars.sort()
     return pulsars
 
@@ -65,40 +65,97 @@ def write_bypsr(pulsars, HEADER, FOOTER, WEBPATH, DBPATH):
     return 0
 
 
-def get_lastobs(PSR, DBPATH, antennas=['A1,'A2']):
+def write_psr(PSR, HEADER, FOOTER, WEBPATH, DBPATH):
+    header = open(WEBPATH+HEADER).readlines()
+    footer = open(WEBPATH+FOOTER).readlines()
+
+    try:
+        df = pd.read_json('{}/{}/{}.json'.format(DBPATH,PSR,PSR))
+    except:
+        return -1
+
+    lines = "<!-- "+PSR+" --> \n"
+    lines += '<article class="box page-content"><header><h2><a href="'+PSR+'.html">'+PSR+'</a></h2></header> \n'
+
+    for idx in range(len(df)):
+        antenna = df.antenna.loc[idx]
+        gti = float(df.gti_percentage.loc[idx])
+        exp = float(df.obs_duration.loc[idx])/1000.
+        date = df.obs_date.loc[idx]
+        try:
+            snr_par = float(df.snr_par.loc[idx])
+        except:
+            snr_par = -1
+        try:
+            snr_timing = float(df.snr_timing.loc[idx])
+        except:
+            snr_timing = -1
+
+        glitch = df.glitch[idx]
+
+        try:
+            pngs = df.pngs[idx]
+        except:
+            pngs = ''
+
+        lines += '{} {} {} {} {} {} {} <a href="{}">Plots</a><br>\n'.format(antenna, gti, exp, date, snr_par, snr_timing, glitch, pngs)
+
+    file = open(DBPATH+'/'+PSR+'/'+PSR+'.html', 'w')
+    file.writelines(header)
+    file.writelines(lines)
+    file.writelines(footer)
+    file.close()
+    return 0
+
+
+
+def get_lastobs(PSR, DBPATH, antennas=['A1','A2']):
     if dbg:
         print(PSR)
 
-    df = pd.read_json(f'{PSR}/{PSR}.json')
+    try:
+        df = pd.read_json('{}/{}/{}.json'.format(DBPATH,PSR,PSR))
+    except:
+        return ''
 
     lines = "<!-- "+PSR+" --> \n"
-    lines += '<article class="box page-content"><header><h2>J1740-3015</h2></header> \n'
+    lines += '<article class="box page-content"><header><h2><a href="'+PSR+'.html">'+PSR+'</a></h2></header> \n'
 
     for antenna in antennas:
-        idx = df[df.antenna == antenna].obs_date.idxmax()
+        try:
+            idx = df[df.antenna == antenna].obs_date.idxmax()
+        except:
+            continue
 
-        gti = df.gti_percentage.loc[idx]
-        exp = df.obs_duration.loc[idx]/1000.
+        gti = float(df.gti_percentage.loc[idx])
+        exp = float(df.obs_duration.loc[idx])/1000.
         date = df.obs_date.loc[idx]
-        snr_par = df.snr_par.loc[idx]
-        snr_timing = df.snr_timing.loc[idx]
+        try:
+            snr_par = float(df.snr_par.loc[idx])
+        except:
+            snr_par = -1
+        try:
+            snr_timing = float(df.snr_timing.loc[idx])
+        except:
+            snr_timing = -1
+
         glitch = df.glitch[idx]
 
-        lines += f'<h3>{antenna}: observed on {date} for a total of {exp} ks with {gti} \% GTI <br> \n'
-        lines += f'      SNR_par: {snr_par} ; SNR_timing: {snr_timing} : Glitch: {glitch} </h3> \n'
+        lines += '<h3>{}: observed on {} for a total of {:.2f} ks with {:.2f} &#37; GTI <br> \n'.format(antenna, date, exp, gti)
+        lines += '      SNR_par: {:.2f}  ;  SNR_timing: {:.2f}  ;   Glitch: {} </h3> \n'.format(snr_par, snr_timing, glitch)
         lines += '<div class="row 200%"> <div class="12u"> \n'
         lines += '<section class="box features"><div><div class="row"> \n'
         lines += '<div class="3u 6u(mobile)"><section class="box feature"> \n'
-        lines += '<a href="last_obs/'+PSR+'_'+ANT+'_par.png"><img width="100%" src="last_obs/'+PSR+'_'+ANT+'_par.jpg" alt=""></a> \n'
+        lines += '<a href="last_obs/'+PSR+'_'+antenna+'_par.png"><img width="100%" src="last_obs/'+PSR+'_'+antenna+'_par.jpg" alt=""></a> \n'
         lines += '</section></div> \n'
         lines += '<div class="3u 6u(mobile)"><section class="box feature"> \n'
-        lines += '<a href="last_obs/'+PSR+'_'+ANT+'_timing.png"><img width="100%" src="last_obs/'+PSR+'_'+ANT+'_timing.jpg" alt=""></a> \n'
+        lines += '<a href="last_obs/'+PSR+'_'+antenna+'_timing.png"><img width="100%" src="last_obs/'+PSR+'_'+antenna+'_timing.jpg" alt=""></a> \n'
         lines += '</section></div> \n'
         lines += '<div class="3u 6u(mobile)"><section class="box feature"> \n'
-        lines += '<a href="last_obs/'+PSR+'_'+ANT+'_mask.png"><img width="100%" src="last_obs/'+PSR+'_'+ANT+'_'+ANT+'_'+ANT+'_mask.jpg" alt=""></a> \n'
+        lines += '<a href="last_obs/'+PSR+'_'+antenna+'_mask.png"><img width="100%" src="last_obs/'+PSR+'_'+antenna+'_mask.jpg" alt=""></a> \n'
         lines += '</section></div> \n'
         lines += '<div class="3u 6u(mobile)"><section class="box feature"> \n'
-        lines += '<a href="last_obs/'+PSR+'_'+ANT+'_tempo.png"><img width="100%" src="last_obs/'+PSR+'_'+ANT+'_'+ANT+'_'+ANT+'_'+ANT+'_tempo.jpg" alt=""></a> \n'
+        lines += '<a href="last_obs/'+PSR+'_'+antenna+'_tempo.png"><img width="100%" src="last_obs/'+PSR+'_'+antenna+'_tempo.jpg" alt=""></a> \n'
         lines += '</section></div> \n'
         lines += '</div></div></section> \n'
         lines += '</div></div> \n'
@@ -119,7 +176,7 @@ def write_lastobs(pulsars, HEADER, FOOTER, WEBPATH, DBPATH):
     for psr in pulsars:
         content += get_lastobs(psr,DBPATH)
 
-    file = open(WEBPATH+'last_obs_2.html', 'w')
+    file = open(WEBPATH+'last_obs.html', 'w')
     file.writelines(header)
     file.writelines(content)
     file.writelines(footer)
@@ -132,18 +189,28 @@ if __name__ == "__main__":
 
     WEBPATH = "/home/observacion/scratchdisk/PuGli-S/puglieseweb/"
     DBPATH = "/home/observacion/scratchdisk/PuGli-S/"
-    
+
     dbg = False
-    print()
+    print('')
     print('READING PULSARS FROM DB AT '+DBPATH)
     pulsars = get_observed_pulsars(DBPATH)
-    print()
+    print('')
+    if dbg: print(pulsars)
 
     # by_psr.html
     HEADER = 'by_psr_header.txt'
     FOOTER = 'by_psr_footer.txt'
     print('-----------------')
-    print('START by_psr.html')
+    print('START psr.html')
+    for pulsar in pulsars:
+         if write_psr(pulsar, HEADER, FOOTER, WEBPATH, DBPATH) ==0:
+               print('WRITTEN '+pulsar+'.html')
+         else:
+               print('ERROR in '+pulsar+'.html')
+    print()
+
+#    print('-----------------')
+#    print('START by_psr.html')
 #    if write_bypsr(pulsars, HEADER, FOOTER, WEBPATH, DBPATH) == 0:
 #        print('WRITTEN by_psr.html')
 #    else:
