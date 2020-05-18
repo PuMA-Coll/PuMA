@@ -56,8 +56,10 @@ def write_psr(PSR, HEADER, FOOTER, WEBPATH, DBPATH):
     lines += '<h4>A2</h4><a href="'+PSR+'_A2_tempo.png"> \n'
     lines += '<img width="30%" src="'+PSR+'_A2_tempo.png" alt="A2"></a></article> \n'
 
-    lines += "<article> \n"
-    lines += '<b>Date Antenna Nfils GTI Exposure SNR_par SNR_tim Glitch</b><br> \n'
+    lines += '<article> <table>\n'
+    lines += '<thead><tr>\n'
+    lines += '<th>Date</th><th>Antenna</th><th>Nfils</th><th>GTI</th><th>Exposure</th><th>SNR_par</th><th>SNR_tim</th><th>Glitch</th><th>Plots</th>\n'
+    lines += '</tr></thead><tbody>\n'
 
     for idx in range(len(df)):
         antenna = df.antenna.loc[idx]
@@ -89,10 +91,12 @@ def write_psr(PSR, HEADER, FOOTER, WEBPATH, DBPATH):
         except:
             pngmask, pngtiming, pngpar = '', '', ''
 
-        lines += '{} {} {} {:.2f}&percnt; {:.2f}hr {:.2f} {:.2f} {} \n'.format(date, antenna, nfils, gti, exp, snr_par, snr_timing, glitch)
-        lines += '<a href="pngs/{}">MASK</a> <a href="pngs/{}">TIMING</a> <a href="pngs/{}">PAR</a><br>\n'.format(pngmask, pngtiming, pngpar)
+        lines += '<tr>\n'
+        lines += '   <td>{}</td><td>{}</td><td>{}</td><td>{:.2f}&percnt;</td><td>{:.2f}hr</td><td> {:.2f}</td><td>{:.2f}</td><td>{}</td>\n'.format(date, antenna, nfils, gti, exp, snr_par, snr_timing, glitch)
+        lines += '   <td><a href="pngs/{}">MASK</a> <a href="pngs/{}">TIMING</a> <a href="pngs/{}">PAR</a></td>\n'.format(pngmask, pngtiming, pngpar)
+        lines += '</tr>\n'
 
-    lines += '</article>\n\n'
+    lines += '</tbody> </table> </article>\n\n'
 
     file = open(DBPATH+'/'+PSR+'/'+PSR+'.html', 'w')
     file.writelines(header)
