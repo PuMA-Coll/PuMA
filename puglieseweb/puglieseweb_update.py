@@ -45,6 +45,7 @@ def write_psr(PSR, HEADER, FOOTER, WEBPATH, DBPATH):
 
     try:
         df = pd.read_json('{}/{}/{}.json'.format(DBPATH,PSR,PSR))
+        df.sort_values(by=['obs_date','antenna'],ascending=False, inplace=True)
     except:
         return -1
 
@@ -61,7 +62,7 @@ def write_psr(PSR, HEADER, FOOTER, WEBPATH, DBPATH):
     lines += '<th>Date</th><th>Antenna</th><th>Nfils</th><th>GTI</th><th>Exposure</th><th>SNR_par</th><th>SNR_tim</th><th>Glitch</th><th>Plots</th>\n'
     lines += '</tr></thead><tbody>\n'
 
-    for idx in range(len(df)):
+    for idx in df.index:
         antenna = df.antenna.loc[idx]
         gti = float(df.gti_percentage.loc[idx])
         exp = float(df.obs_duration.loc[idx])/3600.
@@ -79,21 +80,24 @@ def write_psr(PSR, HEADER, FOOTER, WEBPATH, DBPATH):
         glitch = df.glitch[idx]
 
         try:
+            pngsdir = 'pngs/'
             pngs = df.pngs[idx]
             pngs = [png.split('/')[-1] for png in pngs]
-            if len(pngs) == 3:
-                pngpar, pngtiming, pngmask = pngs
-            elif len(pngs) == 2:
-                pngtiming, pngmask = pngs
-                pngpar = ''
-            else:
-                pngmask, pngtiming, pngpar = '', '', ''
+            pngmask = pngtiming = pngpar = ''
+            for png in pngs:
+                 if 'rfifind.png' in png:
+                     pngmask = pngsdir + png
+                 elif 'prepfold' in png:
+                     if 'timing' in png:
+                          pngtiming = pngsdir + png
+                     elif 'par' in png:
+                          pngpar = pngsdir + png
         except:
             pngmask, pngtiming, pngpar = '', '', ''
 
         lines += '<tr>\n'
         lines += '   <td>{}</td><td>{}</td><td>{}</td><td>{:.2f}&percnt;</td><td>{:.2f}hr</td><td> {:.2f}</td><td>{:.2f}</td><td>{}</td>\n'.format(date, antenna, nfils, gti, exp, snr_par, snr_timing, glitch)
-        lines += '   <td><a href="pngs/{}">MASK</a> <a href="pngs/{}">TIMING</a> <a href="pngs/{}">PAR</a></td>\n'.format(pngmask, pngtiming, pngpar)
+        lines += '   <td><a href="{}">MASK</a> <a href="{}">TIMING</a> <a href="{}">PAR</a></td>\n'.format(pngmask, pngtiming, pngpar)
         lines += '</tr>\n'
 
     lines += '</tbody> </table> </article>\n\n'
