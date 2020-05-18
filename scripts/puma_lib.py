@@ -281,6 +281,7 @@ class Observation(object):
         
         ierr = 0
 
+        self.tresh = tresh   # Store value in obs object for future analysis
         # Check if the reduction has already been made
         if len(glob.glob('*timing*.pfd')) + len(glob.glob('*par*.pfd')) >= 2: self.was_reduced = True
 
@@ -297,18 +298,21 @@ class Observation(object):
             self.maskname = glob.glob('*.mask')[0]
 
         # Check for glitch
-        P_eph, err_P, ierr = self.read_bestprof('timing')
+        self.P_eph, self.err_P, ierr = self.read_bestprof('timing')
         if ierr != 0: sys.exit(1)
         
-        P_obs, err_P, ierr = self.read_bestprof('par')
+        self.P_obs, self.err_P, ierr = self.read_bestprof('par')
         if ierr != 0: sys.exit(1)
 
-        DP = P_eph - P_obs  # if >0 glithc, <0 anti_glitch
-        self.jump = DP/P_eph
+        DP = self.P_eph - self.P_obs  # if >0 glitch, <0 anti_glitch
+        self.jump = DP/self.P_eph
 
+        self.yellow_alert = False
         self.red_alert = False
-        if abs(self.jump) > thresh and err_P/P_eph < thresh:
-            self.red_alert = True
+        if abs(self.jump) > thresh:
+            self.yellow_alert = True
+            if  self.err_P/self.P_eph < thresh:
+                self.red_alert = True
 
         return ierr
 

@@ -131,5 +131,5 @@ def write_pugliS_info_jason(path2pugliese,obs):
    df_new = df.append(obs.__dict__, ignore_index=True)
 
    # guardar los pandas como json
-   df_new.to_json(path_or_buf=PSR, orient='records', date_format='iso')
+   df_new.to_json(path_or_buf=PSR, orient='records', date_format='iso', double_precision=14)
    return
