@@ -189,11 +189,13 @@ if __name__ == "__main__":
     WEBPATH = "/home/observacion/scratchdisk/PuGli-S/puglieseweb/"
     DBPATH = "/home/observacion/scratchdisk/PuGli-S/"
 
+    if len(sys.argv) > 1:
+         WEBPATH = sys.argv[1]
+         DBPATH = sys.argv[2]
+
     dbg = False
-    print('')
-    print('READING PULSARS FROM DB AT '+DBPATH)
+    print('\n>>>READING PULSARS FROM DB AT '+DBPATH)
     pulsars = get_observed_pulsars(DBPATH)
-    print('')
     if dbg: print(pulsars)
 
     # PSR/PSR.html
@@ -206,8 +208,8 @@ if __name__ == "__main__":
                print('WRITTEN '+pulsar+'.html')
          else:
                print('ERROR in '+pulsar+'.html')
-    print()
-    
+    print('-----------------')
+
     # by_psr.html
     HEADER = 'by_psr_header.txt'
     FOOTER = 'by_psr_footer.txt'
@@ -217,7 +219,7 @@ if __name__ == "__main__":
         print('WRITTEN by_psr.html')
     else:
         print('ERROR by_psr.html')
-    print()
+    print('-----------------')
 
     # last_obs/last_obs.html
     HEADER = 'last_obs_header.txt'
@@ -228,9 +230,7 @@ if __name__ == "__main__":
         print('WRITTEN last_obs.html')
     else:
         print('ERROR last_obs.html')
-    print()
+    print('-------------------')
 
     # EXIT PROGRAM
-    print()
-    print('FINISHED UPDATING WEBPAGE AT '+WEBPATH)
-    print()
+    print('>>> FINISHED UPDATING WEBPAGE AT '+WEBPATH+'\n\n')
