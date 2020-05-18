@@ -95,14 +95,14 @@ def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/'):
    # calculate good time interval percentage
    obs.get_mask_percentage(obs.maskname)   
 
+   # copy files for visualization and analysis; also store the output paths in observation object
+   obs.pngs, obs.pfds, obs.polycos = copy_db(obs.pname, obs.antenna, folder, path2pugliese)   
+
    # write observation info
    path2db = path2pugliese + 'database/'
    write_obs_info_ascii(path2db, obs)
    write_pugliS_info_jason(path2pugliese, obs)
  
-   # copy files for visualization and analysis; also store the output paths in observation object
-   obs.pngs, obs.pfds, obs.polycos = copy_db(obs.pname, obs.antenna, folder, path2pugliese)   
-
    # plot TOAs and save in PuGli-S database
    tim_fname = tim_folder + obs.pname + '_' +  obs.antenna + '.tim'
    output_dir = path2pugliese + '/' + obs.pname + '/'
