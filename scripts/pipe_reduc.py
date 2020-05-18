@@ -69,12 +69,13 @@ def write_obs_info_ascii(path2db,obs):
    f.write(line)
    f.close()
 
-def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/'):
+def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/', nfils_total=1):
 
    start = time.time()
 
    # read relevant information from the .fil
    obs = Observation(folder)
+   obs.nfils_total = nfils_total
 
    # reduce using PRESTO (timing mode only)
    obs.set_params2reduc(path_to_dir=folder)

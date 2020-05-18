@@ -82,12 +82,13 @@ def write_pugliS_info_ascii(path2db,obs):
    f.close()
 
 
-def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/shared/PuGli-S/'):
+def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/shared/PuGli-S/', nfils_total=1):
 
    start = time.time()
 
 	# read relevant information from the .fil
    obs = Observation(folder)
+   obs.nfils_total = obs.nfils
 
    # search for glitches (code red)
    obs.do_glitch_search(thresh=thresh, path_to_dir=folder)

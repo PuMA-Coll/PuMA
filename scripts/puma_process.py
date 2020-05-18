@@ -93,7 +93,7 @@ def process_observations(obs_folder='', dest_path=''):
                new_reduction_path = reduction_path + obs_id
                os.mkdir(new_reduction_path)
                shutil.move(fils[i], new_reduction_path)
-               do_pipe_reduc(folder=new_reduction_path)
+               do_pipe_reduc(folder=new_reduction_path, nfils_total=len(fils))
 
          # pipeline for glitching pulsars:
          else:
