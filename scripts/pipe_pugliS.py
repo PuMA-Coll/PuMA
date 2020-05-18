@@ -9,8 +9,6 @@ sys.path.insert(1,os.path.join(sys.path[0], '/opt/pulsar/puma/scripts/'))
 import time
 import argparse
 
-import pandas as pd
-
 from ConfigParser import SafeConfigParser
 import glob
 import sigproc
@@ -21,34 +19,6 @@ from puma_utils import *
 from puma_timing import plot_residuals
 
 
-def set_argparse():
-   # add arguments
-   parser = argparse.ArgumentParser(prog='pipe_pugliS.py',
-      formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-      description='Main pipeline for pulsar timing and glitch detections')
-   parser.add_argument('--folder', default=os.environ['PWD'], type=str,
-      help='ABSOLUTE PATH where observations are stored and where output will be created')
-   parser.add_argument('--par_dirname', default='/opt/pulsar/tempo/tzpar/', type=str,
-      help='path to directory containing .par file')
-   parser.add_argument('--thresh', default=1e-8, type=float,
-      help='threshold for glitch alert (DP/P > thresh)')
-   parser.add_argument('--path2pugliese', default='/home/jovyan/work/shared/PuGli-S/', type=str,
-      help='Pugli-S database folder')
-
-   return parser.parse_args()
-
-
-def check_cli_arguments(args):
-
-   ierr = 0
-   if os.path.isabs(args.folder) is False:
-      print('\n FATAL ERROR: folder path is not absolute\n')
-      ierr = -1
-      return ierr
-
-   return ierr
-
-
 def send_alert(alert_type):
    # Define remote alert in a future
    if alert_type == 'red':
@@ -56,30 +26,6 @@ def send_alert(alert_type):
 
    elif alert_type == 'blue':
       print('\n \x1b[34;1m glitch blue alert \x1b[0m \n')
-
-
-def write_pugliS_info_ascii(path2db,obs):
-   """ Write information"""
-   fname = path2db + obs.pname + '.txt'
-
-   order = ['pname', 'mjd', 'path_to_dir', 'antenna', 'nchans', 'red_alert', 'blue_alert', 'dotpar_filename', 'jump', 'gti_percentage', 'nfils', 'nempty']
-
-   if os.path.isfile(fname) is False:
-      f = open(fname, 'w')
-      header = ''
-      for key in order:
-         header += '{:>40}'.format(key)
-      header += '\n'
-      f.write(header)
-      f.close()
-
-   f = open(fname, 'a')
-   line = ''
-   for key in order:
-      line += '{:>40}'.format(str(obs.__dict__[key]))
-   line += '\n'
-   f.write(line)
-   f.close()
 
 
 def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/shared/PuGli-S/', nfils_total=1):
@@ -113,11 +59,6 @@ def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/sh
    # calculate good time interval percentage
    obs.get_mask_percentage(obs.maskname)
 
-   # write observation info
-   path2db = path2pugliese + 'database/'
-   write_pugliS_info_ascii(path2db, obs)
-   #write_pugliS_info_jason(path2db, obs)
-
    # copy files for visualization and analysis
    obs.pngs, obs.pfds, obs.polycos = copy_db(obs.pname, obs.antenna, folder, path2pugliese)
 
@@ -128,13 +69,12 @@ def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/sh
    par_fname = '/opt/pulsar/puma/config/timing/' + obs.pname + '.par'
    plot_residuals(par_fname=par_fname, tim_fname=tim_fname, output_dir=output_dir, copy2last=True, units='ms')
 
-   # call updater for webpage
-   # (puglieseweb_update)
+   # call updater for webpage (puglieseweb_update)
    try:
-       write_pugliS_info_jason(path2pugliese,obs)
+      # write observation info
+      write_pugliS_info_jason(path2pugliese,obs)
    except:
-       print('\n JASON_NEW FAILED')
-
+      print('\n JASON_NEW FAILED')
 
    # exit with success printing duration
    end = time.time()
@@ -144,7 +84,36 @@ def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/sh
 
 
 
-#==================================================================================
+#=========================================================================
+# BELOW IS JUST FOR RUNNING AS INDEPENDENT PROGRAM   
+
+def set_argparse():
+   # add arguments
+   parser = argparse.ArgumentParser(prog='pipe_pugliS.py',
+      formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+      description='Main pipeline for pulsar timing and glitch detections')
+   parser.add_argument('--folder', default=os.environ['PWD'], type=str,
+      help='ABSOLUTE PATH where observations are stored and where output will be created')
+   parser.add_argument('--par_dirname', default='/opt/pulsar/tempo/tzpar/', type=str,
+      help='path to directory containing .par file')
+   parser.add_argument('--thresh', default=1e-8, type=float,
+      help='threshold for glitch alert (DP/P > thresh)')
+   parser.add_argument('--path2pugliese', default='/home/jovyan/work/shared/PuGli-S/', type=str,
+      help='Pugli-S database folder')
+
+   return parser.parse_args()
+
+
+def check_cli_arguments(args):
+   # check if command line arguments are OK
+   ierr = 0
+   if os.path.isabs(args.folder) is False:
+      print('\n FATAL ERROR: folder path is not absolute\n')
+      ierr = -1
+      return ierr
+
+   return ierr
+
 
 if __name__ == '__main__':
 

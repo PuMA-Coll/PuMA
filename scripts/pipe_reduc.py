@@ -19,56 +19,6 @@ from puma_utils import *
 from puma_timing import plot_residuals
 
 
-def set_argparse():
-   # add arguments
-   parser = argparse.ArgumentParser(prog='pipe_reduc.py',
-      formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-      description='Main pipeline for pulsar timing (no glitch search)')
-   parser.add_argument('--folder', default=os.environ['PWD'], type=str,
-      help='ABSOLUTE PATH where observations are stored and where output will be created')
-   parser.add_argument('--par_dirname', default='/opt/pulsar/tempo/tzpar/', type=str,
-      help='path to directory containing .par file')
-   parser.add_argument('--path2pugliese', default='/home/jovyan/work/shared/PuGli-S/', type=str,
-      help='Pugli-S database folder')
-
-   return parser.parse_args()
-
-
-def check_cli_arguments(args):
-
-   ierr = 0
-   if os.path.isabs(args.folder) is False:
-      print('\n FATAL ERROR: folder path is not absolute\n')
-      ierr = -1
-      return ierr
-
-   return ierr
-
-
-def write_obs_info_ascii(path2db,obs):
-   """ Write information inf ascii format"""
-   fname = path2db + obs.pname + '.txt'
-
-   # Use the same order as for glitching pulsars for consistency in a single database.
-   order = ['pname', 'mjd', 'path_to_dir', 'antenna', 'nchans', 'dotpar_filename', 'jump', 'gti_percentage', 'nfils', 'nempty']
-
-   if os.path.isfile(fname) is False:
-      f = open(fname, 'w')
-      header = ''
-      for key in order:
-         header += '{:>40}'.format(key)
-      header += '\n'
-      f.write(header)
-      f.close()
-
-   f = open(fname, 'a')
-   line = ''
-   for key in order:
-      line += '{:>40}'.format(str(obs.__dict__[key]))
-   line += '\n'
-   f.write(line)
-   f.close()
-
 def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/', nfils_total=1):
 
    start = time.time()
@@ -99,11 +49,6 @@ def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/', 
    # copy files for visualization and analysis; also store the output paths in observation object
    obs.pngs, obs.pfds, obs.polycos = copy_db(obs.pname, obs.antenna, folder, path2pugliese)   
 
-   # write observation info
-   path2db = path2pugliese + 'database/'
-   write_obs_info_ascii(path2db, obs)
-   write_pugliS_info_jason(path2pugliese, obs)
- 
    # plot TOAs and save in PuGli-S database
    tim_fname = tim_folder + obs.pname + '_' +  obs.antenna + '.tim'
    output_dir = path2pugliese + '/' + obs.pname + '/'
@@ -111,8 +56,11 @@ def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/', 
    par_fname = '/opt/pulsar/puma/config/timing/' + obs.pname + '.par'
    plot_residuals(par_fname=par_fname, tim_fname=tim_fname, output_dir=output_dir, copy2last=True, units='us')
    
-   # call updater for webpage
-   # (puglieseweb_update)
+   # write observation info
+   try:
+      write_pugliS_info_jason(path2pugliese,obs)
+   except:
+      print('\n JASON_NEW FAILED')
 
    # exit with success printing duration
    end = time.time()
@@ -122,7 +70,35 @@ def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/', 
 
 
    
-#==================================================================================
+#=========================================================================
+# BELOW IS JUST FOR RUNNING AS INDEPENDENT PROGRAM   
+
+
+def set_argparse():
+   # add arguments
+   parser = argparse.ArgumentParser(prog='pipe_reduc.py',
+      formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+      description='Main pipeline for pulsar timing (no glitch search)')
+   parser.add_argument('--folder', default=os.environ['PWD'], type=str,
+      help='ABSOLUTE PATH where observations are stored and where output will be created')
+   parser.add_argument('--par_dirname', default='/opt/pulsar/tempo/tzpar/', type=str,
+      help='path to directory containing .par file')
+   parser.add_argument('--path2pugliese', default='/home/jovyan/work/shared/PuGli-S/', type=str,
+      help='Pugli-S database folder')
+
+   return parser.parse_args()
+
+
+def check_cli_arguments(args):
+   # check if command line arguments are OK
+   ierr = 0
+   if os.path.isabs(args.folder) is False:
+      print('\n FATAL ERROR: folder path is not absolute\n')
+      ierr = -1
+      return ierr
+
+   return ierr
+
 
 if __name__ == '__main__':
 
