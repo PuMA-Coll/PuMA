@@ -84,8 +84,8 @@ def move_observation(path_to_obs='', dest_path=''):
    # grab pulsar name and antenna from *.fil file name 
    try:
       fil_fname = glob.glob(path_to_obs + '/*.fil')[0]
-      pulsar_name = fil_fname.split('_')[1].split('/')[-1]
-      antenna = fil_fname.split('_')[2]
+      pulsar_name = fil_fname.split('/')[-1].split('_')[1]
+      antenna = fil_fname.split('/')[-1].split('_')[2]
 
    except:
       print('\n FATAL ERROR: no .fil file found!')
