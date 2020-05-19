@@ -45,42 +45,46 @@ def plot_residuals(par_fname='', tim_fname='', output_dir='', copy2last=False, u
     residuals_array = np.vstack((t, res, errs)).T
     np.savetxt(res_fname, residuals_array, header='MJD[day]  res[us]    err[us]')    
 
-    print("Plotting {0} points.".format(timing.nobs))
+    if timing.nobs < 2:
+        print("There are {0} points, I cannot make a plot".format(timing.nobs))
+    else:
+        print("Plotting {0} points.".format(timing.nobs))
 
-    if units == 'us':
-        un = 1e6
-        ylabel = 'res [us]'
-        rms_title = '\mu$s'
-    elif units == 'ms':
-        un = 1e3
-        ylabel = 'res [ms]'
-        rms_title = '$ms'
+        if units == 'us':
+            un = 1e6
+            ylabel = 'res [us]'
+            rms_title = '\mu$s'
+        elif units == 'ms':
+            un = 1e3
+            ylabel = 'res [ms]'
+            rms_title = '$ms'
 
-    rms = timing.rms()*un    # convert to units
-    rms_min, rms_max = calc_residuals_errorbars(n_obs=timing.nobs, rms=rms)
-    rms_err = math.sqrt( (rms-rms_min)**2 + (rms-rms_max)**2 )/2 # APPROX! 
+        rms = timing.rms()*un    # convert to units
+        rms_min, rms_max = calc_residuals_errorbars(n_obs=timing.nobs, rms=rms)
+        rms_err = math.sqrt( (rms-rms_min)**2 + (rms-rms_max)**2 )/2 # APPROX! 
 
-    i = np.argsort(t)
-    P.errorbar(t[i], res[i]*un, yerr=errs[i]*un/1e6, fmt='x', marker=".")
-        
-    #P.legend(unique,numpoints=1,bbox_to_anchor=(1.1,1.1))
-    P.xlabel('MJD'); P.ylabel(ylabel)
-    P.title("{0} , $rms={1:.2f} \pm {2:.2f} {3} , $\chi^2_r={4:.2f}$".format(timing.name,rms,rms_err,rms_title,timing.chisq()))
+        i = np.argsort(t)
+        P.errorbar(t[i], res[i]*un, yerr=errs[i]*un/1e6, fmt='x', marker=".")
+            
+        #P.legend(unique,numpoints=1,bbox_to_anchor=(1.1,1.1))
+        P.xlabel('MJD'); P.ylabel(ylabel)
+        P.title("{0} , $rms={1:.2f} \pm {2:.2f} {3} , $\chi^2_r={4:.2f}$".format(timing.name,rms,rms_err,rms_title,timing.chisq()))
 
-    # Save
-    pname_A = tim_fname.split('.tim')[0].split('/')[-1]
-    plot_output = output_dir + '/' + pname_A + '_tempo.png'
-    print('Saving plot to ' + plot_output)
-    P.savefig(plot_output, bbox_inches='tight')
+        # Save
+        pname_A = tim_fname.split('.tim')[0].split('/')[-1]
+        plot_output = output_dir + '/' + pname_A + '_tempo.png'
+        print('Saving plot to ' + plot_output)
+        P.savefig(plot_output, bbox_inches='tight')
 
-    # Save a copy in last_obs if requested:
-    if copy2last: 
-        path2pugliese='/home/jovyan/work/shared/PuGli-S/'
-        path2last = path2pugliese + '/last_obs/'
-        shutil.copy(plot_output, path2last)
+        # Save a copy in last_obs if requested:
+        if copy2last: 
+            path2pugliese='/home/jovyan/work/shared/PuGli-S/'
+            path2last = path2pugliese + '/last_obs/'
+            shutil.copy(plot_output, path2last)
 
-    # Clear figure for possible future calls in a pipeline
-    P.clf()
+        # Clear figure for possible future calls in a pipeline
+        P.clf()
+
 
 #=========================================================================
 # BELOW IS JUST FOR RUNNING AS INDEPENDENT PROGRAM   
