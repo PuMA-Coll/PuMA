@@ -277,11 +277,11 @@ class Observation(object):
         return float(P_topo), float(err_P_topo), ierr
 
 
-    def do_glitch_search(self, path_to_dir=os.environ['PWD'], par_dirname=DEFAULT_PAR_DIRNAME, thresh=1.0e-8, ncores=2):
+    def do_glitch_search(self, path_to_dir=os.environ['PWD'], par_dirname=DEFAULT_PAR_DIRNAME, threshold=1.0e-8, ncores=2):
         
         ierr = 0
 
-        self.tresh = tresh   # Store value in obs object for future analysis
+        self.tresh = treshold   # Store value in obs object for future analysis
         # Check if the reduction has already been made
         if len(glob.glob('*timing*.pfd')) + len(glob.glob('*par*.pfd')) >= 2: self.was_reduced = True
 
@@ -311,7 +311,7 @@ class Observation(object):
         self.red_alert = False
         if abs(self.jump) > thresh:
             self.yellow_alert = True
-            if  self.err_P/self.P_eph < thresh:
+            if  self.err_P/self.P_eph < self.thresh:
                 self.red_alert = True
 
         return ierr
