@@ -309,7 +309,7 @@ class Observation(object):
 
         self.yellow_alert = False
         self.red_alert = False
-        if abs(self.jump) > thresh:
+        if abs(self.jump) > self.thresh:
             self.yellow_alert = True
             if  self.err_P/self.P_eph < self.thresh:
                 self.red_alert = True
