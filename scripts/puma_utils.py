@@ -126,9 +126,21 @@ def write_pugliS_info_jason(path2pugliese,obs):
    except:
        df = pd.DataFrame()
 
-   #WE HAVE TO CHECK IF AND OBSID EXISTS TO REPLACE IT INSTEAD OF APPEND
+   # We check whether and observation already exists and replace it instead of append it
+   count = 0
+   already_reduced = False
+   for mjd in df['mjd']:
+      if mjd == obs.mjd:
+         already_reduced = True
+         break
+      count += 1   
 
-   df_new = df.append(obs.__dict__, ignore_index=True)
+   if already_reduced:
+      df_new = df
+      df_new.loc[count] = pd.Series(obs.__dict__)
+      print('Observation was already reduced. The correspondent row (index=' + str(count) + ') in the .json file will be overwritten\n')
+   else:
+      df_new = df.append(obs.__dict__, ignore_index=True)
 
    # guardar los pandas como json
    df_new.to_json(path_or_buf=PSR, orient='records', date_format='iso', double_precision=14)
