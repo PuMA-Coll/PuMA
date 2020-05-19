@@ -281,7 +281,7 @@ class Observation(object):
         
         ierr = 0
 
-        self.tresh = treshold   # Store value in obs object for future analysis
+        self.thresh = threshold   # Store value in obs object for future analysis
         # Check if the reduction has already been made
         if len(glob.glob('*timing*.pfd')) + len(glob.glob('*par*.pfd')) >= 2: self.was_reduced = True
 
