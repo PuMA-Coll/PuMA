@@ -37,7 +37,7 @@ def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/sh
    obs.nfils_total = obs.nfils
 
    # search for glitches (code red)
-   obs.do_glitch_search(thresh=thresh, path_to_dir=folder)
+   obs.do_glitch_search(threshold=thresh, path_to_dir=folder)
    if obs.red_alert: send_alert('red')
 
    # calculate signal-to-noise ratio
