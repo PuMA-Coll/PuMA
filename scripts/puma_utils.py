@@ -6,6 +6,7 @@ import os
 import sys
 import glob
 import shutil
+import numpy as np
 import pandas as pd
 
 
@@ -117,6 +118,7 @@ def move_observation(path_to_obs='', dest_path=''):
       ierr = -1
       return ierr, pulsar_name, path_to_reduc
 
+
 def write_pugliS_info_jason(path2pugliese,obs):
    """ Write information in JSON format"""
    PSR = path2pugliese + '/' + obs.pname + '/' + obs.pname + '.json'
@@ -127,11 +129,12 @@ def write_pugliS_info_jason(path2pugliese,obs):
        df = pd.DataFrame()
 
    # We check whether and observation already exists and eliminate it
+   print('Creating df_new')
    df_new = df[ np.abs( df.mjd - obs.mjd ) > 1.0e-5 ] 
    
    already_reduced = len(df) - len(df_new)
    if already_reduced > 0:
-      print('Observation was already reduced ' + str(already_reduced) + ' times. All previous reduction information was deleted\n')
+      print('Observation was already reduced ' + str(already_reduced) + ' times. All previous reduction information was deleted')
       
    df_new = df_new.append(obs.__dict__, ignore_index=True).sort_values(by=['mjd'], ascending=False).reset_index(drop=True)
 
