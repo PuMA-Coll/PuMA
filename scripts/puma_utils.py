@@ -6,6 +6,7 @@ import os
 import sys
 import glob
 import shutil
+import numpy as np
 import pandas as pd
 
 
@@ -117,6 +118,7 @@ def move_observation(path_to_obs='', dest_path=''):
       ierr = -1
       return ierr, pulsar_name, path_to_reduc
 
+
 def write_pugliS_info_jason(path2pugliese,obs):
    """ Write information in JSON format"""
    PSR = path2pugliese + '/' + obs.pname + '/' + obs.pname + '.json'
@@ -126,22 +128,18 @@ def write_pugliS_info_jason(path2pugliese,obs):
    except:
        df = pd.DataFrame()
 
-   # We check whether and observation already exists and replace it instead of append it
-   count = 0
-   already_reduced = False
-   for mjd in df['mjd']:
-      if mjd == obs.mjd:
-         already_reduced = True
-         break
-      count += 1   
+   # We check whether and observation already exists and eliminate it
+   print('Creating df_new')
+   df_new = df[ np.abs( df.mjd - obs.mjd ) > 1.0e-5 ] 
+   
+   already_reduced = len(df) - len(df_new)
+   if already_reduced > 0:
+      print('Observation was already reduced ' + str(already_reduced) + ' times. All previous reduction information was deleted')
+      
+   df_new = df_new.append(obs.__dict__, ignore_index=True).sort_values(by=['mjd'], ascending=False).reset_index(drop=True)
 
-   if already_reduced:
-      df_new = df
-      df_new.loc[count] = pd.Series(obs.__dict__)
-      print('Observation was already reduced. The correspondent row (index=' + str(count) + ') in the .json file will be overwritten\n')
-   else:
-      df_new = df.append(obs.__dict__, ignore_index=True)
-
-   # guardar los pandas como json
+   # We save the dataframe as a JSON file.
    df_new.to_json(path_or_buf=PSR, orient='records', date_format='iso', double_precision=14)
+   print('\nAdded new observation to the .json file\n')
+
    return
