@@ -24,6 +24,9 @@ def write_bypsr(pulsars, HEADER, FOOTER, WEBPATH, DBPATH):
     for PSR in pulsars:
         lines += "<!-- "+PSR+" --> \n"
         lines += '<article class="box page-content"><header><h2><a href="'+PSR+'/'+PSR+'.html">'+PSR+'</a></h2></header> \n'
+        lines += '<p><a href="https://ui.adsabs.harvard.edu/search/q=((%3Dabs%3A%22PSR%20'+PSR+'%22%20OR%20simbid%3A%223510432%22%20OR%20nedid%3A%220%22)%20database%3Aastronomy)&sort=date%20desc%2C%20bibcode%20desc&p_=0">ADS</a>&nbsp|&nbsp;'
+        lines += '<a href="https://www.atnf.csiro.au/research/pulsar/psrcat/proc_form.php?version=1.63&startUserDefined=true&c1_val=&c2_val=&c3_val=&c4_val=&sort_attr=jname&sort_order=asc&condition=&pulsar_names='+PSR+'&ephemeris=long&submit_ephemeris=Get+Ephemeris&coords_unit=raj%2Fdecj&radius=&coords_1=&coords_2=&style=Long+with+last+digit+error&no_value=*&fsize=3&x_axis=&x_scale=linear&y_axis=&y_scale=linear&state=query">ATNF</a></p>'
+
         lines += '<h3>Historical Tempo Plots</h3> \n'
         lines += '<h4>A1</h4><a href="'+PSR+'/'+PSR+'_A1_tempo.png"> \n'
         lines += '<img width="30%" src="'+PSR+'/'+PSR+'_A1_tempo.png" alt="A1"></a> \n'
@@ -51,6 +54,8 @@ def write_psr(PSR, HEADER, FOOTER, WEBPATH, DBPATH):
 
     lines = "<!-- "+PSR+" --> \n"
     lines += '<article class="box page-content"><header><h2><a href="'+PSR+'.html">'+PSR+'</a></h2></header> \n'
+    lines += '<p><a href="https://ui.adsabs.harvard.edu/search/q=((%3Dabs%3A%22PSR%20'+PSR+'%22%20OR%20simbid%3A%223510432%22%20OR%20nedid%3A%220%22)%20database%3Aastronomy)&sort=date%20desc%2C%20bibcode%20desc&p_=0">ADS</a>&nbsp|&nbsp;'
+    lines += '<a href="https://www.atnf.csiro.au/research/pulsar/psrcat/proc_form.php?version=1.63&startUserDefined=true&c1_val=&c2_val=&c3_val=&c4_val=&sort_attr=jname&sort_order=asc&condition=&pulsar_names='+PSR+'&ephemeris=long&submit_ephemeris=Get+Ephemeris&coords_unit=raj%2Fdecj&radius=&coords_1=&coords_2=&style=Long+with+last+digit+error&no_value=*&fsize=3&x_axis=&x_scale=linear&y_axis=&y_scale=linear&state=query">ATNF</a></p>'
     lines += '<h3>Historical Tempo Plots</h3> \n'
     lines += '<h4>A1</h4><a href="'+PSR+'_A1_tempo.png"> \n'
     lines += '<img width="30%" src="'+PSR+'_A1_tempo.png" alt="A1"></a> \n'
@@ -122,6 +127,9 @@ def get_lastobs(PSR, DBPATH, antennas=['A1','A2']):
 
     lines = "<!-- "+PSR+" --> \n"
     lines += '<article class="box page-content"><header><h2><a href="'+PSR+'/'+PSR+'.html">'+PSR+'</a></h2></header> \n'
+    lines += '<p><a href="https://ui.adsabs.harvard.edu/search/q=((%3Dabs%3A%22PSR%20'+PSR+'%22%20OR%20simbid%3A%223510432%22%20OR%20nedid%3A%220%22)%20database%3Aastronomy)&sort=date%20desc%2C%20bibcode%20desc&p_=0">ADS</a>&nbsp|&nbsp;'
+    lines += '<a href="https://www.atnf.csiro.au/research/pulsar/psrcat/proc_form.php?version=1.63&startUserDefined=true&c1_val=&c2_val=&c3_val=&c4_val=&sort_attr=jname&sort_order=asc&condition=&pulsar_names='+PSR+'&ephemeris=long&submit_ephemeris=Get+Ephemeris&coords_unit=raj%2Fdecj&radius=&coords_1=&coords_2=&style=Long+with+last+digit+error&no_value=*&fsize=3&x_axis=&x_scale=linear&y_axis=&y_scale=linear&state=query">ATNF</a></p>'
+
 
     for antenna in antennas:
         try:
