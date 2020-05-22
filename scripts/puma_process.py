@@ -28,37 +28,6 @@ import subprocess
 # ---------------------------------------------------------------
 
 
-def set_argparse():
-   # add arguments
-   parser = argparse.ArgumentParser(prog='puma_process.py',
-         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-         description='moves observations to reduction folder and applies a reduction pipeline')
-   parser.add_argument('--obs_folder', default='/home/jovyan/work/shared/upload/', type=str,
-         help='ABSOLUTE PATH to folder containing all the folders for each specific observation')
-   parser.add_argument('--dest_path', default='/home/jovyan/work/shared/', type=str,
-         help='path to directory containing all the observations for reduction')
-
-   return parser.parse_args()
-
-
-def check_cli_arguments(args):
-
-   ierr = 0
-
-   if os.path.isabs(args.obs_folder) is False:
-      print('\n FATAL ERROR: observation folder path is not absolute\n')
-      ierr = -1
-      return ierr
-
-   if os.path.isabs(args.dest_path) is False:
-      print('\n FATAL ERROR: destination folder path is not absolute\n')
-      ierr = -1
-      return ierr
-
-
-   return ierr
-
-
 def process_observations(obs_folder='', dest_path=''):
    '''
    This function moves multiple observations contained within a single folder.
@@ -100,7 +69,39 @@ def process_observations(obs_folder='', dest_path=''):
             do_pipe_puglis(folder=reduction_path)
 
 
-#====================================================================================
+   
+#=========================================================================
+# BELOW IS JUST FOR RUNNING AS INDEPENDENT PROGRAM   
+
+
+def set_argparse():
+   # add arguments
+   parser = argparse.ArgumentParser(prog='puma_process.py',
+         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+         description='moves observations to reduction folder and applies a reduction pipeline')
+   parser.add_argument('--obs_folder', default='/home/jovyan/work/shared/upload/', type=str,
+         help='ABSOLUTE PATH to folder containing all the folders for each specific observation')
+   parser.add_argument('--dest_path', default='/home/jovyan/work/shared/', type=str,
+         help='path to directory containing all the observations for reduction')
+
+   return parser.parse_args()
+
+
+def check_cli_arguments(args):
+   # check if command line arguments are OK
+   ierr = 0
+   if os.path.isabs(args.obs_folder) is False:
+      print('\n FATAL ERROR: observation folder path is not absolute\n')
+      ierr = -1
+      return ierr
+
+   if os.path.isabs(args.dest_path) is False:
+      print('\n FATAL ERROR: destination folder path is not absolute\n')
+      ierr = -1
+      return ierr
+
+   return ierr
+
 
 if __name__ == '__main__':
 
