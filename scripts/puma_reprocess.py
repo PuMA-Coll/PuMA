@@ -8,7 +8,7 @@ import os
 import sys
 import shutil
 import glob
-from puma_process import *
+from puma_process import process_observations
 
 '''
 This program must be executed in the pulsar folder to reprocess. 
@@ -23,7 +23,7 @@ def oldfolder_to_newfolder(folder=''):
    old_paths: /YYYYMMDD/A*/obs*/ or /YYYYMMDD/A*/all/
    The new paths are: /YYYY-MM-DDT_A*/
    '''
-   def adapt_folder(fils, AX):
+   def adapt_folder(folder, fils, AX):
       if len(fils) > 0:
          new_folder = folder + '_' + AX + '/'
          try:
@@ -32,23 +32,23 @@ def oldfolder_to_newfolder(folder=''):
          except Exception:
             print(new_folder + ' already exists')
          for fil in fils:
-            shutil.move(fil,new_folder)
+            os.rename(fil, new_folder+fil.split('/')[-1])
 
 
    if os.path.isdir(folder):
       fils_A1 = glob.glob(folder + '*/A1/*/*.fil')
-      adapt_folder(fils_A1, 'A1')
+      adapt_folder(folder, fils_A1, 'A1')
 
       fils_A2 = glob.glob(folder + '*/A2/*/*.fil')
-      adapt_folder(fils_A2, 'A2')
+      adapt_folder(folder, fils_A2, 'A2')
 
       # SHOULD WE SEARCH MORE EXTENSIVELY WITH A WALK? SEE IF NUMBER OF FILES MATCH?
       # This is just in case some observations are not placed in a subfolder
       fils_A1 = glob.glob(folder + '*/A1/*.fil')
-      adapt_folder(fils_A1, 'A1')
+      adapt_folder(folder, fils_A1, 'A1')
 
       fils_A2 = glob.glob(folder + '*/A2/*.fil')
-      adapt_folder(fils_A2, 'A2')
+      adapt_folder(folder, fils_A2, 'A2')
 
       shutil.rmtree(folder)
    
@@ -83,16 +83,18 @@ if __name__ == '__main__':
    os.mkdir(temp_folder)
    folders = glob.glob('*A*')
    for folder in folders:
-      print(temp_folder + folder)
+      print(folder, temp_folder + folder)
       os.rename(folder, temp_folder + folder)
 
    # Process the observations using puma_process.py
-   print('\n Start moving and processing observations from temp folder to current folder using process_observations')
+   reduction_folder = '/home/jovyan/work/shared/' # (THIS CAN BE CHANGED AS A CLI ARGUMENT IF NEEDED)
+   print('\n Start moving and processing observations from temp folder (' + temp_folder + ') to reduction folder (' + reduction_folder + ') using process_observations')
 
-   ierr = process_observations(obs_folder=temp_folder, dest_path=pwd)
+   ierr = process_observations(obs_folder=temp_folder, dest_path = reduction_folder)
 
    if ierr != 0: sys.exit(1)
-      
+
+   print('Removing temp folder (' + temp_folder + ')')
    os.rmdir(temp_folder)
 
    print('\n Finished reprocessing observations')
