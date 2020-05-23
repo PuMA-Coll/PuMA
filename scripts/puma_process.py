@@ -68,7 +68,7 @@ def process_observations(obs_folder='', dest_path=''):
          else:
             do_pipe_puglis(folder=reduction_path)
 
-
+   return ierr
    
 #=========================================================================
 # BELOW IS JUST FOR RUNNING AS INDEPENDENT PROGRAM   

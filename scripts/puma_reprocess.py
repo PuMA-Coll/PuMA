@@ -75,7 +75,6 @@ if __name__ == '__main__':
    # Change the structure in the old observation folder to match the new one
    print('\n Adapting ' + str(len(old_folders)) + ' folders to the new format')
    for folder in old_folders:
-      print(folder)
       oldfolder_to_newfolder(folder=folder)
 
    # Move all the observations to a new directory to reduce them one by one
