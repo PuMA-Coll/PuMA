@@ -30,5 +30,18 @@
         <script src="../assets/js/util.js"></script>
         <!--[if lte IE 8]><script src="../assets/js/ie/respond.min.js"></script><![endif]-->
         <script src="../assets/js/main.js"></script>
-    </body>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js"></script>
+<script src="../assets/js/swipebox.min.js"></script>
+
+<script type="text/javascript">
+$( document ).ready(function() {
+
+			/* Basic Gallery */
+			$( '.swipebox' ).swipebox();
+
+});
+</script>
+
+</body>
 </html>
