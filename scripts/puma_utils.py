@@ -14,10 +14,10 @@ def copy_db(pname, antenna, path2ini, path2end):
    '''
    Copy files useful for database (.ps converted to png, pfd and polycos)
    '''
-   
+
    path2last = path2end + '/last_obs/'
    path2pngs = path2end + '/' + pname + '/pngs/'
-   path2pfds = path2end + '/' + pname + '/pfds/' 
+   path2pfds = path2end + '/' + pname + '/pfds/'
    # Create the specific directory for the pulsar if it does not exist
    try:
       os.makedirs(path2pngs)
@@ -27,11 +27,11 @@ def copy_db(pname, antenna, path2ini, path2end):
 
    ps_mask = glob.glob(path2ini + '/*mask*.ps')[0]
    pngfile = ps_mask[:-2] + 'png'
-   os.system('convert -density 300 -rotate 90 -alpha off ' + ps_mask + ' ' + pngfile)
+   os.system('convert -density 150 -rotate 90 -alpha off ' + ps_mask + ' ' + pngfile)
 
-   png_files = glob.glob(path2ini + '/*.png') 
-   pfd_files = glob.glob(path2ini + '/*.pfd') 
-   polycos_files = glob.glob(path2ini + '/*.polycos') 
+   png_files = glob.glob(path2ini + '/*.png')
+   pfd_files = glob.glob(path2ini + '/*.pfd')
+   polycos_files = glob.glob(path2ini + '/*.polycos')
 
    # Copy all png files and save their paths in a list of pngs
    pngs = []
@@ -68,7 +68,7 @@ def copy_db(pname, antenna, path2ini, path2end):
 def move_observation(path_to_obs='', dest_path=''):
    '''
    This function moves all files from an observation done by each
-   antenna into the database folder for later reduction. It also 
+   antenna into the database folder for later reduction. It also
    returns the pulsar name and the new reduction folder.
    '''
 
@@ -82,7 +82,7 @@ def move_observation(path_to_obs='', dest_path=''):
    # skel: path_to_obs = '.../upload/date', dest_path = '.../'
    print(path_to_obs)
 
-   # grab pulsar name and antenna from *.fil file name 
+   # grab pulsar name and antenna from *.fil file name
    try:
       fil_fname = glob.glob(path_to_obs + '/*.fil')[0]
       pulsar_name = fil_fname.split('/')[-1].split('_')[1]
@@ -130,12 +130,12 @@ def write_pugliS_info_jason(path2pugliese,obs):
 
    # We check whether and observation already exists and eliminate it
    print('Creating df_new')
-   df_new = df[ np.abs( df.mjd - obs.mjd ) > 1.0e-5 ] 
-   
+   df_new = df[ np.abs( df.mjd - obs.mjd ) > 1.0e-5 ]
+
    already_reduced = len(df) - len(df_new)
    if already_reduced > 0:
       print('Observation was already reduced ' + str(already_reduced) + ' times. All previous reduction information was deleted')
-      
+
    df_new = df_new.append(obs.__dict__, ignore_index=True).sort_values(by=['mjd'], ascending=False).reset_index(drop=True)
 
    # We save the dataframe as a JSON file.
