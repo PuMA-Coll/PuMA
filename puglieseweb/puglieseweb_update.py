@@ -63,16 +63,22 @@ def write_psr(PSR, HEADER, FOOTER, WEBPATH, DBPATH):
     lines += '<img width="30%" src="'+PSR+'_A2_tempo.png" alt="A2"></a></article> \n'
 
     lines += '<article> <table>\n'
-    lines += '<thead><tr>\n'
-    lines += '<th>Date</th><th>Antenna</th><th>Nfils</th><th>GTI</th><th>Exposure</th><th>SNR_par</th><th>SNR_tim</th><th>Glitch</th><th>Plots</th>\n'
-    lines += '</tr></thead><tbody>\n'
+    lines += '<thead ><tr>\n'
+    lines += '<th><b>Date</b></th><th><b>Antenna</b></th><th><b>Nfils</b></th><th><b>GTI</b></th><th><b>Exposure</b></th><th><b>SNR_par</b></th><th><b>SNR_tim</b></th><th><b>Jump</b></th><th><b>Glitch</b></th>\n'
+    lines += '</tr><tr>'
+    lines += '<th> </th><th><b>Blue Alert</b></th><th><b>Yellow Alert</b></th><th><b>Red Alert</b></th><th><b>Thresh</b></th><th><b>P_err</b></th><th><b>P_eph</b></th><th><b>P_obs</b></th>\n'
+    lines += '</b></tr></thead><tbody>\n'
 
     for idx in df.index:
         antenna = df.antenna.loc[idx]
         gti = float(df.gti_percentage.loc[idx])
         exp = float(df.obs_duration.loc[idx])/3600.
         date = df.obs_date.loc[idx]
-        nfils = df.nfils.loc[idx]
+        nfils = int(df.nfils.loc[idx])
+        try:
+            nfils_total = int(df.nfils_total.loc[idx])
+        except:
+            nfils_total = -1
         try:
             snr_par = float(df.snr_par.loc[idx])
         except:
@@ -82,7 +88,29 @@ def write_psr(PSR, HEADER, FOOTER, WEBPATH, DBPATH):
         except:
             snr_timing = -1
 
-        glitch = df.glitch[idx]
+        try:
+            glitch = df.glitch.loc[idx]
+            jump = float(df.jump.loc[idx])
+        except:
+            glitch = jump = -1
+
+        try: blue_alert = df.blue_alert.loc[idx]
+        except: blue_alert = -1
+        try: yellow_alert = df.yellow_alert.loc[idx]
+        except: yellow_alert = -1
+        try: red_alert = df.red_alert.loc[idx]
+        except: red_alert = -1
+
+        try:
+            thresh = float(df.thresh.loc[idx])
+        except:
+            thresh = -1
+        try:
+            P_obs = float(df.P_obs.loc[idx])
+            P_eph = float(df.P_eph.loc[idx])
+            err_P = float(df.err_P.loc[idx])
+        except:
+            P_obs = P_eph = err_P = -1
 
         try:
             pngsdir = 'pngs/'
@@ -101,8 +129,17 @@ def write_psr(PSR, HEADER, FOOTER, WEBPATH, DBPATH):
             pngmask, pngtiming, pngpar = '', '', ''
 
         lines += '<tr>\n'
-        lines += '   <td>{}</td><td>{}</td><td>{}</td><td>{:.2f}&percnt;</td><td>{:.2f}hr</td><td> {:.2f}</td><td>{:.2f}</td><td>{}</td>\n'.format(date, antenna, nfils, gti, exp, snr_par, snr_timing, glitch)
-        lines += '   <td><a class="swipbox" href="{}">MASK</a> <a class="swipebox" href="{}">TIMING</a> <a class="swipebox" href="{}">PAR</a></td>\n'.format(pngmask, pngtiming, pngpar)
+        if '0437-4715' in PSR:
+            lines += '   <td>{}</td><td>{}</td><td>{}</td><td>{:.2f}&percnt;</td><td>{:.2f}hr</td><td>{:.2f}</td><td>{:.2f}</td><td>{:.8f}</td><td><b>{}</b></td>\n'.format(date, antenna, nfils_total, gti, exp, snr_par, snr_timing, jump, glitch)
+        else:
+            lines += '   <td>{}</td><td>{}</td><td>{}</td><td>{:.2f}&percnt;</td><td>{:.2f}hr</td><td>{:.2f}</td><td>{:.2f}</td><td>{:.8f}</td><td><b>{}</b></td>\n'.format(date, antenna, nfils, gti, exp, snr_par, snr_timing, jump, glitch)
+        lines += '</tr>\n'
+        lines += '<tr>\n'
+        lines += '   <td> </td><td style="color:blue">{}</td><td style="color:yellow">{}</td><td style="color:red">{}</td><td>{:.8f}</td><td>{:.8f}</td><td> {:.8f}</td><td>{:.8f}</td>\n'.format(blue_alert, yellow_alert, red_alert, thresh, err_P, P_eph, P_obs)
+        if '0437-4715' in PSR:
+            lines += '   <td><a class="swipebox" href="{}">MASK</a> <a class="swipebox" href="{}">TIMING</a></td>\n'.format(pngmask, pngtiming)
+        else:
+            lines += '   <td><a class="swipebox" href="{}">MASK</a> <a class="swipebox" href="{}">TIMING</a> <a class="swipebox" href="{}">PAR</a></td>\n'.format(pngmask, pngtiming, pngpar)
         lines += '</tr>\n'
 
     lines += '</tbody> </table> </article>\n\n'
