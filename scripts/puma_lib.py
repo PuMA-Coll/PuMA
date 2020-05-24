@@ -16,7 +16,6 @@ import psrchive
 
 class Observation(object):
     """ This is the main class that represents an observation from a single antenna."""
-
     DEFAULT_PAR_DIRNAME = '/opt/pulsar/puma/pardir/'
     DEFAULT_CONFIG_DIRNAME = '/opt/pulsar/puma/config/'
     DEFAULT_TIMING_DIRNAME = DEFAULT_CONFIG_DIRNAME + 'timing/'
@@ -71,14 +70,14 @@ class Observation(object):
 
 
     def do_rfi_search(self):
-
+        ''' Use rfifind to make a mask '''
         ierr = 0
         self.maskname = ''
 
         # search for antenna in one of the .fil(s)
-        if 'A1' in self.params2reduc['fils'][0]:
+        if self.antenna == 'A1':
             sigmas = '35'
-        elif 'A2' in self.params2reduc['fils'][0]:
+        elif self.antenna == 'A2':
             sigmas = '4'
         else:
             print('\n ERROR: no antenna A1 or A2 found in .fil name \n')
@@ -86,7 +85,7 @@ class Observation(object):
 
         # RFIfind process
         # - check if we would re-use an existing mask. If not, start rfifind process
-        output = 'mask_' + self.pname + '_' + self.params2reduc['nint'] + '_' + self.params2reduc['date']
+        output = 'mask_' + self.pname + '_' + self.params2reduc['nint'] + '_' + self.antenna + '_' + self.params2reduc['date']
         rfifind = ['rfifind', '-ncpus', self.params2reduc['ncores'], '-time', self.params2reduc['nint'], '-freqsig', sigmas, '-zerodm', '-o', output]
         rfifind.extend(self.params2reduc['fils'])
 
@@ -98,7 +97,7 @@ class Observation(object):
             elif len(masks) == 0:
                 print('WARNING: No mask in the folder. I will make one for you')
                 subprocess.check_call(rfifind, cwd=self.path_to_dir)
-                self.maskname = self.path_to_dir + '/' + output+'_rfifind.mask'
+                self.maskname = self.path_to_dir + '/' + output + '_rfifind.mask'
             else:
                 self.maskname = masks[0]
         else:
@@ -109,7 +108,7 @@ class Observation(object):
 
 
     def prepare_prepfold_cmd(self):
-
+        ''' construct the string to run prepfold '''
         ierr = 0
 
         # command to run prepfold
@@ -162,7 +161,7 @@ class Observation(object):
 
 
     def set_params2reduc(self, ftype='timing', path_to_dir=os.environ['PWD'], par_dirname=DEFAULT_PAR_DIRNAME, ptopo=1.0, ncores=2, start=0.0, end=1.0):
-    
+        ''' get the reduction parameters from .ini file '''
         self.params2reduc['ftype'] = ftype
         self.path_to_dir = path_to_dir
         self.par_dirname = par_dirname
@@ -191,20 +190,19 @@ class Observation(object):
         elif self.nfils > 1:
             print('\n WARNING: more than one fil found in the folder. I will fold them all. \n')
 
-        # grab name of pulsar from the .fil with sigproc function read_header (dictionary)
+        # grab pulsar name from the .fil with sigproc function read_header (dictionary)
         fil_dic = sigproc.read_header(fils[0])[0]
         pulsarname = fil_dic['source_name'][:-3]
-        
         if (self.pname == ''): self.pname = pulsarname
         elif (self.pname != pulsarname):
             print('\n WARNING: Pulsar name in the header .fil different from the name of the pulsar you intend to reduce. You might be in a wrong folder. \n')
 
-        # grab configuration file with same name than the pulsar
+        # grab configuration file with same name as the pulsar
         configfile = SafeConfigParser()
         configfile.read(self.config_dirname + self.pname + '.ini')
 
-        # if we are not using manual mode, take all parameters in the config file,
-        # this file contains 3 sections: main, parameters and rfi. Each of them will
+        # If we are not using manual mode, take all parameters in the config file.
+        # This file contains 3 sections: main, parameters and rfi. Each of them will
         # be stored in different dictionaries, Main, Parameters and Rfi such that
         # this will be returned by get_pulsar_info function
 
@@ -236,7 +234,7 @@ class Observation(object):
 
 
     def do_reduc(self):
-
+        ''' Fold observation with prepfold command (PRESTO) '''
         ierr = 0
 
         # apply mask on observation(s)
@@ -255,7 +253,7 @@ class Observation(object):
 
 
     def read_bestprof(self,ftype=''):
-
+        ''' Extract period information from .bestprof file created by prepfold '''
         ierr = 0
         try:
             filename = glob.glob(self.path_to_dir + '/*'+ftype+'*.bestprof')[0]
@@ -278,7 +276,7 @@ class Observation(object):
 
 
     def do_glitch_search(self, path_to_dir=os.environ['PWD'], par_dirname=DEFAULT_PAR_DIRNAME, threshold=1.0e-8, ncores=2):
-        
+        ''' Search for a glitch in the pulsar period by comparing timing period vs par period (DP/P > threshold)'''
         ierr = 0
 
         self.thresh = threshold   # Store value in obs object for future analysis
@@ -307,8 +305,7 @@ class Observation(object):
         DP = self.P_eph - self.P_obs  # if >0 glitch, <0 anti_glitch
         self.jump = DP/self.P_eph
 
-        self.yellow_alert = False
-        self.red_alert = False
+        self.yellow_alert, self.red_alert = False, False
         if abs(self.jump) > self.thresh:
             self.yellow_alert = True
             if  self.err_P/self.P_eph < self.thresh:
@@ -319,8 +316,10 @@ class Observation(object):
 
     def do_toas(self, mode='add', pfd_dirname=os.environ['PWD'], par_dirname=DEFAULT_PAR_DIRNAME,
                 std_dirname=DEFAULT_TIMING_DIRNAME, tim_dirname='', n_subints=1):
+        ''' Calculate TOAs using pat. It can calculate just one TOA (add mode) or all TOAs (all mode) '''
 
         def do_single_toa(pfd, pfd_dirname, par_fname, std_fname, n_subints, tim_fname):
+            ''' Calculate a single TOA '''
             ierr = 0
             # change pfd header
             coord = self.RAJ + self.DECJ
@@ -347,10 +346,8 @@ class Observation(object):
             except:   
                 pass
 
-            # define arguments for call to pat
+            # define arguments for pat and then call it
             line = '-A PGS -f \"tempo2\" -s ' + std_fname + ' -jFD -j \"T ' + str(n_subints) + '\" '
-            # call pat to get toa
-            print('pat ' + line + pfd + ' >> ' + tim_fname)
             subprocess.call(['pat ' + line + pfd + ' >> ' + tim_fname], shell=True)
 
             # move back files in the tmp folder
@@ -376,7 +373,7 @@ class Observation(object):
         par_fname = par_dirname + self.pname + '.par'
         std_fname = std_dirname + '/' + self.pname + '.pfd.std'
 
-        # computing toa for observations(s)
+        # computing toa for observation(s)
         if mode == 'all':
             # first remove old .tim
             subprocess.call(['rm', '-f', tim_fname])
@@ -394,7 +391,7 @@ class Observation(object):
 
 
     def get_mask_percentage(self, maskname=''):
-        
+        ''' Calculate the percentage of the observation affected by the mask '''
         ierr = 0
  
         print('\n Getting GTI from mask: {}\n'.format(maskname))
@@ -426,7 +423,7 @@ class Observation(object):
         elif '_timing' in pfd:
             self.snr_timing = snr
         else:
-            print('What is that pfd? cannot calculate store the SNR in obs object')
+            print('What is that pfd? cannot store the SNR in obs object')
             ierr = -1
 
         return ierr
