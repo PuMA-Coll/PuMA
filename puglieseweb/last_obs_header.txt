@@ -34,7 +34,8 @@
 <h5> Disk space (last min)</h5>
 <embed width="380" height="120" src="diskspace.txt">
 
-<p> <a href="https://www.overleaf.com/project/5e46ece44ffedc00012fa9b0">OverLeaf Glitches</a> </p>
+<p> <a href="https://www.overleaf.com/project/5e46ece44ffedc00012fa9b0">OverLeaf Glitches</a> |
+<a href="https://docs.google.com/spreadsheets/d/1yMP0cmu7KSk7TeOXnW2wf79Gc2zToP3WTFBUUTz6Aio/edit#gid=1050344985">Lista de Pulsares</a></p>
 
             </header>
             <!-- Nav -->

@@ -64,10 +64,14 @@ def write_psr(PSR, HEADER, FOOTER, WEBPATH, DBPATH):
 
     lines += '<article> <table>\n'
     lines += '<thead ><tr>\n'
-    lines += '<th><b>Date</b></th><th><b>Antenna</b></th><th><b>Nfils</b></th><th><b>GTI</b></th><th><b>Exposure</b></th><th><b>SNR_par</b></th><th><b>SNR_tim</b></th><th><b>Jump</b></th><th><b>Glitch</b></th>\n'
-    lines += '</tr><tr>'
-    lines += '<th> </th><th><b>Blue Alert</b></th><th><b>Yellow Alert</b></th><th><b>Red Alert</b></th><th><b>Thresh</b></th><th><b>P_err</b></th><th><b>P_eph</b></th><th><b>P_obs</b></th>\n'
-    lines += '</b></tr></thead><tbody>\n'
+    if '0437-4715' in PSR:
+        lines += '<th><b>Date</b></th><th><b>Antenna</b></th><th><b>Nfils</b></th><th><b>GTI</b></th><th><b>Exposure</b></th><th><b>SNR_par</b></th><th><b>SNR_tim</b></th>\n'
+        lines += '</tr></thead><tbody>\n'
+    else:
+        lines += '<th><b>Date</b></th><th><b>Antenna</b></th><th><b>Nfils</b></th><th><b>GTI</b></th><th><b>Exposure</b></th><th><b>SNR_par</b></th><th><b>SNR_tim</b></th><th><b>Jump</b></th><th><b>Glitch</b></th>\n'
+        lines += '</tr><tr>'
+        lines += '<th> </th><th><b>Blue Alert</b></th><th><b>Yellow Alert</b></th><th><b>Red Alert</b></th><th><b>Thresh</b></th><th><b>P_err</b></th><th><b>P_eph</b></th><th><b>P_obs</b></th>\n'
+        lines += '</tr></thead><tbody>\n'
 
     for idx in df.index:
         antenna = df.antenna.loc[idx]
@@ -130,15 +134,12 @@ def write_psr(PSR, HEADER, FOOTER, WEBPATH, DBPATH):
 
         lines += '<tr>\n'
         if '0437-4715' in PSR:
-            lines += '   <td>{}</td><td>{}</td><td>{}</td><td>{:.2f}&percnt;</td><td>{:.2f}hr</td><td>{:.2f}</td><td>{:.2f}</td><td>{:.8f}</td><td><b>{}</b></td>\n'.format(date, antenna, nfils_total, gti, exp, snr_par, snr_timing, jump, glitch)
-        else:
-            lines += '   <td>{}</td><td>{}</td><td>{}</td><td>{:.2f}&percnt;</td><td>{:.2f}hr</td><td>{:.2f}</td><td>{:.2f}</td><td>{:.8f}</td><td><b>{}</b></td>\n'.format(date, antenna, nfils, gti, exp, snr_par, snr_timing, jump, glitch)
-        lines += '</tr>\n'
-        lines += '<tr>\n'
-        lines += '   <td> </td><td style="color:blue">{}</td><td style="color:yellow">{}</td><td style="color:red">{}</td><td>{:.8f}</td><td>{:.8f}</td><td> {:.8f}</td><td>{:.8f}</td>\n'.format(blue_alert, yellow_alert, red_alert, thresh, err_P, P_eph, P_obs)
-        if '0437-4715' in PSR:
+            lines += '   <td>{}</td><td>{}</td><td>{}</td><td>{:.2f}&percnt;</td><td>{:.2f}hr</td><td>{:.2f}</td><td>{:.2f}</td>\n'.format(date, antenna, nfils_total, gti, exp, snr_par, snr_timing)
             lines += '   <td><a class="swipebox" href="{}">MASK</a> <a class="swipebox" href="{}">TIMING</a></td>\n'.format(pngmask, pngtiming)
         else:
+            lines += '   <td>{}</td><td>{}</td><td>{}</td><td>{:.2f}&percnt;</td><td>{:.2f}hr</td><td>{:.2f}</td><td>{:.2f}</td><td>{:.8f}</td><td><b>{}</b></td>\n'.format(date, antenna, nfils, gti, exp, snr_par, snr_timing, jump, glitch)
+            lines += '</tr><tr>\n'
+            lines += '   <td> </td><td style="color:blue">{}</td><td style="color:yellow">{}</td><td style="color:red">{}</td><td>{:.8f}</td><td>{:.8f}</td><td> {:.8f}</td><td>{:.8f}</td>\n'.format(blue_alert, yellow_alert, red_alert, thresh, err_P, P_eph, P_obs)
             lines += '   <td><a class="swipebox" href="{}">MASK</a> <a class="swipebox" href="{}">TIMING</a> <a class="swipebox" href="{}">PAR</a></td>\n'.format(pngmask, pngtiming, pngpar)
         lines += '</tr>\n'
 
