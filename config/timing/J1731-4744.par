@@ -1,65 +1,41 @@
-PSRJ            J1731-4744
-PSRB            B1727-47
-NAME            B1727-47
-RAJ             17:31:42.160                  5.000e-03
-DECJ            -47:44:36.26                  6.000e-02
-ELONG           264.78
-ELAT            -24.43
-DM              123.056                       4.000e-03
-PEPOCH          50939.0000
-F0              1.20506786194                 6.000e-11
-F1              -0.237616E-12                 5.000e-18
-P0              0.82982878524                 5.000e-11
-P1              1.63626E-13                   4.000e-18
-DIST_DM         5.54
-DIST_DM1        2.79
-SURVEY          mol1,mol2,pks70,pkssw,htru_pks
-PMRA            73                            1.500e+01
-PMDEC           -132                          1.400e+01
-S200            424                           8.000e+00
-S400            190
-S1400           27                            3.000e+00
-W50             17.1
-W10             32
-POSEPOCH        53000
-DMEPOCH         55000
-F2              5.6E-24                       1.300e-24
-DIST_AMN        0.4
-DIST_AMX        0.7
-ASSOC           SNR:G343.0-6.0(RCW114)[skz+19]
-AGE             8.04e+04
-RM              -429.1                        5.000e-01
-TAU_SC          1.006E-04                     3.000e-07
-S3000           7                             2.000e+00
-TYPE            HE[sbc+19]
-NGLT            7
-DATE            1968
-DIST            0.70
-DIST1           0.70
-PMERR_PA        -56.556
-P1_I            1.64e-13
-AGE_I           8.04e+04
-BSURF_I         1.18e+13
-EDOT_I          1.13e+34
-EDOTD2          2.3e+34
-R_LUM           93.10
-R_LUM14         13.23
-PMTOT           151                           1.500e+01
-VTRANS          500.59
-BSURF           1.18e+13
-B_LC            1.93e+02
-SI414           1.56
-EDOT            1.1e+34
-RAJD            262.92567                     2.083e-05
-DECJD           -47.743406                    1.667e-05
-OSURVEY         000010104011
-DMSINB          -16.42
-GL              342.565
-GB              -7.669
-XX              -0.21
-YY              7.84
-ZZ              -0.09
-PML             -68                           1.500e+01
-PMB             -130                          1.500e+01
-EPHVER          2
-UNITS           TDB
+PSRJ           J1731-4744
+RAJ            17:31:42.2103229             0.01961200000000000000   
+DECJ           -47:44:38.79454              0.47952000000000000003   
+F0             1.2049313608565322968     1  0.00000000709161194340   
+F1             -2.3711968795565275178e-13 1  6.1764965469952930467e-17
+PEPOCH         57600                       
+POSEPOCH       57600                       
+DMEPOCH        57600                       
+DM             123.33                       0.02000000000000000000   
+GLEP_1         57984.260363000000002       
+GLPH_1         -1.6885201834207283401e-05   
+GLF0_1         3.794485020286688174e-06    
+GLF1_1         -3.6155814221002354797e-16   
+START          58750.943904249847936     1 
+FINISH         58989.185818190277626     1 
+TRACK          -2                          
+TZRMJD         58856.539390997420313       
+TZRFRQ         1428.4375                
+TZRSITE        iar1   
+TRES           585.805      
+EPHVER         5                           
+NE_SW          9.9610000000000000001       
+CLK            TT(TAI)
+MODE 1
+UNITS          TCB
+TIMEEPH        IF99
+DILATEFREQ     Y
+PLANET_SHAPIRO Y
+T2CMETHOD      IAU2000B
+NE_SW          9.961
+CORRECT_TROPOSPHERE  Y
+EPHEM          DE430
+NITS           1
+NTOA           61
+CHI2R          2.6401 57
+JUMP TEL iar2 -0.00035332847742496 1
+TNGlobalEF 1.02669
+TNGlobalEQ -4.14736
+TNRedAmp -9.49469
+TNRedGam 4.9275
+TNRedC 10
