@@ -1,0 +1,16 @@
+RJ            J0534+2200
+RAJ             05:34:31.973            
+DECJ            +22:00:52.06            
+DM              56.791                  
+PEPOCH          48442.5
+F0              29.946923               
+F1              -3.77535E-10           
+PMRA            -14.7                  
+PMDEC           2.0                    
+POSEPOCH        40675
+F2              1.1147E-20            
+EPHEM           DE405
+RM              -42.3                
+F3              -2.73E-30          
+EPHVER          2
+UNITS           TDB

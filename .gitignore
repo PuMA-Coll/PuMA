@@ -1,5 +1,22 @@
-*.sh
-*.par
-*.iar
-*.ini
+ Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.save
 
+# C extensions
+*.so
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+*.sh
+*.iar
+
+
+# Files in PuglieseWeb
+
+puglieseweb/antena1tlmy.txt
+puglieseweb/antena2tlmy.txt
+puglieseweb/diskspace.txt
+puglieseweb/tiempo.shtml

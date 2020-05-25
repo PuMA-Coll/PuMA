@@ -1,0 +1,14 @@
+PSRJ            J1832-0827
+RAJ		18:32:37.0200
+DECJ		-08:27:03.64
+DM              300.869                
+PEPOCH          49442.00
+F0              1.54489610590          
+F1              -1.524610E-13          
+PMRA            -4                     
+PMDEC           20                   
+POSEPOCH        49442.00
+F2              1.9E-26                
+RM              39                     
+EPHVER          2
+UNITS           TDB

@@ -149,11 +149,11 @@ for psr in psrs:
 
 for psr in psrs_iar:
 	create_parfile(psrs_iar[psr])
-		create_inifile(psrs_iar[psr])
-		A1.create_iarfile(psrs_iar[psr])
-		A2.create_iarfile(psrs_iar[psr])
-		A1.create_pointer(psrs_iar[psr])
-		A2.create_pointer(psrs_iar[psr])
+	create_inifile(psrs_iar[psr])
+	A1.create_iarfile(psrs_iar[psr])
+	A2.create_iarfile(psrs_iar[psr])
+	A1.create_pointer(psrs_iar[psr])
+	A2.create_pointer(psrs_iar[psr])
             
 #####################################################################################################
             

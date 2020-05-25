@@ -1,0 +1,58 @@
+PSRJ            J1430-6623
+PSRB            B1426-66
+NAME            B1426-66
+RAJ             14:30:40.872             1.800e-02
+DECJ            -66:23:05.04             1.400e-01
+ELONG           241.71
+ELAT            -48.01
+DM              65.3                     1.000e-01
+PEPOCH          46800.0
+F0              1.273170497807           1.300e-11
+F1              -4.4893E-15              9.000e-19
+P0              0.785440757324           8.000e-12
+P1              2.7695E-15               5.000e-19
+DIST_DM         1.33
+DIST_DM1        1.00
+SURVEY          mol1,mol2,pks70,pkssw,pks
+PMRA            -31                      5.000e+00
+PMDEC           -21                      3.000e+00
+S200            214                      2.400e+01
+S400            130
+S1400           16.3                     3.300e+00
+W50             3.9
+W10             28
+POSEPOCH        46916
+DMEPOCH         46800.00
+AGE             4.49e+06
+RM              -19.2                    3.000e-01
+DATE            1968
+DIST            1.33
+DIST1           1.00
+PMERR_PA        -89.904
+P1_I            2.77e-15
+AGE_I           4.50e+06
+BSURF_I         1.49e+12
+EDOT_I          2.25e+32
+EDOTD2          1.3e+32
+R_LUM           229.96
+R_LUM14         28.83
+PMTOT           37                       5.000e+00
+VTRANS          236.10
+BSURF           1.49e+12
+B_LC            2.89e+01
+SI414           1.66
+EDOT            2.3e+32
+RAJD            217.67030
+DECJD           -66.38473
+OSURVEY         000010144011
+DMSINB          -6.15
+GL              312.65
+GB              -5.40
+XX              -0.97
+YY              7.60
+ZZ              -0.13
+PML             -31                      5.000e+00
+PMB             -7                       4.000e+00
+EPHVER          2
+UNITS           TDB
+

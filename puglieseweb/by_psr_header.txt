@@ -10,11 +10,15 @@
         <meta content="initial-scale=1" name="viewport">
         <meta content="user-scalable=yes,width=device-width,initial-scale=1" name="viewport">
         <title>Pugli-S- | PuMA Collaboration</title>
+				<link rel="icon" href="../images/tab.png">
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
-        <link rel="stylesheet" href="assets/css/main.css">
-        <!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+        <!--[if lte IE 8]><script src="../assets/js/ie/html5shiv.js"></script><![endif]-->
+        <link rel="stylesheet" href="../assets/css/main.css">
+        <!--[if lte IE 8]><link rel="stylesheet" href="../assets/css/ie8.css" /><![endif]-->
+
+<link rel="stylesheet" href="../assets/css/swipebox.css">
+
     </head>
     <body class="">
         <div id="page-wrapper">
@@ -22,16 +26,20 @@
             <header id="header">
                 <div class="logo container">
                     <div>
-						<h4><a href="index.html" id="logo">PUGLI-S-: PUlsar Glitching Squad of PuMA collaboration</a></h4>
+						<h4><a href="../index.html" id="logo">PUGLI-S-: PUlsar Glitching Squad</a></h4>
 						<h5>Historical by PSR</h5>
                     </div>
                 </div>
+
+<p> <a href="https://www.overleaf.com/project/5e46ece44ffedc00012fa9b0">OverLeaf Glitches</a> |
+<a href="https://docs.google.com/spreadsheets/d/1yMP0cmu7KSk7TeOXnW2wf79Gc2zToP3WTFBUUTz6Aio/edit#gid=1050344985">Lista de Pulsares</a></p>
+
             </header>
             <!-- Nav -->
             <nav id="nav">
                 <ul>
                     <li style="white-space: nowrap;">
-                        <a href="index.html">INICIO</a>
+                        <a href="../index.html">HOME</a>
                     </li>
                     <li style="white-space: nowrap;">
                         <a href="last_obs.html">LAST OBSERVATIONS</a>
@@ -46,10 +54,8 @@
             </nav>
             <!-- Main -->
             <div id="main-wrapper">
-            <div id="main" class="container"> 
-                    <div class="row"> 
-                        <div class="12u"> 
-                            <div class="content"> 
+            <div id="main" class="container">
+                    <div class="row">
+                        <div class="12u">
+                            <div class="content">
                                 <!-- Content -->
-
-

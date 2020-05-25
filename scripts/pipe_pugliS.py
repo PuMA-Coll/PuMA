@@ -15,7 +15,77 @@ import sigproc
 import subprocess
 
 from puma_lib import Observation
+from puma_utils import *
+from puma_timing import plot_residuals
 
+
+def send_alert(alert_type):
+   # Define remote alert in a future
+   if alert_type == 'red':
+      print('\n \x1b[31;1m GLITCH RED ALERT! \x1b[0m \n')
+
+   elif alert_type == 'blue':
+      print('\n \x1b[34;1m glitch blue alert \x1b[0m \n')
+
+
+def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/shared/PuGli-S/', nfils_total=1):
+
+   start = time.time()
+
+	# read relevant information from the .fil
+   obs = Observation(folder)
+   obs.nfils_total = obs.nfils
+
+   # search for glitches (code red)
+   obs.do_glitch_search(threshold=thresh, path_to_dir=folder)
+   if obs.red_alert: send_alert('red')
+
+   # calculate signal-to-noise ratio
+   pfds = glob.glob(folder + '/*.pfd')
+   for pfd in pfds:
+      obs.calc_snr(pfd=pfd)
+
+   # calculate TOAs
+   tim_folder = path2pugliese + '/tims/'
+   obs.do_toas(pfd_dirname=folder, tim_dirname=tim_folder)
+
+   # search for glitches (code blue)
+   # obs.do_timing(thresh)
+   # if blue_alert: send_alert('blue')
+
+   if obs.red_alert or obs.blue_alert:
+      obs.glitch = True
+
+   # calculate good time interval percentage
+   obs.get_mask_percentage(obs.maskname)
+
+   # copy files for visualization and analysis
+   obs.pngs, obs.pfds, obs.polycos = copy_db(obs.pname, obs.antenna, folder, path2pugliese)
+
+   #plot TOAs and save in PuGli-S database
+   tim_fname = tim_folder + obs.pname + '_' +  obs.antenna + '.tim'
+   output_dir = path2pugliese + '/' + obs.pname + '/'
+   #par_fname = obs.dotpar_filename
+   par_fname = '/opt/pulsar/puma/config/timing/' + obs.pname + '.par'
+   plot_residuals(par_fname=par_fname, tim_fname=tim_fname, output_dir=output_dir, copy2last=True, units='ms')
+
+   # call updater for webpage (puglieseweb_update)
+   try:
+      # write observation info
+      write_pugliS_info_jason(path2pugliese,obs)
+   except:
+      print('\n JASON_NEW FAILED')
+
+   # exit with success printing duration
+   end = time.time()
+   hours, rem = divmod(end-start, 3600)
+   minutes, seconds = divmod(rem, 60)
+   print('\n Reduction process completed in {:0>2}:{:0>2}:{:05.2f}\n'.format(int(hours), int(minutes), seconds))
+
+
+
+#=========================================================================
+# BELOW IS JUST FOR RUNNING AS INDEPENDENT PROGRAM   
 
 def set_argparse():
    # add arguments
@@ -35,7 +105,7 @@ def set_argparse():
 
 
 def check_cli_arguments(args):
-
+   # check if command line arguments are OK
    ierr = 0
    if os.path.isabs(args.folder) is False:
       print('\n FATAL ERROR: folder path is not absolute\n')
@@ -44,43 +114,6 @@ def check_cli_arguments(args):
 
    return ierr
 
-
-def send_alert(alert_type):
-   # Define remote alert in a future
-   if alert_type == 'red':
-      print('\n \x1b[31;1m GLITCH RED ALERT! \x1b[0m \n')
-
-   elif alert_type == 'blue':
-      print('\n \x1b[34;1m glitch blue alert \x1b[0m \n')
-
-
-def write_pugliS_info(path2db,obs):
-   """ Write information"""
-   fname = path2db + obs.pname + '.txt'
-
-   order = ['pname', 'mjd', 'antenna', 'nchans', 'red_alert', 'blue_alert', 'par', 'jump' ]
-
-   if os.path.isfile(fname) is False:
-      f = open(fname, 'w')
-      header = ''
-      for key in order:
-         header += '{:>40}'.format(key)
-      header += '\n'
-      f.write(header)
-      f.close()
-
-   f = open(fname, 'a')
-   line = ''
-   for key in order:
-      line += '{:>40}'.format(str(obs.__dict__[key]))
-   line += '\n'
-   f.write(line)
-   f.close()
-
-   
-
-
-#==================================================================================
 
 if __name__ == '__main__':
 
@@ -91,37 +124,4 @@ if __name__ == '__main__':
    ierr = check_cli_arguments(args)
    if ierr != 0: sys.exit(1)
 
-   start = time.time()
-
-   # move observations to destination folder par_dirname
-   # (to complete)
-
-   # read relevant information from the .fil
-   obs = Observation(args.folder)
-
-   # search for glitches (code red)
-   obs.do_glitch_search(args.thresh)
-   if obs.red_alert: send_alert('red')
-
-   # search for glitches (code blue)
-   #obs.do_glitch_search(thresh)
-   # if blue_alert: send_alert('blue')
-
-   if obs.red_alert or obs.blue_alert:
-      obs.glitch = True
-
-   # write observation info
-   path2db = args.path2pugliese + 'database/'
-   write_pugliS_info(path2db, obs)
-
-   # copy files for visualization in ...
-   # (to do)
-
-   # call updater for webpage
-   # (puglieseweb_update)
-
-   # exit with success printing duration
-   end = time.time()
-   hours, rem = divmod(end-start, 3600)
-   minutes, seconds = divmod(rem, 60)
-   print('\n Reduction process completed in {:0>2}:{:0>2}:{:05.2f}\n'.format(int(hours), int(minutes), seconds))
+   do_pipe_puglis(args.folder, args.thresh, args.path2pugliese)

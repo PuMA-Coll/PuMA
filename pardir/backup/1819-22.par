@@ -1,0 +1,13 @@
+PSRJ            J1822-2256
+RAJ		18:22:58.95
+DECJ		-22:56:31
+ELAT            0.392                   
+DM              121.20                  
+PEPOCH          48740.00
+F0              0.5335414804559       
+F1              -3.85550E-16          
+POSEPOCH        48740.00
+F2              5.8E-28              
+RM              124                
+EPHVER          2
+UNITS           TDB
