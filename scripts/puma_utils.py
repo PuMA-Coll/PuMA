@@ -11,9 +11,7 @@ import pandas as pd
 
 
 def copy_db(pname, antenna, path2ini, path2end):
-   '''
-   Copy files useful for database (.ps converted to png, pfd and polycos)
-   '''
+   '''  Copy files useful for database (.ps converted to png, pfd and polycos)  '''
 
    path2last = path2end + '/last_obs/'
    path2pngs = path2end + '/' + pname + '/pngs/'
@@ -25,10 +23,12 @@ def copy_db(pname, antenna, path2ini, path2end):
    except Exception:
       print('pulsar database directory already exists')
 
+   # Convert mask from .ps format to .png
    ps_mask = glob.glob(path2ini + '/*mask*.ps')[0]
    pngfile = ps_mask[:-2] + 'png'
    os.system('convert -density 150 -rotate 90 -alpha off ' + ps_mask + ' ' + pngfile)
 
+   # Get the paths to all files (pdfs, pfds, polycoss)
    png_files = glob.glob(path2ini + '/*.png')
    pfd_files = glob.glob(path2ini + '/*.pfd')
    polycos_files = glob.glob(path2ini + '/*.polycos')
@@ -36,7 +36,7 @@ def copy_db(pname, antenna, path2ini, path2end):
    # Copy all png files and save their paths in a list of pngs
    pngs = []
    for png in png_files:
-      pngs = pngs + [png.split('/')[-1]]
+      pngs.append(png.split('/')[-1])
       shutil.copy(png, path2pngs)
       # Make a copy in last_obs directory taking out the date information
       if 'mask' in png:
@@ -51,15 +51,15 @@ def copy_db(pname, antenna, path2ini, path2end):
          else:
             print('What is this file: ' + png + '?!')
 
-   # Copy pfds and polycos and save their paths in a list of pngs
+   # Copy pfds and polycoss and save their paths in a list of pfds and a list of polycoss
    pfds = []
    for pfd in pfd_files:
-      pfds = pfds + [pfd.split('/')[-1]]
+      pfds.append(pfd.split('/')[-1])
       shutil.copy(pfd, path2pfds)
 
    polycoss = []
    for polycos in polycos_files:
-      polycoss = polycoss + [polycos.split('/')[-1]]
+      polycoss.append(polycos.split('/')[-1])
       shutil.copy(polycos, path2pfds)
 
    return pngs, pfds, polycoss
