@@ -59,7 +59,10 @@ def oldfolder_to_newfolder(folder=''):
 if __name__ == '__main__':
 
    pwd = os.getcwd()
-   temp_folder = pwd + '/temp/' 
+   temp_folder = pwd + '/temp/'
+   if len( glob.glob(temp_folder + '*') ) > 0:
+   	print(temp_folder + ' is not empty! ABORT')
+   	sys.exit(1)
 
    # Get absolute paths to all .fil files. We have two distinct formats:
    # old_paths: these are strings /YYYYMMDD/A*/obs*/ or /YYYYMMDD/A*/all/
