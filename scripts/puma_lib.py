@@ -191,7 +191,7 @@ class Observation(object):
             print('\n WARNING: more than one fil found in the folder. I will fold them all. \n')
 
         # grab pulsar name from the .fil with sigproc function read_header (dictionary)
-        fil_dic = sigproc.read_header(fils[0])[0]
+        fil_dic = sigproc.read_header(fils2reduc[0])[0]
         pulsarname = fil_dic['source_name'][:-3]
         if (self.pname == ''): self.pname = pulsarname
         elif (self.pname != pulsarname):
@@ -211,7 +211,7 @@ class Observation(object):
         self.params2reduc['rfimask'] = configfile.getboolean('main', 'rfimask')
         self.params2reduc['gvoutput'] = configfile.getboolean('main', 'gvoutput')
         self.params2reduc['movephase'] = configfile.getboolean('main', 'movephase')
-        self.params2reduc['date'] = fil_dic['rawdatafile'][-19:-4]
+        self.params2reduc['date'] = fils2reduc[0][-19:-4] #fil_dic['rawdatafile'][-19:-4]
         self.params2reduc['fils'] = fils2reduc
         self.params2reduc['ncores'] = str(ncores)
 
