@@ -30,7 +30,7 @@ for root, dirs, files in os.walk(directory):
 looplist=[]
 
 # We just take the folders of the type: /obs#
-files = re.compile(r'obs[1-9]+')
+files = re.compile(r'obs[0-9]+')
 
 for x in rootlist:
 	if files.findall(x):
