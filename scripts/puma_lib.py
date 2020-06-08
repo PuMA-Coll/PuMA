@@ -20,6 +20,7 @@ class Observation(object):
     DEFAULT_CONFIG_DIRNAME = '/opt/pulsar/puma/config/'
     DEFAULT_TIMING_DIRNAME = DEFAULT_CONFIG_DIRNAME + 'timing/'
     DEFAULT_THRESHOLD_FOR_REDUC = 1000000  # 1 Mb in bytes
+    DEFAULT_NCORES = 2  # 2 for pulsar, 12 for gardel?
 
     def __init__(self, path2dir=os.environ['PWD'], pname=''):
         self.path_to_dir = path2dir
@@ -160,7 +161,7 @@ class Observation(object):
         return prepfold_args, ierr
 
 
-    def set_params2reduc(self, ftype='timing', path_to_dir=os.environ['PWD'], par_dirname=DEFAULT_PAR_DIRNAME, ptopo=1.0, ncores=2, start=0.0, end=1.0):
+    def set_params2reduc(self, ftype='timing', path_to_dir=os.environ['PWD'], par_dirname=DEFAULT_PAR_DIRNAME, ptopo=1.0, ncores=DEFAULT_NCORES, start=0.0, end=1.0):
         ''' get the reduction parameters from .ini file '''
         self.params2reduc['ftype'] = ftype
         self.path_to_dir = path_to_dir
@@ -275,7 +276,7 @@ class Observation(object):
         return float(P_topo), float(err_P_topo), ierr
 
 
-    def do_glitch_search(self, path_to_dir=os.environ['PWD'], par_dirname=DEFAULT_PAR_DIRNAME, threshold=1.0e-8, ncores=2):
+    def do_glitch_search(self, path_to_dir=os.environ['PWD'], par_dirname=DEFAULT_PAR_DIRNAME, threshold=1.0e-8, ncores=DEFAULT_NCORES):
         ''' Search for a glitch in the pulsar period by comparing timing period vs par period (DP/P > threshold)'''
         ierr = 0
 
