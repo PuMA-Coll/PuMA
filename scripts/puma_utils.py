@@ -128,15 +128,19 @@ def write_pugliS_info_jason(path2pugliese,obs):
    except:
        df = pd.DataFrame()
 
-   # We check whether and observation already exists and eliminate it
-   print('Creating df_new')
-   df_new = df[ np.abs( df.mjd - obs.mjd ) > 1.0e-5 ]
+   if len(df) == 0:
+        df.append(obs.__dict__, ignore_index=True)
 
-   already_reduced = len(df) - len(df_new)
-   if already_reduced > 0:
-      print('Observation was already reduced ' + str(already_reduced) + ' times. All previous reduction information was deleted')
+   else:
+       # We check whether and observation already exists and eliminate it
+       print('Creating df_new')
+       df_new = df[ np.abs( df.mjd - obs.mjd ) > 1.0e-5 ]
 
-   df_new = df_new.append(obs.__dict__, ignore_index=True).sort_values(by=['mjd'], ascending=False).reset_index(drop=True)
+       already_reduced = len(df) - len(df_new)
+       if already_reduced > 0:
+          print('Observation was already reduced ' + str(already_reduced) + ' times. All previous reduction information was deleted')
+
+       df_new = df_new.append(obs.__dict__, ignore_index=True).sort_values(by=['mjd'], ascending=False).reset_index(drop=True)
 
    # We save the dataframe as a JSON file.
    df_new.to_json(path_or_buf=PSR, orient='records', date_format='iso', double_precision=14)
