@@ -129,7 +129,7 @@ def write_pugliS_info_jason(path2pugliese,obs):
        df = pd.DataFrame()
 
    if len(df) == 0:
-        df.append(obs.__dict__, ignore_index=True)
+       df = df.append(obs.__dict__, ignore_index=True)
 
    else:
        # We check whether and observation already exists and eliminate it
