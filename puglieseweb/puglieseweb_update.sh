@@ -5,11 +5,11 @@ export DBPATH="/home/observacion/scratchdisk/PuGli-S/"
 echo 
 echo Generating thumbnails ...
 cd $DBPATH/last_obs/
-thumbnailer.sh
+~/bin/thumbnailer.sh
 
 #Update the full website
 cd $WEBPATH
-python puglieseweb_update.py $WEBPATH $DBPATH
+python ./puglieseweb_update.py $WEBPATH $DBPATH
 
 echo Updating website ...
 #Update Last-Obs
@@ -29,6 +29,10 @@ scp $DBPATH/*html lacar:public_html/private/
 #Update diskspace
 df -h | grep "sd" > $DBPATH/diskspace.txt
 scp $DBPATH/diskspace.txt lacar:public_html/private/
+
+#Update date
+~/bin/get_mjd_now.py > $DBPATH/mjd.txt
+scp $DBPATH/mjd.txt lacar:public_html/private/
 
 echo
 echo 'Everything is up-to-date now.'
