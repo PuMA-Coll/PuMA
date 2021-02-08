@@ -12,7 +12,7 @@ import time
 import os
 
 # List all folders with observations
-folders = glob.glob('*/*obs*')
+folders = glob.glob('2020-07*A1/obs*')
 # For non-ms pulsar: folders = glob.glob('*')
 
 # Check how long does it take to rfiClean all files
@@ -27,7 +27,7 @@ for folder in folders:
    fil = glob.glob(folder + '/*.fil')[0] # For non-ms pulsars we should iterate over all .fil files
    input_name = fil.split('/')[-1]
    output_name = 'CLEAN' + input_name
-   rficlean_cmd = ['rficlean', '-zerodm', '-o', output_name, input_name]
+   rficlean_cmd = ['rficlean', '-o', output_name, input_name]
    subprocess.check_call(rficlean_cmd, cwd=folder)
 
 
