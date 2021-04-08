@@ -10,6 +10,7 @@ cd $DBPATH/last_obs/
 # Get RFI plots from GANCIO
 echo Getting RFI plots
 cd $DBPATH/rfi/plots/
+rm *
 wget -d http://tux.iar.unlp.edu.ar/~ggancio/pub/rfi/plots/Power_wide.png
 wget -d http://tux.iar.unlp.edu.ar/~ggancio/pub/rfi/plots/Spectrum_limited.png
 wget -d http://tux.iar.unlp.edu.ar/~ggancio/pub/rfi/plots/Spectrum_wide.png
