@@ -37,6 +37,32 @@
 <p> <a href="https://www.overleaf.com/project/5e46ece44ffedc00012fa9b0">OverLeaf Glitches</a> |
 <a href="https://docs.google.com/spreadsheets/d/1yMP0cmu7KSk7TeOXnW2wf79Gc2zToP3WTFBUUTz6Aio/edit#gid=1050344985">Lista de Pulsares</a></p>
 
+<h5> Date (last min)</h5>
+<embed width="380" height"120" src="mjd.txt">
+
+<h5> RFIs </h5>
+<!--<table width="80%">
+<tr>
+<td><img src="http://tux.iar.unlp.edu.ar/~ggancio/pub/rfi/plots/Power_wide.png"></td>
+<td><img src="http://tux.iar.unlp.edu.ar/~ggancio/pub/rfi/plots/Spectrum_limited.png"></img></td>
+<td><img src="http://tux.iar.unlp.edu.ar/~ggancio/pub/rfi/plots/Spectrum_wide.png"></img></td>
+</tr>
+</table>-->
+
+<div class="row 200%"> <div class="12u">
+<section class="box features"><div><div class="row">
+<div class="3u 6u(mobile)"><section class="box feature">
+<a class="swipebox" href="rfi/plots/Power_wide.png"><img width="100%" src="rfi/plots/Power_wide.png" alt=""></a>
+</div>
+<div class="3u 6u(mobile)"><section class="box feature">
+<a class="swipebox" href="rfi/plots/Spectrum_limited.png"><img width="100%" src="rfi/plots/Spectrum_limited.png" alt=""></a>
+</div>
+<div class="3u 6u(mobile)"><section class="box feature">
+<a class="swipebox" href="rfi/plots/Spectrum_wide.png"><img width="100%" src="rfi/plots/Spectrum_wide.png" alt=""></a>
+</div>
+</section>
+</div></div>
+
             </header>
             <!-- Nav -->
             <nav id="nav">
