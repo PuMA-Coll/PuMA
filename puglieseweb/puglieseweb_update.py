@@ -60,7 +60,11 @@ def write_psr(PSR, HEADER, FOOTER, WEBPATH, DBPATH):
     lines += '<h4>A1</h4><a class="swipebox" href="'+PSR+'_A1_tempo.png"> \n'
     lines += '<img width="30%" src="'+PSR+'_A1_tempo.png" alt="A1"></a> \n'
     lines += '<h4>A2</h4><a class="swipebox" href="'+PSR+'_A2_tempo.png"> \n'
-    lines += '<img width="30%" src="'+PSR+'_A2_tempo.png" alt="A2"></a></article> \n'
+    lines += '<img width="30%" src="'+PSR+'_A2_tempo.png" alt="A2"></a> \n'
+    lines += '<h3>Pulse Profile Template</h3> \n'
+    lines += '<a class="swipebox" href="'+PSR+'_template.png"> \n'
+    lines += '<img width="30%" src="'+PSR+'_template.png" alt="template"></a> \n'
+    lines += '</article>\n'
 
     lines += '<article> <table>\n'
     lines += '<thead ><tr>\n'
