@@ -49,19 +49,33 @@
 </tr>
 </table>-->
 
-<div class="row 200%"> <div class="12u">
-<section class="box features"><div><div class="row">
-<div class="3u 6u(mobile)"><section class="box feature">
-<a class="swipebox" href="rfi/plots/Power_wide.png"><img width="100%" src="rfi/plots/Power_wide.png" alt=""></a>
-</div>
-<div class="3u 6u(mobile)"><section class="box feature">
-<a class="swipebox" href="rfi/plots/Spectrum_limited.png"><img width="100%" src="rfi/plots/Spectrum_limited.png" alt=""></a>
-</div>
-<div class="3u 6u(mobile)"><section class="box feature">
-<a class="swipebox" href="rfi/plots/Spectrum_wide.png"><img width="100%" src="rfi/plots/Spectrum_wide.png" alt=""></a>
-</div>
-</section>
-</div></div>
+<div class="row 200%"> <div class="12u"> 
+<section class="box features"><div><div class="row"> 
+<div class="3u 6u(mobile)"><section class="box feature"> 
+<a class="swipebox" href="rfi/plots/Power_wide.png"><img width="100%" src="rfi/plots/Power_wide.png" alt=""></a> 
+</div> 
+<div class="3u 6u(mobile)"><section class="box feature"> 
+<a class="swipebox" href="rfi/plots/Spectrum_limited.png"><img width="100%" src="rfi/plots/Spectrum_limited.png" alt=""></a> 
+</div> 
+<div class="3u 6u(mobile)"><section class="box feature"> 
+<a class="swipebox" href="rfi/plots/Spectrum_wide.png"><img width="100%" src="rfi/plots/Spectrum_wide.png" alt=""></a> 
+</div> 
+</section> 
+<section class="box features"><div><div class="row"> 
+<div class="3u 6u(mobile)"><section class="box feature"> 
+<a class="swipebox" href="rfi/plots/spectrogram_A1a.png"><img width="100%" src="rfi/plots/spectrogram_A1a.png" alt=""></a> 
+</div> 
+<div class="3u 6u(mobile)"><section class="box feature"> 
+<a class="swipebox" href="rfi/plots/spectrogram_A1b.png"><img width="100%" src="rfi/plots/spectrogram_A1b.png" alt=""></a> 
+</div> 
+<div class="3u 6u(mobile)"><section class="box feature"> 
+<a class="swipebox" href="rfi/plots/spectrogram_A2a.png"><img width="100%" src="rfi/plots/spectrogram_A2a.png" alt=""></a> 
+</div> 
+<div class="3u 6u(mobile)"><section class="box feature"> 
+<a class="swipebox" href="rfi/plots/spectrogram_A2b.png"><img width="100%" src="rfi/plots/spectrogram_A2b.png" alt=""></a> 
+</div> 
+</section> 
+</div></div> 
 
             </header>
             <!-- Nav -->
