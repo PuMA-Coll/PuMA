@@ -73,7 +73,8 @@ def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/sh
    try:
       # write observation info
       write_pugliS_info_jason(path2pugliese,obs)
-   except:
+   except Exception,e:
+      print(str(e))
       print('\n JASON_NEW FAILED')
 
    # exit with success printing duration

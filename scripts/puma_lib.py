@@ -77,7 +77,7 @@ class Observation(object):
 
         # search for antenna in one of the .fil(s)
         if self.antenna == 'A1':
-            sigmas = '35'
+            sigmas = '4'
         elif self.antenna == 'A2':
             sigmas = '4'
         else:
@@ -247,6 +247,7 @@ class Observation(object):
         if ierr != 0: sys.exit(1)
 
         # do actual reduction
+        print(prepfold_args)
         subprocess.check_call(prepfold_args, cwd=self.path_to_dir)
         self.was_reduced = True
 
