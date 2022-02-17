@@ -1,0 +1,59 @@
+PSRJ            J1709-4429
+PSRB            B1706-44
+NAME            B1706-44
+RAJ             17:09:42.728                  2.000e-03
+DECJ            -44:29:08.24                  6.000e-02
+ELONG           260.39
+ELAT            -21.46
+DM              75.68                         3.000e-02
+PEPOCH          50042.00
+F0              9.7599781350                  7.000e-10
+F1              -8.857444E-12                 1.200e-17
+P0              0.102459245929                8.000e-12
+P1              9.298454E-14                  1.300e-19
+DIST_DM         2.27
+DIST_DM1        0.83
+SURVEY          pks1,pks70,pksmb,htru_pks
+S400            25                            4.000e+00
+S600            13.3
+S800            23                            1.000e+00
+S1400           12.1                          7.000e-01
+S5000           3.51                          7.000e-01
+W50             5.7
+W10             13
+POSEPOCH        50042.00
+DMEPOCH         55000
+F2              173.1E-24                     7.000e-25
+DIST_AMN        2.0
+DIST_AMX        3.1
+DIST_A          2.6
+ASSOC           SNR:G343.1-2.3(?)[mop93],GRS:H
+AGE             1.75e+04
+SPINDX          -0.62                         1.000e-01
+RM              0.70                          7.000e-02
+S3000           5                             1.000e+00
+TYPE            HE[ghd02,aaa+10m]
+NGLT            1
+DATE            1992
+DIST            2.60
+DIST1           2.60
+PMERR_PA        -54.777
+EDOTD2          5.0e+35
+R_LUM           169.00
+R_LUM14         81.80
+BSURF           3.12e+12
+B_LC            2.72e+04
+SI414           0.58
+EDOT            3.4e+36
+RAJD            257.428033                    8.333e-06
+DECJD           -44.485622                    1.667e-05
+OSURVEY         000010045000
+DMSINB          -3.55
+GL              343.098
+GB              -2.686
+XX              -0.76
+YY              6.02
+ZZ              -0.12
+EPHVER          2
+UNITS           TDB
+
