@@ -2,12 +2,13 @@ import os
 import sys
 sys.path.insert(1,os.path.join(sys.path[0], '/opt/pulsar/puma/scripts/'))
 import shutil
+import time
 
 from ConfigParser import SafeConfigParser
 import sigproc
+import numpy as np
 import glob
 import subprocess
-import numpy as np
 from datetime import datetime
 
 import rfifind
@@ -68,6 +69,79 @@ class Observation(object):
         obs_date = fil.split('_')[-2]
 
         return pname, antenna, mjd, nchans, obs_date
+
+    def do_rficlean_cleaning(self):
+
+        '''clean the observation using RFIClean'''
+
+        ierr = 0
+
+        print("Cleaning the observation using RFIClean")
+
+        # Look up the number of .fil(s)
+        if len(self.params2reduc['fils']) > 1:
+            print('\n ERROR: more than one .fil found \n')
+            sys.exit(1)
+
+        # First we will read the fundamental frequency of the pulsar from the .par file
+        f = open(self.dotpar_filename, 'r')
+        lines = f.readlines()
+        for line in lines:
+            if 'F0 ' in line:
+                str_arr = line.strip().split(' ')
+                F0 = float(filter(None, str_arr)[1])
+                period_s = 1.0/F0
+                period_us = period_s * (10.0**6)
+                print("F0 = " + str(F0))
+                print("period (sec) = " + str(period_s))
+                break
+        f.close()
+
+        # Now we will use readfile to read the sampling time and dump the information to a file
+        readfile = ['readfile', self.params2reduc['fils'][0]]
+        proc = subprocess.Popen(readfile, stdout=subprocess.PIPE)
+
+        lines = proc.stdout.readlines()
+        for line in lines:
+            if 'Sample time' in line:
+                str_arr = line.strip().split('= ')
+                t_sampling_us = float(filter(None, str_arr)[1])
+                print("t_sampling (us)= " + str(t_sampling_us))
+                break
+
+        # We calculate a couple of parameters we will need for running RFIClean
+        nbins_per_single_pulse = int(period_us/t_sampling_us)
+        window_size = int(nbins_per_single_pulse / 18.0)
+        block_size = 120 * nbins_per_single_pulse
+
+        # Create a new folder to store the cleaned observation
+        new_path_to_folder = self.path_to_dir + '/original/'
+        if not os.path.isdir(new_path_to_folder):
+            os.makedirs(new_path_to_folder)
+
+        # We set up the command line for RFIClean
+        output = self.path_to_dir + '/rficlean_obs.fil'
+        rficlean_cmd = ['rficlean',  '-psrf', str(F0), '-psrfbins', str(window_size), '-t', str(block_size), '-white', '-o', output]
+        rficlean_cmd.extend(self.params2reduc['fils'])
+
+        # Check how long it take to rfiClean all files
+        start = time.time()
+
+        subprocess.check_call(rficlean_cmd, cwd=new_path_to_folder)
+
+        # exit with success printing duration
+        end = time.time()
+        hours, rem = divmod(end-start, 3600)
+        minutes, seconds = divmod(rem, 60)
+        print('\n rfiClean process completed in {:0>2}:{:0>2}:{:05.2f}\n'.format(int(hours), int(minutes), seconds))
+
+        # Interchange the rficleaned file and the original file
+        mv_cmd = ['sudo', 'mv', self.params2reduc['fils'][0], new_path_to_folder]
+        subprocess.check_call(mv_cmd)
+        change_name_cmd = ['sudo', 'mv', output, self.params2reduc['fils'][0]]
+        subprocess.check_call(change_name_cmd)
+
+        return ierr
 
 
     def do_rfi_search(self):
@@ -234,9 +308,14 @@ class Observation(object):
         return ierr
 
 
-    def do_reduc(self):
+    def do_reduc(self, rficlean=False):
         ''' Fold observation with prepfold command (PRESTO) '''
         ierr = 0
+
+        # clean the observation using RFIClean
+        if rficlean:
+            ierr = self.do_rficlean_cleaning()
+            if ierr != 0: sys.exit(1)
 
         # apply mask on observation(s)
         ierr = self.do_rfi_search()

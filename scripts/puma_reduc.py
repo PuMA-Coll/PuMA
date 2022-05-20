@@ -46,6 +46,8 @@ def set_argparse():
             help='The folding start time as a fraction of the full obs')
     parser.add_argument('--end', default=1.0, type=float,
             help='The folding end time as a fraction of the full obs')
+    parser.add_argument('--rficlean', default=False, type=bool,
+            help='Use rficlean as part of the cleaning algorithm')
 
     return parser.parse_args()
 
@@ -86,7 +88,7 @@ if __name__ == '__main__':
     obs = Observation()
     ierr = obs.set_params2reduc(ftype=args.ftype, path_to_dir=args.folder, par_dirname=args.par_dirname, 
     	ptopo=args.ptopo, start=args.start, end=args.end)
-    ierr = obs.do_reduc()
+    ierr = obs.do_reduc(args.rficlean)
     if ierr != 0: sys.exit(1)
 	
     del obs
