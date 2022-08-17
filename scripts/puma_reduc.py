@@ -85,7 +85,7 @@ if __name__ == '__main__':
     
     start = time.time()
 
-    obs = Observation()
+    obs = Observation(path2dir=args.folder)
     ierr = obs.set_params2reduc(ftype=args.ftype, path_to_dir=args.folder, par_dirname=args.par_dirname, 
     	ptopo=args.ptopo, start=args.start, end=args.end)
     ierr = obs.do_reduc(args.rficlean)
