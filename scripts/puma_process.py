@@ -72,16 +72,20 @@ def process_observations(obs_folder='', dest_path=''):
    
 #=========================================================================
 # BELOW IS JUST FOR RUNNING AS INDEPENDENT PROGRAM   
-
+# (02/02/2023 modification on the line that  stablish scratch_3/observation/upload
+# as the dfault folder, change  in for scratch_4/observation/upload. Also change of 
+# the  line /scratch_3/observation for scratch_4/observation. This is a test as the
+# new observations are stored in scratch_4 instead of scratch_3. Note by Susana B.
+# Araujo F.)
 
 def set_argparse():
    # add arguments
    parser = argparse.ArgumentParser(prog='puma_process.py',
          formatter_class=argparse.ArgumentDefaultsHelpFormatter,
          description='moves observations to reduction folder and applies a reduction pipeline')
-   parser.add_argument('--obs_folder', default='/home/jovyan/work/shared/upload/', type=str,
+   parser.add_argument('--obs_folder', default='/home/jovyan/work/scratch_4/observacion/upload/', type=str,
          help='ABSOLUTE PATH to folder containing all the folders for each specific observation')
-   parser.add_argument('--dest_path', default='/home/jovyan/work/shared/', type=str,
+   parser.add_argument('--dest_path', default='/home/jovyan/work/scratch_4/observacion', type=str,
          help='path to directory containing all the observations for reduction')
 
    return parser.parse_args()
