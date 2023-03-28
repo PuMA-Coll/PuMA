@@ -9,6 +9,7 @@ import os
 import sys
 import time
 import argparse
+from puma_lib import *
 
 from ConfigParser import SafeConfigParser
 import glob
@@ -39,8 +40,14 @@ def set_argparse():
             help='ABSOLUTE PATH where observations are stored and where output will be created')
     parser.add_argument('--ptopo', default=None, type=str,
             help='seed for the topocentric folding period in sec')
-    parser.add_argument('--par_dirname', default='/opt/pulsar/tempo/tzpar/', type=str,
+    parser.add_argument('--par_dirname', default='/opt/pulsar/puma/pardir', type=str,
             help='path to directory containing .par file')
+    parser.add_argument('--start', default=0.0, type=float,
+            help='The folding start time as a fraction of the full obs')
+    parser.add_argument('--end', default=1.0, type=float,
+            help='The folding end time as a fraction of the full obs')
+    parser.add_argument('--rficlean', default=False, type=bool,
+            help='Use rficlean as part of the cleaning algorithm')
 
     return parser.parse_args()
 
@@ -67,189 +74,6 @@ def check_cli_arguments(args):
     return ierr
 
 
-def get_pulsar_info(path, dotpar_path):
-
-    # stuff to return
-    ierr = 0
-    Main, Parameters, Rfi = {}, {}, {}
-
-    # check the name of the pulsar and fils
-    # - grab name of .fils
-    fils = glob.glob(path + '/*.fil')
-    fils.sort()
-    # - count how many fils are in the folder
-    nfils = len(fils)
-
-    # warning if there are more than one fil
-    if nfils <= 0: 
-        print('\n ERROR: no *.fil(s) found in ' + args.folder + '\n')
-        ierr = -1
-        return Main, Parameters, Rfi, ierr
-    elif nfils > 1:
-        print('\n WARNING: more than one fil in this folder. I will fold them all.\n')
-
-    # grab name of pulsar from the .fil with sigproc function read_header (dictionary)
-    fil_dic = sigproc.read_header(fils[0])[0]
-    pulsarname = fil_dic['source_name'][:-3]
-        
-    # grab configuration file with same name than the pulsar
-    configdest = '/opt/pulsar/puma/config/'
-    configfile = SafeConfigParser()
-    configfile.read(configdest + pulsarname + '.ini')
-
-    # if we are not using manual mode, take all parameters in the config file,
-    # this file contains 3 sections: main, parameters and rfi. Each of them will
-    # be stored in different dictionaries, Main, Parameters and Rfi such that
-    # this will be returned by get_pulsar_info function
-
-    # Main information
-    Main['timing'] = configfile.getboolean('main', 'timing')
-    Main['dmsearch'] = configfile.getboolean('main', 'dmsearch')
-    Main['rfimask'] = configfile.getboolean('main', 'rfimask')
-    Main['gvoutput'] = configfile.getboolean('main', 'gvoutput')
-    Main['movephase'] = configfile.getboolean('main', 'movephase')
-    Main['name'] = pulsarname
-    Main['date'] = fil_dic['rawdatafile'][-19:-4]
-    Main['fils'] = fils
-
-    # Parameters information
-    Parameters['nbins'] = configfile.get('parameters', 'nbins')
-    Parameters['nchan'] = str(fil_dic['nchans'])
-    Parameters['phase'] = configfile.get('parameters', 'phase')
-    Parameters['npart'] = configfile.get('parameters', 'npart')
-    Parameters['pstep'] = configfile.get('parameters', 'pstep')
-
-    # Rfi information
-    Rfi['nint'] = configfile.get('rfi', 'nint')
-    Rfi['reuse'] = configfile.getboolean('rfi', 'reuse')
-
-    # path to .par file
-    dotpar = dotpar_path + '/' + pulsarname + '.par'
-    if os.path.isfile(dotpar) is False:
-        print('\n ERROR: no .par file found in ' + pardest + '\n')
-        ierr = -1
-        return Main, Parameters, Rfi, ierr
-    else:
-        Main['dotpar'] = dotpar
-
-    return Main, Parameters, Rfi, ierr
-
-
-def do_rfi_search(main_params={}, rfi_params={}, path_to_folder='', ncores=2):
-
-    ierr = 0
-    maskname = ''
-
-    # search for antenna in one of the .fil(s)
-    if 'A1' in main_params['fils'][0]:
-        sigmas = '35'
-    elif 'A2' in main_params['fils'][0]:
-        sigmas = '4'
-    else:
-        print('\n ERROR: no antenna A1 or A2 found in .fil name \n')
-        sys.exit(1)
-
-    # RFIfind process
-    # - check if we would re-use an existing mask. If not, start rfifind process
-    output = 'mask_' + main_params['name'] + '_' + rfi_params['nint'] + '_' + main_params['date']
-    rfifind = ['rfifind',  '-ncpus', str(ncores), '-time', rfi_params['nint'], '-freqsig', sigmas, '-zerodm', '-o', output]
-    rfifind.extend(main_params['fils'])
-
-    if rfi_params['reuse']:
-        masks = glob.glob(path_to_folder + '/*.mask')
-        if len(masks) > 1:
-            print('WARNING: More than one mask in the folder! I will use the first one.')
-            usingmask = masks[0]
-        elif len(masks) == 0:
-            print('WARNING: No mask in the folder. I will make one for you')
-            subprocess.check_call(rfifind, cwd=path_to_folder)
-            maskname = output+'_rfifind.mask'
-        else:
-            maskname = masks[0]
-    else:
-        subprocess.check_call(rfifind, cwd=path_to_folder)
-        maskname = output + '_rfifind.mask'
-
-    return maskname, ierr
-
-
-def prepare_prepfold_cmd(main_params={}, params={}, rfi_params={}, ftype='', ptopo=str(1.0), ncores=2):
-
-    ierr = 0
-
-    # command to run prepfold
-    prepfold_args = ['prepfold',
-            '-nsub', params['nchan'],
-            '-n', params['nbins'],
-            '-mask', rfi_params['maskname'],
-            '-ncpus', str(ncores),
-            '-noxwin']
-
-    # do_dm_search
-    if not main_params['dmsearch']:
-        prepfold_args.append('-nodmsearch')
-
-    # move_phase
-    if main_params['movephase']:
-        prepfold_args.extend(('-phs', params['phase']))
-
-    if ftype == 'timing':
-        prepfold_args.extend(('-timing', main_params['dotpar']))
-    elif ftype == 'par':
-        prepfold_args.extend(('-par', main_params['dotpar'],
-            '-pstep', params['pstep'],
-            '-npart', params['npart'],
-            '-nopdsearch'))
-    elif ftype == 'search':
-        # search dm
-        f = open(main_params['dotpar'], 'r')
-        lines = f.readlines()
-        for line in lines:
-            if 'DM ' in line:
-                str_arr = line.strip().split(' ')
-                dm = filter(None, str_arr)[1]
-                break
-        f.close()
-        prepfold_args.extend(('-topo', '-p', ptopo,
-            '-pstep', params['pstep'],
-            '-npart', params['npart'],
-            '-dm', dm,
-            '-nopdsearch'))
-
-    # add output filename
-    output = 'prepfold_' + ftype + '_' + main_params['date']
-    prepfold_args.extend(('-o', output, '-filterbank'))
-    prepfold_args.extend(main_params['fils'])
-
-    return prepfold_args, ierr
-
-
-def do_reduc(ftype='timing', folder=os.environ['PWD'], par_dirname='/opt/pulsar/tempo/tzpar/', ptopo=1.0, ncores=1):
-
-    # convert ptopo to string
-    ptopo = str(ptopo)
-
-    ierr = 0
-
-    # get pulsar information
-    Main, Parameters, Rfi, ierr = get_pulsar_info(path=folder, dotpar_path=par_dirname)
-    if ierr != 0: sys.exit(1)
-
-    # apply mask on observation(s)
-    maskname, ierr = do_rfi_search(main_params=Main, rfi_params=Rfi, path_to_folder=folder, ncores=ncores)
-    Rfi['maskname'] = maskname
-    if ierr != 0: sys.exit(1)
-
-    # prepare to call prepfold for observation reduction process
-    prepfold_args, ierr = prepare_prepfold_cmd(main_params=Main, params=Parameters, rfi_params=Rfi, ftype=ftype, ptopo=ptopo, ncores=ncores)
-    if ierr != 0: sys.exit(1)
-
-    # do actual reduction
-    subprocess.check_call(prepfold_args, cwd=folder)
-
-    return ierr
-
-
 if __name__ == '__main__':
 
     # get cli-arguments
@@ -257,14 +81,17 @@ if __name__ == '__main__':
 
     # check arguments
     ierr = check_cli_arguments(args)
-    if ierr != 0:
-        sys.exit(1)
-    else:
-        start = time.time()
+    if ierr != 0: sys.exit(1)
+    
+    start = time.time()
 
-    ierr = do_reduc(args.ftype, args.folder, args.par_dirname, args.ptopo)
-    if ierr != 0:
-        sys.exit(1)
+    obs = Observation(path2dir=args.folder)
+    ierr = obs.set_params2reduc(ftype=args.ftype, path_to_dir=args.folder, par_dirname=args.par_dirname, 
+    	ptopo=args.ptopo, start=args.start, end=args.end)
+    ierr = obs.do_reduc(args.rficlean)
+    if ierr != 0: sys.exit(1)
+	
+    del obs
 
     # exit with success printing duration
     end = time.time()

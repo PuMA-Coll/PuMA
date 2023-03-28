@@ -1,16 +1,6 @@
 #!/usr/bin/env python
 
 """
-waterfaller_puma.py
-
-Same as waterfaller.py from PRESTO, but tweaked for our own purposes.
-Specifically, it dumps the timeserie of de-dispersed data and time, and does not
-make the waterfaller plot.
-To see the specific modifications, look for PuMA keyword.
-
-
----
-
 waterfaller.py
 
 Make waterfall plots to show frequency sweep of a single pulse.
@@ -137,7 +127,7 @@ def waterfall(rawdatafile, start, duration, dm=None, nbins=None, nsub=None,\
         nbins = np.round(duration/rawdatafile.tsamp).astype('int')
 
     if dm:
-	nbinsextra = np.round((duration + dmfac * dm)/rawdatafile.tsamp).astype('int')
+        nbinsextra = np.round((duration + dmfac * dm)/rawdatafile.tsamp).astype('int')
     else:
         nbinsextra = nbins    
 
@@ -261,8 +251,8 @@ def plot_waterfall(data, start, duration,
         times = (np.arange(data.numspectra)*data.dt + start)[..., :nbinlim]
         ax_ts.plot(times, Dedisp_ts,"k")
         ax_ts.set_xlim([times.min(),times.max()])
-	plt.setp(ax_ts.get_xticklabels(), visible = False)
-	plt.setp(ax_ts.get_yticklabels(), visible = False)
+        plt.setp(ax_ts.get_xticklabels(), visible = False)
+        plt.setp(ax_ts.get_yticklabels(), visible = False)
 
     # Plot Spectrum                                                             
     if integrate_spec:                                                         
@@ -315,7 +305,7 @@ def main():
                             bandpass_corr=options.bandpass_corr)
 
     
-#### PuMA edition starts:
+#### FGLA edition starts:
 
 
 
@@ -325,23 +315,98 @@ def main():
     Dedisp_ts = data_out.sum(axis=0)
     times = (np.arange(data.numspectra)*data.dt + start)[..., :nbinlim]
 
-
-
-    # we write the original time and intensity vectors into csv files
+    # we write the original time and intensty vectors into two csv files
     np.savetxt('times.csv',times,delimiter=',')
     np.savetxt('original.csv',Dedisp_ts,delimiter=',')
 
+#### interpolate method, now applied in other script    
+
+    # Number of pulses to dump:
+#    npulses = 1000
 
 
-    # We don't want the plot, so commenting out:
+
+    # Create new vector of times for perfect match of period:
+#    Period = 0.0894072725212666
+#    new_nbins = 1220
+#    new_dt = Period / new_nbins
+
+#    new_times = np.zeros(new_nbins * npulses)
+#    new_times[0] = times[0]
+#    for i in range(1,len(new_times)):
+#        new_times[i] = new_times[i-1] + new_dt
+
+    # Cannot ask for too many pulses:
+#    if new_times[-1] > times[-1]:
+#        print("Too many pulses!")
+#        exit()
+
+
+
+    # Interpolate data to new_times:
+#    new_data = np.interp( new_times, times, Dedisp_ts )
+
+
+
+    # Plot the pulses:
+#    for i in range(npulses):
+#        plt.clf()
+#        plt.ylim(-10,30)
+#        beg_plot = i*new_nbins
+#        end_plot = beg_plot + 305 #new_nbins
+#        plt.plot(new_times[beg_plot:end_plot], new_data[beg_plot:end_plot])
+#        plt.savefig('pulse_' + str(i).zfill(6) + '.png')
+
+
+    #write table
+#    pulse = np.empty([npulses,new_nbins])
+#    for i in range(npulses):
+#        beg = i*new_nbins
+#        end = beg + new_nbins - 1
+#        pulse[i]=new_data[beg:end]
+#    np.savetxt('pulses.csv',pulse,delimiter=',')
+
+
+# OLD METHOD: Using original time bins
+
+## plot all single pulses with the pulse 'centered'
+#    beg = 0 #offset
+#    n_pulses = 999 # Delta_t/period
+#    n_points_per = 1222
+#    pulse = np.empty([n_pulses,n_points_per]) #full(or no) range
+#    for it in range(n_pulses):
+#      # plt.clf()
+#       print(it)
+#       #plt.title('Vela_singlepulse ' +  str(it))
+#       #plt.xlabel('t [s]')
+#       #plt.ylim(-5,30)
+#       if it%2 ==0:
+#          end = beg + n_points_per  # 1222.41 * dt = Period of Vela
+#          pulse[it] = Dedisp_ts[beg:end]
+#         # if it<10 or it>4900:
+#          #   plt.axhline(linewidth=2, color='r')
+#         # plt.plot(times[beg:end], pulse[it])
+#         # plt.savefig('pulse_' + str(it).zfill(6) + '.png')
+#       else:
+#          end = beg + n_points_per + 1
+#          pulse[it] = Dedisp_ts[beg+1:end]
+#      #    plt.plot(times[beg+1:end],pulse[it])
+#      # plt.plot(times[beg:end],Dedisp_ts[beg:end])
+#       beg = end
+#      # if it>0 and it%5000==0: # hace un salto cada 5000 pulsos
+#       #    beg=beg-1000
+#      # plt.savefig('pulse_' + str(it) + '.png')
+#      # plt.savefig('pulse_'+ str(it).zfill(6) +'.png') 
+#    np.savetxt("pulses.csv", pulse, delimiter=",")
+
+
+# We don't want the plot, so commenting out:
     #plot_waterfall(data, start, options.duration, integrate_ts=options.integrate_ts, \
     #               integrate_spec=options.integrate_spec, show_cb=options.show_cb, 
     #               cmap_str=options.cmap, sweep_dms=options.sweep_dms, 
     #               sweep_posns=options.sweep_posns)
 
-
-
-### PuMA edition ends.
+### FGLA edition ends.
 
 if __name__=='__main__':
     parser = optparse.OptionParser(prog="waterfaller.py", \
