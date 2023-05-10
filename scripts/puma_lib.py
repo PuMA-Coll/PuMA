@@ -21,11 +21,11 @@ class Observation(object):
     DEFAULT_CONFIG_DIRNAME = '/opt/pulsar/puma/config/'
     DEFAULT_TIMING_DIRNAME = DEFAULT_CONFIG_DIRNAME + 'timing/'
     DEFAULT_THRESHOLD_FOR_REDUC = 1000000  # 1 Mb in bytes
-    DEFAULT_NCORES = 2  # 2 for pulsar, 12 for gardel?
+    DEFAULT_NCORES = 10  # 2 for pulsar, 12 for gardel?, 10 for new pulsar cpu.
 
     def __init__(self, path2dir=os.environ['PWD'], pname=''):
         self.path_to_dir = path2dir
-        if pname != '': 
+        if pname != '':
             self.pname = pname
         else:
             self.pname, self.antenna, self.mjd, self.nchans, self.obs_date = self.get_pulsar_parameters()
@@ -150,9 +150,9 @@ class Observation(object):
         self.maskname = ''
 
         # search for antenna in one of the .fil(s)
-        if self.antenna == 'A1':
+        if self.antenna == 'A1' or self.antenna == 'R1':
             sigmas = '35'
-        elif self.antenna == 'A2':
+        elif self.antenna == 'A2' or self.antenna == 'R2':
             sigmas = '4'
         else:
             print('\n ERROR: no antenna A1 or A2 found in .fil name \n')
@@ -163,8 +163,9 @@ class Observation(object):
         # RFIfind process
         # - check if we would re-use an existing mask. If not, start rfifind process
         output = 'mask_' + self.pname + '_' + self.params2reduc['nint'] + '_' + self.antenna + '_' + self.params2reduc['date']
-        rfifind = ['rfifind', '-ncpus', self.params2reduc['ncores'], '-time', self.params2reduc['nint'], '-freqsig', sigmas, '-intfrac', intfrac, '-zerodm', '-o', output]
+        rfifind = ['rfifind', '-ncpus', self.params2reduc['ncores'], '-time', self.params2reduc['nint'], '-freqsig', sigmas, '-intfrac', intfrac, '-zerodm','-o', output]
         rfifind.extend(self.params2reduc['fils'])
+
 
         if self.params2reduc['reuse']:
             masks = glob.glob(self.path_to_dir + '/*.mask')
@@ -196,7 +197,13 @@ class Observation(object):
                 '-ncpus', self.params2reduc['ncores'],
                 '-start', self.start,
                 '-end', self.end,
+		'-fine',
                 '-noxwin']
+
+	if self.pname == 'J1810-197':
+	#	prepfold_args.append('-nooffsets')
+	#	prepfold_args.append('-noscales')
+		pass
 
         # do_dm_search
         if not self.params2reduc['dmsearch']:
@@ -206,13 +213,23 @@ class Observation(object):
         if self.params2reduc['movephase']:
             prepfold_args.extend(('-phs', self.params2reduc['phase']))
 
-        if self.params2reduc['ftype'] == 'timing':
+        #Only for J1810, remove later this line
+	if self.antenna == 'A2':
+	    prepfold_args.extend(('-ignorechan', '42:43,62:65'))
+	# search for antenna in one of the .fil(s)
+        if self.antenna == 'A1':
+   	    prepfold_args.extend(('-ignorechan', '22:24,88:94'))
+
+        if self.antenna == 'R2':
+	    prepfold_args.extend(('-ignorechan', '62:64,220:235'))
+
+	if self.params2reduc['ftype'] == 'timing':
             prepfold_args.extend(('-timing', self.dotpar_filename))
         elif self.params2reduc['ftype'] == 'par':
             prepfold_args.extend(('-par', self.dotpar_filename,
                 '-pstep', self.params2reduc['pstep'],
                 '-npart', self.params2reduc['npart'],
-                '-nopdsearch'))
+                '-nopdsearch')) 
         elif self.params2reduc['ftype'] == 'search':
             # search dm
             f = open(self.params2reduc['dotpar'], 'r')
@@ -233,6 +250,7 @@ class Observation(object):
         output = 'prepfold_' + self.params2reduc['ftype'] + '_' + self.antenna + '_' + self.params2reduc['date']
         prepfold_args.extend(('-o', output, '-filterbank'))
         prepfold_args.extend(self.params2reduc['fils'])
+
 
         return prepfold_args, ierr
 
