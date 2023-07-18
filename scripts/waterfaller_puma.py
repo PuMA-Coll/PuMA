@@ -127,7 +127,7 @@ def waterfall(rawdatafile, start, duration, dm=None, nbins=None, nsub=None,\
         nbins = np.round(duration/rawdatafile.tsamp).astype('int')
 
     if dm:
-	nbinsextra = np.round((duration + dmfac * dm)/rawdatafile.tsamp).astype('int')
+        nbinsextra = np.round((duration + dmfac * dm)/rawdatafile.tsamp).astype('int')
     else:
         nbinsextra = nbins    
 
@@ -251,8 +251,8 @@ def plot_waterfall(data, start, duration,
         times = (np.arange(data.numspectra)*data.dt + start)[..., :nbinlim]
         ax_ts.plot(times, Dedisp_ts,"k")
         ax_ts.set_xlim([times.min(),times.max()])
-	plt.setp(ax_ts.get_xticklabels(), visible = False)
-	plt.setp(ax_ts.get_yticklabels(), visible = False)
+        plt.setp(ax_ts.get_xticklabels(), visible = False)
+        plt.setp(ax_ts.get_yticklabels(), visible = False)
 
     # Plot Spectrum                                                             
     if integrate_spec:                                                         
@@ -401,10 +401,10 @@ def main():
 
 
 # We don't want the plot, so commenting out:
-    #plot_waterfall(data, start, options.duration, integrate_ts=options.integrate_ts, \
-    #               integrate_spec=options.integrate_spec, show_cb=options.show_cb, 
-    #               cmap_str=options.cmap, sweep_dms=options.sweep_dms, 
-    #               sweep_posns=options.sweep_posns)
+#    plot_waterfall(data, start, options.duration, integrate_ts=options.integrate_ts, \
+#                   integrate_spec=options.integrate_spec, show_cb=options.show_cb, 
+#                   cmap_str=options.cmap, sweep_dms=options.sweep_dms, 
+#                   sweep_posns=options.sweep_posns)
 
 ### FGLA edition ends.
 
