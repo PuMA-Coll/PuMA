@@ -35,6 +35,9 @@
 #
  2765357.08    -4449628.98      -3625726.47      IAR1                iar1
  2765322.49    -4449569.52      -3625825.14      IAR2                iar2
+ 2765357.08    -4449628.98      -3625726.47      IAR1R               iar1r
+ 2765322.49    -4449569.52      -3625825.14      IAR2R               iar2r
+
 #
 ####### From Jodrell obsys.dat file
 #
@@ -58,6 +61,5 @@
 # Fake telescope for IPTA data challenge
   6378138.00    0.0     0.0                      AXIS                axi  
 
-
-
-
+# Molonglo Observatory (FGLA)
+-4482904.6562  2618131.6793 -3694185.9458 	MOLONGLO	mo
