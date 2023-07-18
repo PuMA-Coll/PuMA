@@ -1,33 +1,32 @@
-PSRJ           B1046-58
-ELONG          201.1115780351790079949481083   
-ELAT           -57.8382909416645180043781149   
-F0             8.0824061393461273922       0.00000183031974304314   
-F1             -6.1008748018480715691e-12   2.541677160292416164e-14 
-F2             -1.1092617818183153932e-21   1.7643500896632870135e-22
-PEPOCH         57600                       
-POSEPOCH       57600                       
-DMEPOCH        55000                       
-DM             128.679000000000002          0.00400000000000000000   
-EDOT           2.0035739898292808389e-12   
-START          59030.859639681063395     1 
-FINISH         59528.046737581454042     1 
-TZRMJD         59205.400369030192707       
+PSRJ           J1048-5832
+RAJ            10:48:12.64                  0.04000000000000000000   
+DECJ           -58:32:03.75                 0.01000000000000000000   
+F0             8.0816607378823572521        0.00000004508920797536   
+F1             -6.2662499102907040626e-12    2.4077023741222575609e-16
+F2             1.2666840728303322385e-22   
+PEPOCH         59000                       
+POSEPOCH       59000                       
+DM             128.67898802884047464        0.00399999962787527017   
+EDOT           2.0035740519609038303e-12   
+START          59795.779519522675997       
+FINISH         60081.915622827912632       
+TRACK          -2                          
+TZRMJD         59927.416829830935431       
 TZRFRQ         1400.4375                
 TZRSITE        iar1   
-TRES           398.049      
-EPHVER         5                           
-NE_SW          4                           
-CLK            TT(TAI)
-UNITS          TCB
-TIMEEPH        IF99
-DILATEFREQ     Y
-PLANET_SHAPIRO Y
-T2CMETHOD      IAU2000B
-NE_SW          4.000
-CORRECT_TROPOSPHERE  Y
+TRES           387.837      
+EPHVER         2                           
+NE_SW          9.9610000000000000001       
+#CLK            TT(TAI)
+MODE 1
+UNITS          TDB
+TIMEEPH        FB90
+DILATEFREQ     N
+PLANET_SHAPIRO N
+T2CMETHOD      TEMPO
+NE_SW          9.961
+CORRECT_TROPOSPHERE  N
 EPHEM          DE405
 NITS           1
-NTOA           26
-CHI2R          0.0000 22
-JUMP TEL iar2 6.9992575559936e-05 0
-
+NTOA           90
+CHI2R          15.8836 86

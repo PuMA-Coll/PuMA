@@ -1,9 +1,9 @@
 PSRJ	J1810-197
 PSRB           J1810-197
 RAJ             18:09:51.0870000           
-DECJ           -19:43:51.93000           1 
-F0             0.18041302675      
-F1             0
+DECJ           -19:43:51.93000           0 
+F0             0.18042003853445014877
+F1             -2.6138475624732369693e-13
 F2             0   
 PEPOCH         59880.7976       
 POSEPOCH       54549.999646295444883       
@@ -13,6 +13,7 @@ EPHVER         2
 NE_SW          9.9610000000000000001       
 #CLK            TT(TAI)
 UNITS          TDB
+TRACK           -2
 TIMEEPH        FB90
 DILATEFREQ     N
 PLANET_SHAPIRO N
