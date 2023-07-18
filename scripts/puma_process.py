@@ -72,7 +72,7 @@ def process_observations(obs_folder='', dest_path=''):
    
 #=========================================================================
 # BELOW IS JUST FOR RUNNING AS INDEPENDENT PROGRAM   
-# (02/02/2023 modification on the line that  stablish scratch_3/observation/upload
+# (18/05/2023 modification on the line that  stablish scratch_3/observation/upload
 # as the dfault folder, change  in for scratch_4/observation/upload. Also change of 
 # the  line /scratch_3/observation for scratch_4/observation. This is a test as the
 # new observations are stored in scratch_4 instead of scratch_3. Note by Susana B.
