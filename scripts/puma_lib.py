@@ -150,20 +150,24 @@ class Observation(object):
         self.maskname = ''
 
         # search for antenna in one of the .fil(s)
-        if self.antenna == 'A1' or self.antenna == 'R1':
+        if self.antenna == 'A1':
             sigmas = '35'
-        elif self.antenna == 'A2' or self.antenna == 'R2':
+        elif self.antenna == 'A2':
+            sigmas = '8'
+	elif self.antenna == 'R1':
+            sigmas = '8'
+        elif self.antenna == 'R2':
             sigmas = '4'
         else:
             print('\n ERROR: no antenna A1 or A2 found in .fil name \n')
             sys.exit(1)
 
-        intfrac = '0.5' # Default is 0.3
+        intfrac = '0.3' # Default is 0.3
 
         # RFIfind process
         # - check if we would re-use an existing mask. If not, start rfifind process
         output = 'mask_' + self.pname + '_' + self.params2reduc['nint'] + '_' + self.antenna + '_' + self.params2reduc['date']
-        rfifind = ['rfifind', '-ncpus', self.params2reduc['ncores'], '-time', self.params2reduc['nint'], '-freqsig', sigmas, '-intfrac', intfrac, '-zerodm','-o', output]
+        rfifind = ['rfifind', '-ncpus', self.params2reduc['ncores'], '-time', self.params2reduc['nint'], '-freqsig', sigmas, '-intfrac', intfrac,'-chanfrac', '0.4', '-zerodm','-o', output]
         rfifind.extend(self.params2reduc['fils'])
 
 
@@ -219,9 +223,12 @@ class Observation(object):
 	# search for antenna in one of the .fil(s)
         if self.antenna == 'A1':
    	    prepfold_args.extend(('-ignorechan', '22:24,88:94'))
-
         if self.antenna == 'R2':
-	    prepfold_args.extend(('-ignorechan', '62:64,220:235'))
+            prepfold_args.extend(('-ignorechan', '60:70,140:145'))
+        # search for antenna in one of the .fil(s)
+        if self.antenna == 'R1':
+            prepfold_args.extend(('-ignorechan', '60:70,140:145'))
+
 
 	if self.params2reduc['ftype'] == 'timing':
             prepfold_args.extend(('-timing', self.dotpar_filename))
