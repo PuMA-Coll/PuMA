@@ -59,8 +59,8 @@ elif MJD_A1[0] > MJD_A2[0]:
         finish_A1 = n
         finish_A2 = m
 
-print("Length A1 observation = " + str(len(MJD_A1[start_A1:finish_A1])) + " pulses")
-print("Length A2 observation = " + str(len(MJD_A2[start_A2:finish_A2])) + " pulses")
+print(("Length A1 observation = " + str(len(MJD_A1[start_A1:finish_A1])) + " pulses"))
+print(("Length A2 observation = " + str(len(MJD_A2[start_A2:finish_A2])) + " pulses"))
 
 if(len(MJD_A1[start_A1:finish_A1]) == len(MJD_A2[start_A2:finish_A2])):
 

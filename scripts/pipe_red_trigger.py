@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 ## pipe_red_trigger
 
 #Author: PuGli-S
@@ -10,7 +10,7 @@ sys.path.insert(1,os.path.join(sys.path[0], '/opt/pulsar/puma/scripts/'))
 import time
 import argparse
 
-from ConfigParser import SafeConfigParser
+from configparser import ConfigParser
 import glob
 import sigproc
 import subprocess
@@ -61,7 +61,7 @@ if __name__ == '__main__':
    obs = Observation()
    ierr = obs.do_glitch_search(path_to_dir=args.folder, par_dirname=args.par_dirname, ncores=1, thresh=args.thresh)
 
-   print('Found glitch?', obs.red_alert, 'delta P/P = ', obs.jump)
+   print(('Found glitch?', obs.red_alert, 'delta P/P = ', obs.jump))
    if obs.red_alert: print('\n GLITCH RED ALERT! \n')
 
    del obs
@@ -70,4 +70,4 @@ if __name__ == '__main__':
    end = time.time()
    hours, rem = divmod(end-start, 3600)
    minutes, seconds = divmod(rem, 60)
-   print('\n Reduction process completed in {:0>2}:{:0>2}:{:05.2f}\n'.format(int(hours), int(minutes), seconds))
+   print(('\n Reduction process completed in {:0>2}:{:0>2}:{:05.2f}\n'.format(int(hours), int(minutes), seconds)))

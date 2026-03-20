@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 ## PuMA rficlean
 # This script runs rficlean in all folders within the current ms pulsar folder
@@ -19,11 +19,11 @@ folders = glob.glob('2020-07*A1/obs*')
 start = time.time()
 
 # Call rficlean for each (just one for ms pulsars) .fil file in obs folder
-print('\n I will run rfiClean in ' + str(len(folders)) + ' folders')
+print(('\n I will run rfiClean in ' + str(len(folders)) + ' folders'))
 i = 0
 for folder in folders:
    i += 1
-   print('\n rfiClean-ing ' + str(i) + '/' + str(len(folders)) )
+   print(('\n rfiClean-ing ' + str(i) + '/' + str(len(folders)) ))
    fil = glob.glob(folder + '/*.fil')[0] # For non-ms pulsars we should iterate over all .fil files
    input_name = fil.split('/')[-1]
    output_name = 'CLEAN' + input_name
@@ -35,19 +35,19 @@ for folder in folders:
 end = time.time()
 hours, rem = divmod(end-start, 3600)
 minutes, seconds = divmod(rem, 60)
-print('\n rfiClean process completed in {:0>2}:{:0>2}:{:05.2f}\n'.format(int(hours), int(minutes), seconds))
+print(('\n rfiClean process completed in {:0>2}:{:0>2}:{:05.2f}\n'.format(int(hours), int(minutes), seconds)))
 
 # Move the observations to a new folder
 dest = '/home/jovyan/work/shared/Data/J0437-4715/Prueba_rficlean/A1/con_rficlean'
 
-print('\n I will move ' + str(len(folders)) + ' folders')
+print(('\n I will move ' + str(len(folders)) + ' folders'))
 for folder in folders:
    new_dir = dest + '/' + folder
-   print('Creating directory ' + new_dir)
+   print(('Creating directory ' + new_dir))
    os.makedirs(new_dir)
    clean_fil = glob.glob(folder + '/CLEAN*')[0]
    new_fil = new_dir + '/' + clean_fil.split('/')[-1]
-   print('Renaming file ' + clean_fil + ' as ' + new_fil)
+   print(('Renaming file ' + clean_fil + ' as ' + new_fil))
    os.rename(clean_fil, new_fil)
 
 #reduction_folders = glob.glob('*/*obs*')

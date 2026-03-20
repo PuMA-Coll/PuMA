@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 #Author: PuGli-S
 #Date: April 2020
@@ -9,7 +9,7 @@ sys.path.insert(1,os.path.join(sys.path[0], '/opt/pulsar/puma/scripts/'))
 import time
 import argparse
 
-from ConfigParser import SafeConfigParser
+from configparser import ConfigParser
 import glob
 import sigproc
 import subprocess
@@ -19,7 +19,8 @@ from puma_utils import *
 from puma_timing import plot_residuals
 
 
-def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/', nfils_total=1):
+def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/',
+                  par_dirname='/opt/pulsar/tempo/tzpar/', nfils_total=1):
 
    start = time.time()
 
@@ -28,7 +29,7 @@ def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/', 
    obs.nfils_total = nfils_total
 
    # reduce using PRESTO (timing mode only)
-   obs.set_params2reduc(path_to_dir=folder)
+   obs.set_params2reduc(path_to_dir=folder, par_dirname=par_dirname)
    obs.do_reduc()
 
    # calculate signal-to-noise ratio
@@ -53,7 +54,7 @@ def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/', 
    tim_fname = tim_folder + obs.pname + '_' +  obs.antenna + '.tim'
    output_dir = path2pugliese + '/' + obs.pname + '/'
    #par_fname = obs.dotpar_filename
-   par_fname = '/opt/pulsar/puma/config/timing/' + obs.pname + '.par'
+   par_fname = os.path.join(par_dirname, obs.pname + '.par')
    plot_residuals(par_fname=par_fname, tim_fname=tim_fname, output_dir=output_dir, copy2last=True, units='us')
    
    # write observation info
@@ -66,7 +67,7 @@ def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/', 
    end = time.time()
    hours, rem = divmod(end-start, 3600)
    minutes, seconds = divmod(rem, 60)
-   print('\n Reduction process completed in {:0>2}:{:0>2}:{:05.2f}\n'.format(int(hours), int(minutes), seconds))
+   print(('\n Reduction process completed in {:0>2}:{:0>2}:{:05.2f}\n'.format(int(hours), int(minutes), seconds)))
 
 
    
@@ -109,4 +110,4 @@ if __name__ == '__main__':
    ierr = check_cli_arguments(args)
    if ierr != 0: sys.exit(1)
 
-   do_pipe_reduc(args.folder, args.path2pugliese)
+   do_pipe_reduc(args.folder, args.path2pugliese, args.par_dirname)

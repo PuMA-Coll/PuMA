@@ -43,9 +43,9 @@
 <h5> RFIs </h5>
 <!--<table width="80%">
 <tr>
-<td><img src="http://tux.iar.unlp.edu.ar/~ggancio/pub/rfi/plots/Power_wide.png"></td>
-<td><img src="http://tux.iar.unlp.edu.ar/~ggancio/pub/rfi/plots/Spectrum_limited.png"></img></td>
-<td><img src="http://tux.iar.unlp.edu.ar/~ggancio/pub/rfi/plots/Spectrum_wide.png"></img></td>
+<td><img src="http://tux.iar.unlp.edu.ar/~USER/pub/rfi/plots/Power_wide.png"></td>
+<td><img src="http://tux.iar.unlp.edu.ar/~USER/pub/rfi/plots/Spectrum_limited.png"></img></td>
+<td><img src="http://tux.iar.unlp.edu.ar/~USER/pub/rfi/plots/Spectrum_wide.png"></img></td>
 </tr>
 </table>-->
 

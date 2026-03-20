@@ -1,0 +1,106 @@
+FROM ubuntu:24.04
+
+ARG JOBS=4
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PSRHOME=/opt/pulsar
+ENV PREFIX=/opt/pulsar/install
+ENV PRESTO_VENV=/opt/pulsar/install/presto-venv
+ENV PYTOOLS_VENV=/opt/pulsar/install/python-tools-venv
+ENV PGPLOT_DIR=/opt/pulsar/pgplot
+ENV PRESTO=/opt/pulsar/presto
+ENV TEMPO=/opt/pulsar/install/tempo
+ENV TEMPO2=/opt/pulsar/install/share/tempo2
+ENV PATH=/opt/pulsar/install/python-tools-venv/bin:/opt/pulsar/install/presto-venv/bin:/opt/pulsar/install/bin:$PATH
+ENV LD_LIBRARY_PATH=/opt/pulsar/install/lib
+ENV CPATH=/opt/pulsar/install/include
+ENV LIBRARY_PATH=/opt/pulsar/install/lib
+ENV PKG_CONFIG_PATH=/opt/pulsar/install/lib/pkgconfig
+
+RUN apt-get update && apt-get install -y \
+  build-essential gfortran git autoconf automake libtool libtool-bin pkg-config tar \
+  python3 python3-venv python3-pip python3-dev swig \
+  libglib2.0-dev libfftw3-dev libgsl-dev libcfitsio-dev libpng-dev \
+  libx11-dev libxt-dev \
+  m4 perl flex bison \
+  ca-certificates curl wget \
+  && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /workspace
+COPY install_pulsar_stack.sh /workspace/install_pulsar_stack.sh
+COPY file_codes.txt /workspace/file_codes.txt
+COPY INSTALLER.md /workspace/INSTALLER.md
+COPY README.md /workspace/README.md
+
+RUN chmod +x /workspace/install_pulsar_stack.sh
+
+RUN printf '%s\n' \
+  'export PSRHOME=/opt/pulsar' \
+  'export PREFIX=/opt/pulsar/install' \
+  'export PRESTO_VENV=/opt/pulsar/install/presto-venv' \
+  'export PYTOOLS_VENV=/opt/pulsar/install/python-tools-venv' \
+  'export PGPLOT_DIR=/opt/pulsar/pgplot' \
+  'export PRESTO=/opt/pulsar/presto' \
+  'export TEMPO=/opt/pulsar/install/tempo' \
+  'export TEMPO2=/opt/pulsar/install/share/tempo2' \
+  'export PATH=/opt/pulsar/install/python-tools-venv/bin:/opt/pulsar/install/presto-venv/bin:/opt/pulsar/install/bin:$PATH' \
+  'export LD_LIBRARY_PATH=/opt/pulsar/install/lib:${LD_LIBRARY_PATH:-}' \
+  'export CPATH=/opt/pulsar/install/include:${CPATH:-}' \
+  'export LIBRARY_PATH=/opt/pulsar/install/lib:${LIBRARY_PATH:-}' \
+  'export PKG_CONFIG_PATH=/opt/pulsar/install/lib/pkgconfig:${PKG_CONFIG_PATH:-}' \
+  > /etc/profile.d/pulsar-stack.sh
+
+RUN /workspace/install_pulsar_stack.sh \
+  --psrhome "$PSRHOME" \
+  --prefix "$PREFIX" \
+  --jobs "$JOBS" \
+  --skip-dspsr \
+  --skip-presto \
+  --skip-pint \
+  --skip-rficlean \
+  --skip-sigproc \
+  --skip-tempo \
+  --skip-tempo2 \
+  --clean
+
+RUN /workspace/install_pulsar_stack.sh \
+  --psrhome "$PSRHOME" \
+  --prefix "$PREFIX" \
+  --jobs "$JOBS" \
+  --skip-psrdada \
+  --skip-pgplot \
+  --skip-psrchive \
+  --skip-pint \
+  --skip-rficlean \
+  --skip-sigproc \
+  --skip-tempo \
+  --skip-tempo2 \
+  --clean
+
+RUN /workspace/install_pulsar_stack.sh \
+  --psrhome "$PSRHOME" \
+  --prefix "$PREFIX" \
+  --jobs "$JOBS" \
+  --skip-psrdada \
+  --skip-pgplot \
+  --skip-psrchive \
+  --skip-dspsr \
+  --skip-presto \
+  --skip-pint \
+  --skip-rficlean \
+  --clean
+
+RUN /workspace/install_pulsar_stack.sh \
+  --psrhome "$PSRHOME" \
+  --prefix "$PREFIX" \
+  --jobs "$JOBS" \
+  --skip-psrdada \
+  --skip-pgplot \
+  --skip-psrchive \
+  --skip-dspsr \
+  --skip-presto \
+  --skip-sigproc \
+  --clean
+
+WORKDIR /data
+CMD ["/bin/bash"]

@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 #Author: PuGli-S
 #Date: Feb 2020
@@ -9,7 +9,7 @@ sys.path.insert(1,os.path.join(sys.path[0], '/opt/pulsar/puma/scripts/'))
 import time
 import argparse
 
-from ConfigParser import SafeConfigParser
+from configparser import ConfigParser
 import glob
 import sigproc
 import subprocess
@@ -28,7 +28,8 @@ def send_alert(alert_type):
       print('\n \x1b[34;1m glitch blue alert \x1b[0m \n')
 
 
-def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/shared/PuGli-S/', nfils_total=1):
+def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/shared/PuGli-S/',
+                   par_dirname='/opt/pulsar/tempo/tzpar/', nfils_total=1):
 
    start = time.time()
 
@@ -37,7 +38,7 @@ def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/sh
    obs.nfils_total = obs.nfils
 
    # search for glitches (code red)
-   obs.do_glitch_search(threshold=thresh, path_to_dir=folder)
+   obs.do_glitch_search(threshold=thresh, path_to_dir=folder, par_dirname=par_dirname)
    if obs.red_alert: send_alert('red')
 
    # calculate signal-to-noise ratio
@@ -56,8 +57,8 @@ def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/sh
    if obs.red_alert or obs.blue_alert:
       obs.glitch = True
 
-   # calculate good time interval percentage
-   obs.get_mask_percentage(obs.maskname)
+   # calculate good time interval percentage. Commented by eze for tstart modification
+   #obs.get_mask_percentage(obs.maskname)
 
    # copy files for visualization and analysis
    obs.pngs, obs.pfds, obs.polycos = copy_db(obs.pname, obs.antenna, folder, path2pugliese)
@@ -66,22 +67,22 @@ def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/sh
    tim_fname = tim_folder + obs.pname + '_' +  obs.antenna + '.tim'
    output_dir = path2pugliese + '/' + obs.pname + '/'
    #par_fname = obs.dotpar_filename
-   par_fname = '/opt/pulsar/puma/config/timing/' + obs.pname + '.par'
+   par_fname = os.path.join(par_dirname, obs.pname + '.par')
    plot_residuals(par_fname=par_fname, tim_fname=tim_fname, output_dir=output_dir, copy2last=True, units='ms')
 
    # call updater for webpage (puglieseweb_update)
    try:
       # write observation info
       write_pugliS_info_jason(path2pugliese,obs)
-   except Exception,e:
-      print(str(e))
+   except Exception as e:
+      print((str(e)))
       print('\n JASON_NEW FAILED')
 
    # exit with success printing duration
    end = time.time()
    hours, rem = divmod(end-start, 3600)
    minutes, seconds = divmod(rem, 60)
-   print('\n Reduction process completed in {:0>2}:{:0>2}:{:05.2f}\n'.format(int(hours), int(minutes), seconds))
+   print(('\n Reduction process completed in {:0>2}:{:0>2}:{:05.2f}\n'.format(int(hours), int(minutes), seconds)))
 
 
 
@@ -125,4 +126,4 @@ if __name__ == '__main__':
    ierr = check_cli_arguments(args)
    if ierr != 0: sys.exit(1)
 
-   do_pipe_puglis(args.folder, args.thresh, args.path2pugliese)
+   do_pipe_puglis(args.folder, args.thresh, args.path2pugliese, args.par_dirname)

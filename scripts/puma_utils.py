@@ -6,6 +6,7 @@ import os
 import sys
 import glob
 import shutil
+import subprocess
 import numpy as np
 import pandas as pd
 
@@ -24,9 +25,14 @@ def copy_db(pname, antenna, path2ini, path2end):
       print('pulsar database directory already exists')
 
    # Convert mask from .ps format to .png
-   ps_mask = glob.glob(path2ini + '/*mask*.ps')[0]
-   pngfile = ps_mask[:-2] + 'png'
-   os.system('convert -density 150 -rotate 90 -alpha off ' + ps_mask + ' ' + pngfile)
+   ps_masks = glob.glob(path2ini + '/*mask*.ps')
+   if len(ps_masks) > 0:
+      ps_mask = ps_masks[0]
+      pngfile = ps_mask[:-2] + 'png'
+      subprocess.check_call(['convert', '-density', '150', '-rotate', '90',
+         '-alpha', 'off', ps_mask, pngfile])
+   else:
+      print(('WARNING: no mask PostScript file found in ' + path2ini))
 
    # Get the paths to all files (pdfs, pfds, polycoss)
    png_files = glob.glob(path2ini + '/*.png')
@@ -49,7 +55,7 @@ def copy_db(pname, antenna, path2ini, path2end):
          elif 'timing' in png:
             shutil.copy(png, path2last + pname + '_' + antenna + '_timing.png' )
          else:
-            print('What is this file: ' + png + '?!')
+            print(('What is this file: ' + png + '?!'))
 
    # Copy pfds and polycoss and save their paths in a list of pfds and a list of polycoss
    pfds = []
@@ -106,7 +112,7 @@ def move_observation(path_to_obs='', dest_path=''):
    try:
       os.mkdir(pulsar_folder_name)
    except Exception:
-      print('pulsar folder for {} already exists'.format(pulsar_name))
+      print(('pulsar folder for {} already exists'.format(pulsar_name)))
 
    # move obs data to newly created folder
    path_to_reduc = pulsar_folder_name + '/' + new_path_to_obs.split('/')[-1] + '/'
@@ -139,7 +145,7 @@ def write_pugliS_info_jason(path2pugliese,obs):
 
        already_reduced = len(df) - len(df_new)
        if already_reduced > 0:
-          print('Observation was already reduced ' + str(already_reduced) + ' times. All previous reduction information was deleted')
+          print(('Observation was already reduced ' + str(already_reduced) + ' times. All previous reduction information was deleted'))
 
        df_new = df_new.append(obs.__dict__, ignore_index=True).sort_values(by=['mjd'], ascending=False).reset_index(drop=True)
 

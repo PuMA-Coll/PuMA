@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 #
 # PuMA timing
 # Python script for obtaining and plotting residuals
@@ -10,6 +10,7 @@ import numpy as np
 import shutil
 import math
 import os
+import sys
 
 import scipy.stats
 import libstempo as T2
@@ -41,15 +42,15 @@ def plot_residuals(par_fname='', tim_fname='', output_dir='', copy2last=False, u
     timing = T2.tempopulsar(parfile=par_fname, timfile=tim_fname)
     res, t, errs = timing.residuals(), timing.toas(), timing.toaerrs
 
-    print('Saving residuals to ' + res_fname)
+    print(('Saving residuals to ' + res_fname))
 
     residuals_array = np.vstack((t, res, errs)).T
     np.savetxt(res_fname, residuals_array, header='MJD[day]  res[us]    err[us]')    
 
     if timing.nobs < 2:
-        print("There are {0} points, I cannot make a plot".format(timing.nobs))
+        print(("There are {0} points, I cannot make a plot".format(timing.nobs)))
     else:
-        print("Plotting {0} points.".format(timing.nobs))
+        print(("Plotting {0} points.".format(timing.nobs)))
 
         if units == 'us':
             un = 1e6
@@ -59,6 +60,8 @@ def plot_residuals(par_fname='', tim_fname='', output_dir='', copy2last=False, u
             un = 1e3
             ylabel = 'res [ms]'
             rms_title = '$ms'
+        else:
+            raise ValueError('Unknown units: {0}. Expected "us" or "ms".'.format(units))
 
         rms = timing.rms()*un    # convert to units
         rms_min, rms_max = calc_residuals_errorbars(n_obs=timing.nobs, rms=rms)
@@ -74,7 +77,7 @@ def plot_residuals(par_fname='', tim_fname='', output_dir='', copy2last=False, u
         # Save
         pname_A = tim_fname.split('.tim')[0].split('/')[-1]
         plot_output = output_dir + '/' + pname_A + '_tempo.png'
-        print('Saving plot to ' + plot_output)
+        print(('Saving plot to ' + plot_output))
         P.savefig(plot_output, bbox_inches='tight')
 
         # Save a copy in last_obs if requested:
@@ -101,9 +104,9 @@ def set_argparse():
             help='absolute path to .tim file')
     parser.add_argument('--output_dir', default=os.environ['PWD'], type=str,
             help='absolute path where the plot will be saved')
-    parser.add_argument('--copy2last', default=False, type=bool,
-            help='Do you want to make a copy in Pugli-S/last_obs?')
-    parser.add_argument('--units', default='', type=str,
+    parser.add_argument('--copy2last', action='store_true',
+            help='Make a copy in Pugli-S/last_obs')
+    parser.add_argument('--units', default='us', type=str,
             help='Units for the plot. Options are: ms, us')
 
     return parser.parse_args()
@@ -119,6 +122,10 @@ def check_cli_arguments(args):
         print('\n FATAL ERROR: .tim file path is not absolute\n')
         ierr = -1
         return ierr
+    if args.units not in ('ms', 'us'):
+        print('\n FATAL ERROR: units must be "ms" or "us"\n')
+        ierr = -1
+        return ierr
     return ierr
 
 
@@ -131,7 +138,9 @@ if __name__ == '__main__':
     ierr = check_cli_arguments(args)
     if ierr != 0: sys.exit(1)
     
-    plot_residuals(par_fname=args.par_fname, tim_fname=args.tim_fname, output_dir=args.output_dir, units=args.units)
+    plot_residuals(par_fname=args.par_fname, tim_fname=args.tim_fname,
+                   output_dir=args.output_dir, copy2last=args.copy2last,
+                   units=args.units)
 
     #tim_fname = '/home/jovyan/work/shared/PuGli-S/tims/J0437-4715_A1.tim'  
     #par_fname = '/opt/pulsar/puma/config/timing//J0437-4715.par'

@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 ## puma_reprocess
 
 #Author: Santiago del Palacio for PuMA
@@ -27,10 +27,10 @@ def oldfolder_to_newfolder(folder=''):
       if len(fils) > 0:
          new_folder = folder + '_' + AX + '/'
          try:
-            print('creating ' + new_folder)
+            print(('creating ' + new_folder))
             os.mkdir(new_folder)
          except Exception:
-            print(new_folder + ' already exists')
+            print((new_folder + ' already exists'))
          for fil in fils:
             os.rename(fil, new_folder+fil.split('/')[-1])
 
@@ -61,7 +61,7 @@ if __name__ == '__main__':
    pwd = os.getcwd()
    temp_folder = pwd + '/temp/'
    if len( glob.glob(temp_folder + '*') ) > 0:
-   	print(temp_folder + ' is not empty! ABORT')
+   	print((temp_folder + ' is not empty! ABORT'))
    	sys.exit(1)
 
    # Get absolute paths to all .fil files. We have two distinct formats:
@@ -76,7 +76,7 @@ if __name__ == '__main__':
          old_folders.append(folder)
 
    # Change the structure in the old observation folder to match the new one
-   print('\n Adapting ' + str(len(old_folders)) + ' folders to the new format')
+   print(('\n Adapting ' + str(len(old_folders)) + ' folders to the new format'))
    for folder in old_folders:
       oldfolder_to_newfolder(folder=folder)
 
@@ -85,18 +85,18 @@ if __name__ == '__main__':
    os.mkdir(temp_folder)
    folders = glob.glob('*A*')
    for folder in folders:
-      print(folder, temp_folder + folder)
+      print((folder, temp_folder + folder))
       os.rename(folder, temp_folder + folder)
 
    # Process the observations using puma_process.py
    reduction_folder = '/home/jovyan/work/shared/' # (THIS CAN BE CHANGED AS A CLI ARGUMENT IF NEEDED)
-   print('\n Start moving and processing observations from temp folder (' + temp_folder + ') to reduction folder (' + reduction_folder + ') using process_observations')
+   print(('\n Start moving and processing observations from temp folder (' + temp_folder + ') to reduction folder (' + reduction_folder + ') using process_observations'))
 
    ierr = process_observations(obs_folder=temp_folder, dest_path = reduction_folder)
 
    if ierr != 0: sys.exit(1)
 
-   print('Removing temp folder (' + temp_folder + ')')
+   print(('Removing temp folder (' + temp_folder + ')'))
    os.rmdir(temp_folder)
 
    print('\n Finished reprocessing observations')

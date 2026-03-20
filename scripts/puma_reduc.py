@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 ## puma_reduc
 
 #'El hermano lindo de pulsar_reduc'
@@ -11,7 +11,7 @@ import time
 import argparse
 from puma_lib import *
 
-from ConfigParser import SafeConfigParser
+from configparser import ConfigParser
 import glob
 import sigproc
 import subprocess
@@ -97,4 +97,4 @@ if __name__ == '__main__':
     end = time.time()
     hours, rem = divmod(end-start, 3600)
     minutes, seconds = divmod(rem, 60)
-    print('\n Reduction process completed in {:0>2}:{:0>2}:{:05.2f}\n'.format(int(hours), int(minutes), seconds))
+    print(('\n Reduction process completed in {:0>2}:{:0>2}:{:05.2f}\n'.format(int(hours), int(minutes), seconds)))

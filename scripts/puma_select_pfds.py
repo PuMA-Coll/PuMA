@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 #
 # PuMA select pfds
 # Python script for selecting the high SNR observations for high-precision timing
@@ -28,6 +28,8 @@ pfds = glob.glob(pfdtype)
 pfds.sort()
 
 bad_pfd_folder = pfd_folder+'/no_tan_malas'
+if not os.path.isdir(bad_pfd_folder):
+    os.makedirs(bad_pfd_folder)
 
 # Look which pfds have a low SNR and move them to another folder
 
@@ -38,11 +40,13 @@ for pfd in pfds:
     print(snr)
 
     if float(snr) < snr_min:
-    	shutil.move(pfd,bad_pfd_folder)
-    	polycos = pfd+'.polycos'
-    	bestprof = pfd+'.bestprof'
-    	shutil.move(polycos,bad_pfd_folder)
-    	shutil.move(bestprof,bad_pfd_folder)
+        shutil.move(pfd, bad_pfd_folder)
+        polycos = pfd + '.polycos'
+        bestprof = pfd + '.bestprof'
+        if os.path.exists(polycos):
+            shutil.move(polycos, bad_pfd_folder)
+        if os.path.exists(bestprof):
+            shutil.move(bestprof, bad_pfd_folder)
 
     	#try:
     		

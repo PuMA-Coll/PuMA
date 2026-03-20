@@ -45,7 +45,7 @@ def findP(file, MJD0, deltaT_seg):
         if T_MJD >= T_inicial and T_MJD < T_final:   # nos fijamos si el MJD está dentro de este bloque.
     
             F0 = np.genfromtxt( file, comments="none", dtype=float, skip_header=n+1 , max_rows=1, usecols=(1) ) 
-            matrix = np.genfromtxt(file, usecols=range(3), dtype=float, skip_header=n+2, max_rows=4)
+            matrix = np.genfromtxt(file, usecols=list(range(3)), dtype=float, skip_header=n+2, max_rows=4)
             COEFF = matrix.flatten('C')        
             
 #            print("F0 = " + str(F0))

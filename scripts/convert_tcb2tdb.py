@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 #
 # Python script for converting .par files from TCB to TDB units
 # Author: Santiago del Palacio (based in puma_toa.py by L. Combi)
@@ -44,11 +44,11 @@ for par in pars:
     filedata = filedata.replace('CLK', '#CLK')
     # Fix the pulsar name
     filedata = filedata.replace('PSRJ', 'PSRB')
-#    filedata = filedata.add('PSRJ	', os.path.splitext(par)[0])
+#    filedata = filedata.add('PSRJ      ', os.path.splitext(par)[0])
 
     # Write the file out again
     with open(par, 'w') as file:
-    	file.write("PSRJ" + "\t" + os.path.splitext(par)[0]+ "\n")
+        file.write("PSRJ" + "\t" + os.path.splitext(par)[0]+ "\n")
         file.write(filedata)
         
 

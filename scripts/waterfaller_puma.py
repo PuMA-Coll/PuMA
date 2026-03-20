@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 waterfaller.py
@@ -401,10 +401,10 @@ def main():
 
 
 # We don't want the plot, so commenting out:
-    #plot_waterfall(data, start, options.duration, integrate_ts=options.integrate_ts, \
-    #               integrate_spec=options.integrate_spec, show_cb=options.show_cb, 
-    #               cmap_str=options.cmap, sweep_dms=options.sweep_dms, 
-    #               sweep_posns=options.sweep_posns)
+#    plot_waterfall(data, start, options.duration, integrate_ts=options.integrate_ts, \
+#                   integrate_spec=options.integrate_spec, show_cb=options.show_cb, 
+#                   cmap_str=options.cmap, sweep_dms=options.sweep_dms, 
+#                   sweep_posns=options.sweep_posns)
 
 ### FGLA edition ends.
 

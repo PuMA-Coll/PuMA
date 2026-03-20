@@ -1,0 +1,41 @@
+Telescope ID,
+
+IAR-A1: 19, "IAR1", "A1", "m"
+
+IAR-A2: 20, "IAR2", "A2", "o",
+
+IAR-ROACH-A1: 21, "IAR1R", "R1", "r"
+
+IAR-ROACH-A2: 22, "IAR2R", "R2", "s",
+
+DSA-3: 24, "DSA3", "D3", "p",
+
+CLTC: 25, "CLTC", "CL", "q",
+
+Machine ID,
+
+RTL_Filterbank: 23
+
+IAR_ROACH_v1: 24
+
+IAR_SNAP_v1: 25
+
+TEMPO:Obsys.dat
+ -345159.0      580823.5          10.             IAR1                m  A1
+ -345202.9      580823.4          10.             IAR2                o  A2
+ -345159.0      580823.5          10.             IAR1R               r  R1
+ -345202.9      580823.4          10.             IAR2R               s  R2
+ -354633.1      692353.7         800.             DSA3                p  D3
+ -381129.1      700858.4         800.             CLTC                q  CL
+
+
+
+tempo2/T2runtime/observatory/observatories.dat
+
+# IAR
+ 2765357.08    -4449628.98      -3625726.47      IAR1                iar1
+ 2765322.49    -4449569.52      -3625825.14      IAR2                iar2
+ 2765357.08    -4449628.98      -3625726.47      IAR1R               iar1r
+ 2765322.49    -4449569.52      -3625825.14      IAR2R               iar2r
+ 1822902.736   -4849284.620     -3708078.704     DSA3                dsa3
+ 1704386.809   -4721089.389     -3922212.645     CLTC                cltc

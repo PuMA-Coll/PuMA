@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 ## puma_reduc
 
 #Author: Santiago del Palacio for PuMA
@@ -12,7 +12,7 @@ from puma_utils import *
 from pipe_pugliS import *
 from pipe_reduc import *
 
-from ConfigParser import SafeConfigParser
+from configparser import ConfigParser
 import glob
 import sigproc
 import subprocess
@@ -54,7 +54,7 @@ def process_observations(obs_folder='', dest_path=''):
             continue
 
          # pipeline for non-glitching (ms) pulsars:
-         if pname == 'J0437-4715' or pname == 'J2241-5236':
+         if pname == 'J0437-4715' or pname == 'J2241-5236' or pname == 'J1909-3744':
             # important: make sub-folders for each separate observation
             fils = glob.glob(reduction_path + '/*.fil')
             for i in range(len(fils)):
@@ -72,7 +72,7 @@ def process_observations(obs_folder='', dest_path=''):
    
 #=========================================================================
 # BELOW IS JUST FOR RUNNING AS INDEPENDENT PROGRAM   
-# (02/02/2023 modification on the line that  stablish scratch_3/observation/upload
+# (18/05/2023 modification on the line that  stablish scratch_3/observation/upload
 # as the dfault folder, change  in for scratch_4/observation/upload. Also change of 
 # the  line /scratch_3/observation for scratch_4/observation. This is a test as the
 # new observations are stored in scratch_4 instead of scratch_3. Note by Susana B.

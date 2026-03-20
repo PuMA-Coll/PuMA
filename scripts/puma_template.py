@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 ## PuMA template
 ## Python script for template generator
@@ -13,6 +13,7 @@ import subprocess
 import sys
 import glob
 import os
+import shutil
 import psrchive
 
 # Search for the highest S/N observation
@@ -35,7 +36,7 @@ else:
             pfd_max = pfd
 
     aux_index = pfd_max.index('20')
-    print('The best observation is from ' + pfd_max[aux_index:aux_index+8] + ' and has S/N = '+str(snr_max)+'\n')
+    print(('The best observation is from ' + pfd_max[aux_index:aux_index+8] + ' and has S/N = '+str(snr_max)+'\n'))
     arch = psrchive.Archive_load(pfd_max)
 
     # Make a smooth profile with the best observation
@@ -43,5 +44,7 @@ else:
     subprocess.check_output(['psrsmooth', '-n', '-e', 'std', pfd_max])
     fname = arch.get_filename()[1:] + '.std'
     new_fname = 'J' + fname.split('_')[-1]
-    subprocess.check_output(['mv', os.getcwd()+arch.get_filename()[1:] + '.std', pwd + '/' + new_fname])
-
+    src_name = arch.get_filename().lstrip('./') + '.std'
+    src_std = os.path.join(os.getcwd(), src_name)
+    dst_std = os.path.join(pwd, new_fname)
+    shutil.move(src_std, dst_std)

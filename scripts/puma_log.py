@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 ## PuMA log
 #### Python script for .log file generation.
@@ -86,7 +86,7 @@ maskname = glob.glob('*.mask')[0]
 # Correct metadata information.
 
 # Type
-subprocess.call(['psredit', '-c','type=Pulsar','-m',pfd], shell=True)
+subprocess.check_call(['psredit', '-c', 'type=Pulsar', '-m', pfd])
 
 # Coordinates
 subprocess.check_output(['psredit', '-c','coord='+scoord,'-m',pfd]) 
@@ -129,7 +129,10 @@ nbin = [arch.get_nbin()]
 nchan = [arch.get_nchan()]
 pol = [arch.get_npol()]
 calyn = [arch.get_poln_calibrated()]
-snr = [subprocess.check_output(['psrstat','-jTFp','-Q','-q','-c','snr',pfd]).strip('\n') .strip(' ')]
+snr_output = subprocess.check_output(
+    ['psrstat', '-jTFp', '-Q', '-q', '-c', 'snr', pfd]
+).decode('utf-8').strip()
+snr = [snr_output]
 obstime = [arch.integration_length()/60]
 rfitime = [maskrfi.dtint]
 usablepercent = [nbadint/ntotalint*100]
@@ -180,9 +183,8 @@ file_name = pulsar+'log.txt'
 if not os.path.exists(destination+file_name):
     table = Table(logvar, names = lognames)
     ascii.write(table,destination+file_name)
-    print ('*** A new pulsar log table for '+ file_name+ ' has been created ***') 
+    print(('*** A new pulsar log table for '+ file_name+ ' has been created ***')) 
 else:
     table = ascii.read(destination+file_name)
     table.add_row(logvar)
     ascii.write(table,destination+file_name)    
-

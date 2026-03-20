@@ -1,0 +1,258 @@
+Script started on Fri May  8 14:34:52 2020
+jovyan@3b72cd9969d8:/opt/pulsar/puma$ ls
+README.md  [0m[01;34madquisition[0m  [01;34mconfig[0m  [01;34mdocs[0m  [01;34mipynb[0m  [01;34mpardir[0m  patches.tgz  [01;34mpuglieseweb[0m  [01;34mpuma_cat[0m  [01;34mscripts[0m  [01;34mtest[0m  typescript
+jovyan@3b72cd9969d8:/opt/pulsar/puma$ vim sc  [2Plsvim [2Plsvim     s cd scripts/
+jovyan@3b72cd9969d8:/opt/pulsar/puma/scripts$ ls
+J0437-4715_A1.log  [0m[01;32mconvert_tcb2tdb.py[0m  pipe_pugliS.pyc      pugliS_utils.py.save  [01;32mpuma_log.py[0m      [01;32mpuma_select_pfds.py[0m  [01;32mpuma_toa.py[0m
+J0437-4715_A1.res  fil_corrector.py    [01;32mpipe_red_trigger.py[0m  pugliS_utils.pyc      [01;32mpuma_process.py[0m  [01;32mpuma_template.py[0m     puma_utils.py
+[01;34m__pycache__[0m        looper.py           [01;32mpipe_reduc.py[0m        puma_lib.py           [01;32mpuma_reduc.py[0m    [01;32mpuma_timing.py[0m       puma_utils.pyc
+[01;32mall_templates.py[0m   [01;32mpipe_pugliS.py[0m      pipe_reduc.pyc       puma_lib.pyc          puma_reduc.pyc   puma_timing.pyc
+jovyan@3b72cd9969d8:/opt/pulsar/puma/scripts$ vim pipe_pugliS.py
+[2;1H½[6n[2;1H  [1;1H[m[m[0m[H[2J[34;1H"pipe_pugliS.py" 149L, 4214C[1;1H[34m#!/usr/bin/env python2
+
+#Author: PuGli-S
+#Date: Feb 2020[0m
+
+[35mimport[0m os
+[35mimport[0m sys
+sys.path.insert([31m1[0m,os.path.join(sys.path[[31m0[0m], [31m'/opt/pulsar/puma/scripts/'[0m))
+[35mimport[0m time
+[35mimport[0m argparse
+
+[35mfrom[0m ConfigParser [35mimport[0m SafeConfigParser
+[35mimport[0m glob
+[35mimport[0m sigproc
+[35mimport[0m subprocess
+
+[35mfrom[0m puma_lib [35mimport[0m Observation
+[35mfrom[0m puma_utils [35mimport[0m *
+[35mfrom[0m puma_timing [35mimport[0m make_plot
+
+
+[3130mdef[0m [36mset_argparse[0m():
+   [34m# add arguments[0m
+   parser = argparse.ArgumentParser(prog=[31m'pipe_pugliS.py'[0m,[25;7Hformatter_class=argparse.ArgumentDefaultsHelpFormatter,[26;7Hdescription=[31m'Main pipeline for pulsar timing and glitch detections'[0m)
+   parser.add_argument([31m'--folder'[0m, default=os.environ[[31m'PWD'[0m], [36mtype[0m=[36mstr[0m,[28;7H[36mhelp[0m=[31m'ABSOLUTE PATH where observations are stored and where output will be created'[0m)
+   parser.add_argument([31m'--par_dirname'[0m, default=[31m'/opt/pulsar/tempo/tzpar/'[0m, [36mtype[0m=[36mstr[0m,[30;7H[36mhelp[0m=[31m'path to directory containing .par file'[0m)
+   parser.add_argument([31m'--thresh'[0m, default=[31m1e-8[0m, [36mtype[0m=[36mfloat[0m,[32;7H[36mhelp[0m=[31m'threshold for glitch alert (DP/P > thresh)'[0m)
+   parser.add_argument([31m'--path2pugliese'[0m, default=[31m'/home/jovyan/work/shared/PuGli-S/'[0m, [36mtype[0m=[36mstr[0m,[34;133H1,1[11CTop[1;1H[34;133H2,0-1[2;1H[34;133H3,1  [3;1H[34;133H4[4;1H[34;133H5,0-1[5;1H[34;133H6,1  [6;1H[34;133H7[7;1H[34;133H8[8;1H[34;133H9[9;1H[34;133H10,1[10;1H[34;134H1,0-1[11;1H[34;134H2,1  [12;1H[34;134H3[13;1H[34;134H4[14;1H[34;134H5[15;1H[34;134H6,0-1[16;1H[34;134H7,1  [17;1H[34;134H8[18;1H[34;134H9[19;1H[34;133H20,0-1[20;1H[34;134H1[21;1H[34;134H2,1  [22;1H[34;134H3[23;1H[34;134H4[24;1H[34;134H5[25;1H[34;134H6[26;1H[34;134H7[27;1H[34;134H8[28;1H[34;134H9[29;1H[34;133H30[30;1H[34;134H1[31;1H[34;134H2[32;1H[34;134H3[33;1H
+
+[33;1H      [36mhelp[0m=[31m'Pugli-S database folder'[0m)[33;133H[K[34;133H34,1[11C0%[33;1H
+
+[33;133H[K[34;133H35,0-1[9C1%[33;1H
+
+[33;4H[3130mreturn[0m parser.parse_args()[33;133H[K[34;133H36,1[11C2%[33;1H
+
+[33;133H[K[34;133H37,0-1[9C3%[33;1H
+
+[33;133H[K[34;133H38,0-1[9C4%[33;1H
+
+[33;1H[3130mdef[0m [36mcheck_cli_arguments[0m(args):[33;133H[K[34;133H39,1[11C5%[33;1H
+
+[33;133H[K[34;133H40,0-1[9C6%[33;1H
+
+[33;4Hierr = [31m0[0m[33;133H[K[34;133H41,1[11C6%[33;1H
+
+[33;4H[3130mif[0m os.path.isabs(args.folder) [3130mis[0m [36mFalse[0m:[33;133H[K[34;133H42,1[11C7%[33;1H
+
+[33;7H[36mprint[0m([31m'[0m[35m\n[0m[31m FATAL ERROR: folder path is not absolute[0m[35m\n[0m[31m'[0m)[33;133H[K[34;133H43,1[11C8%[33;1H
+
+[33;7Hierr = -[31m1[0m[33;133H[K[34;133H44,1[11C9%[33;1H
+
+[33;7H[3130mreturn[0m ierr[33;133H[K[34;133H45,1[10C10%[33;1H
+
+[33;133H[K[34;133H46,0-1[8C11%[33;1H
+
+[33;4H[3130mreturn[0m ierr[33;133H[K[34;133H47,1[10C12%[33;1H
+
+[33;133H[K[34;133H48,0-1[8C12%[33;1H
+
+[33;133H[K[34;133H49,0-1[8C13%[33;1H
+
+[33;1H[3130mdef[0m [36msend_alert[0m(alert_type):[33;133H[K[34;133H50,1[10C14%[33;1H
+
+[33;4H[34m# Define remote alert in a future[0m[33;133H[K[34;133H51,1[10C15%[33;1H
+
+[33;4H[3130mif[0m alert_type == [31m'red'[0m:[33;133H[K[34;133H52,1[10C16%[33;1H
+
+[33;7H[36mprint[0m([31m'[0m[35m\n[0m[31m [0m[35m\x1b[0m[31m[31;1m GLITCH RED ALERT! [0m[35m\x1b[0m[31m[0m [0m[35m\n[0m[31m'[0m)[33;133H[K[34;133H53,1[10C17%[33;1H
+
+[33;133H[K[34;133H54,0-1[8C18%[33;1H
+
+[33;4H[3130melif[0m alert_type == [31m'blue'[0m:[33;133H[K[34;133H55,1[10C18%[33;1H
+
+[33;7H[36mprint[0m([31m'[0m[35m\n[0m[31m [0m[35m\x1b[0m[31m[34;1m glitch blue alert [0m[35m\x1b[0m[31m[0m [0m[35m\n[0m[31m'[0m)[33;133H[K[34;133H56,1[10C19%[33;1H
+
+[33;133H[K[34;133H57,0-1[8C20%[33;1H
+
+[33;133H[K[34;133H58,0-1[8C21%[33;1H
+
+[33;1H[3130mdef[0m [36mwrite_pugliS_info_ascii[0m(path2db,obs):[33;133H[K[34;133H59,1[10C22%[33;1H
+
+[33;4H[31m""" Write information"""[0m[33;133H[K[34;133H60,1[10C23%[33;1H
+
+[33;4Hfname = path2db + obs.pname + [31m'.txt'[0m[33;133H[K[34;133H61,1[10C24%[33;1H
+
+[33;133H[K[34;133H62,0-1[8C25%[33;1H[1;1H[2M[32;4Horder = [[31m'pname'[0m, [31m'mjd'[0m, [31m'path_to_dir'[0m, [31m'antenna'[0m, [31m'nchans'[0m, [31m'red_alert'[0m, [31m'blue_alert'[0m, [31m'dotpar_filename'[0m, [31m'jump'[0m, [31m'gti_percentage'[0m, [31m'nfils'[0m, [31m'nempp[33;1Hty'[0m][34;133H63,1[10C26%[32;1H
+
+
+[33;133H[K[34;133H64,0-1[8C27%[33;1H
+
+[33;4H[3130mif[0m os.path.isfile(fname) [3130mis[0m [36mFalse[0m:[33;133H[K[34;133H65,1[10C28%[33;1H
+
+[33;7Hf = [36mopen[0m(fname, [31m'w'[0m)[33;133H[K[34;133H66,1[10C29%[33;1H
+
+[33;7Hheader = [31m''[0m[33;133H[K[34;133H67,1[10C29%[33;1H
+
+[33;7H[3130mfor[0m key [3130min[0m order:[33;133H[K[34;133H68,1[10C30%[33;1H
+
+[33;10Hheader += [31m'{:>40}'[0m.format(key)[33;133H[K[34;133H69,1[10C31%[33;1H
+
+[33;7Hheader += [31m'[0m[35m\n[0m[31m'[0m[33;133H[K[34;133H70,1[10C32%[33;1H
+
+[33;7Hf.write(header)[33;133H[K[34;133H71,1[10C33%[33;1H
+
+[33;7Hf.close()[33;133H[K[34;133H72,1[10C34%[33;1H
+
+[33;133H[K[34;133H73,0-1[8C35%[33;1H
+
+[33;4Hf = [36mopen[0m(fname, [31m'a'[0m)[33;133H[K[34;133H74,1[10C35%[33;1H
+
+[33;4Hline = [31m''[0m[33;133H[K[34;133H75,1[10C36%[33;1H
+
+[33;4H[3130mfor[0m key [3130min[0m order:[33;133H[K[34;133H76,1[10C37%[33;1H
+
+[33;7Hline += [31m'{:>40}'[0m.format([36mstr[0m(obs.__dict__[key]))[33;133H[K[34;133H77,1[10C38%[33;1H
+
+[33;4Hline += [31m'[0m[35m\n[0m[31m'[0m[33;133H[K[34;133H78,1[10C39%[33;1H
+
+[33;4Hf.write(line)[33;133H[K[34;133H79,1[10C40%[33;1H
+
+[33;4Hf.close()[33;133H[K[34;133H80,1[10C41%[33;1H
+
+[33;133H[K[34;133H81,0-1[8C41%[33;1H
+
+[33;1H[3130mdef[0m [36mwrite_obs_info_jason[0m(path2db,obs):[33;133H[K[34;133H82,1[10C42%[33;1H
+
+[33;4H[31m""" Write information inf jason format"""[0m[33;133H[K[34;133H83,1[10C43%[33;1H
+
+[33;4H[3130mpass[0m[33;133H[K[34;133H84,1[10C44%[33;1H
+
+[33;133H[K[34;133H85,1[10C45%[33;1H
+
+[33;133H[K[34;133H86,0-1[8C46%[33;1H
+
+[33;1H[3130mdef[0m [36mdo_pipe_puglis[0m(folder=[31m''[0m, thresh=[31m1.0e-8[0m, path2pugliese=[31m'/home/jovyan/work/shared/PuGli-S/'[0m):[33;133H[K[34;133H87,1[10C47%[33;1H
+
+[33;133H[K[34;133H88,0-1[8C47%[33;1H
+
+[33;4Hstart = time.time()[33;133H[K[34;133H89,1[10C48%[33;1H
+
+[33;133H[K[34;133H90,0-1[8C49%[33;1H
+
+[33;5H[34m# read relevant information from the .fil[0m[33;133H[K[34;133H91,1-4[8C50%[33;4H
+
+[33;4Hobs = Observation(folder)[33;133H[K[34;133H92,1[10C51%[33;1H
+
+[33;133H[K[34;133H93,0-1[8C52%[33;1H
+
+[33;4H[34m# search for glitches (code red)[0m[33;133H[K[34;133H94,1[10C52%[33;1H[1;1H[2M[32;4Hobs.do_glitch_search(thresh=thresh, path_to_dir=folder)[32;133H[K[33;4H[3130mif[0m obs.red_alert: send_alert([31m'red'[0m)[34;133H95,1[10C54%[32;1H[34;134H6[33;1H
+
+[33;133H[K[34;133H97,0-1[8C55%[33;1H
+
+[33;4H[34m# calculate TOAs[0m[33;133H[K[34;133H98,1[10C56%[33;1H
+
+[33;4Htim_folder = path2pugliese + [31m'/tims/'[0m[33;133H[K[34;133H99,1[10C56%[33;1H
+
+[33;4Hobs.do_toas(pfd_dirname=folder, tim_dirname=tim_folder)[33;133H[K[34;133H100,1[9C57%[33;1H
+
+[33;133H[K[34;133H101,1[9C58%[33;1H
+
+[33;4H[34m# search for glitches (code blue)[0m[33;133H[K[34;133H102,1[9C59%[33;1H
+
+[33;4H[34m# obs.do_timing(thresh)[0m[33;133H[K[34;133H103,1[9C60%[33;1H
+
+[33;4H[34m# if blue_alert: send_alert('blue')[0m[33;133H[K[34;133H104,1[9C61%[33;1H
+
+[33;133H[K[34;133H105,0-1[7C62%[33;1H
+
+[33;4H[3130mif[0m obs.red_alert [3130mor[0m obs.blue_alert:[33;133H[K[34;133H106,1[9C62%[33;1H
+
+[33;7Hobs.glitch = [36mTrue[0m[33;133H[K[34;133H107,1[9C63%[33;1H
+
+[33;133H[K[34;133H108,0-1[7C64%[33;1H
+
+[33;4H[34m# calculate good time interval percentage[0m[33;133H[K[34;133H109,1[9C65%[33;1H
+
+[33;4Hobs.get_mask_percentage(obs.maskname)[33;133H[K[34;133H110,1[9C66%[33;1H
+
+[33;133H[K[34;133H111,0-1[7C67%[33;1H
+
+[33;4H[34m# write observation info[0m[33;133H[K[34;133H112,1[9C68%[33;1H
+
+[33;4Hpath2db = path2pugliese + [31m'database/'[0m[33;133H[K[34;133H113,1[9C68%[33;1H
+
+[33;4Hwrite_pugliS_info_ascii(path2db, obs)[33;133H[K[34;133H114,1[9C69%[33;1H
+
+[33;4Hwrite_pugliS_info_jason(path2db, obs)[33;133H[K[34;133H115,1[9C70%[33;1H
+
+[33;133H[K[34;133H116,0-1[7C71%[33;1H
+
+[33;133H[K[34;133H117,0-1[7C72%[33;1H
+
+[33;4H[34m# copy files for visualization and analysis[0m[33;133H[K[34;133H118,1[9C73%[33;1H
+
+[33;4Hcopy_db(obs.pname, folder, path2pugliese)[33;133H[K[34;133H119,1[9C74%[33;1H
+
+[33;133H[K[34;133H120,0-1[7C75%[33;1H
+
+[33;4H[34m#plot TOAs and save in PuGli-S database[0m[33;133H[K[34;133H121,1[9C75%[33;1H
+
+[33;4Htim_fname = tim_folder + obs.pname + [31m'_'[0m +  obs.antenna + [31m'.tim'[0m[33;133H[K[34;133H122,1[9C76%[33;1H
+
+[33;4Houtput_dir = path2pugliese + [31m'/'[0m + obs.pname + [31m'/'[0m[33;133H[K[34;133H123,1[9C77%[33;1H
+
+[33;4Hmake_plot(par_fname=obs.dotpar_filename, tim_fname=tim_fname, output_dir=output_dir)[33;133H[K[34;133H124,1[9C78%[33;1H
+
+[33;133H[K[34;133H125,0-1[7C79%[33;1H
+
+[33;4H[34m# call updater for webpage[0m[33;133H[K[34;133H126,1[9C80%[33;1H
+
+[33;4H[34m# (puglieseweb_update)[0m[33;133H[K[34;133H127,1[9C81%[33;1H
+
+[33;133H[K[34;133H128,0-1[7C81%[33;1H
+
+[33;4H[34m# exit with success printing duration[0m[33;133H[K[34;133H129,1[9C82%[33;1H
+
+[33;4Hend = time.time()[33;133H[K[34;133H130,1[9C83%[33;1H
+
+[33;4Hhours, rem = [36mdivmod[0m(end-start, [31m3600[0m)[33;133H[K[34;133H131,1[9C84%[33;1H
+
+[33;4Hminutes, seconds = [36mdivmod[0m(rem, [31m60[0m)[33;133H[K[34;133H132,1[9C85%[33;1H
+
+[33;4H[36mprint[0m([31m'[0m[35m\n[0m[31m Reduction process completed in {:0>2}:{:0>2}:{:05.2f}[0m[35m\n[0m[31m'[0m.format([36mint[0m(hours), [36mint[0m(minutes), seconds))[33;133H[K[34;133H133,1[9C86%[33;1H
+
+[33;133H[K[34;133H134,0-1[7C87%[33;1H
+
+[33;133H[K[34;133H135,0-1[7C87%[33;1H
+
+[33;133H[K[34;133H136,1[9C88%[33;1H
+
+[33;1H[34m#==================================================================================[0m[33;133H[K[34;133H137,1[9C89%[33;1H
+
+[33;133H[K[34;133H138,0-1[7C90%[33;1H
+
+[33;1H[3130mif[0m __name__ == [31m'__main__'[0m:[33;133H[K[34;133H139,1[9C91%[33;1H
+
+[33;133H[K[34;133H140,0-1[7C92%[33;1H
+
+[33;4H[34m# get cli-arguments[0m[33;133H[K[34;133H141,1[9C93%[33;1H
+
+[33;4Hargs = set_argparse()[33;133H[K[34;133H142,1[9C93%[33;1H
+
+[33;133H[K[34;133H143,0-1[7C94%[33;1H
+
+[33;4H[34m# check arguments[0m[33;133H[K[34;133H144,1[9C95%[33;1H[34;133H[K[34;1H:q[34;1H[K[34;1Hjovyan@3b72cd9969d8:/opt/pulsar/puma/scripts$ vim pipe_pugliS.pyls[Kcd scripts/ls[Kpython[4Plscdlsess -S pyplot.pys[Kcd /opt/conda/envs/python2/lib/python2.7/site-packages/matplotlibjovyan@3b72cd9969d8:/opt/pulsar/puma/scripts$ python[Kcd /opt/conda/envs/python2/lib/python2.7/site-packages/matplotlibjovyan@3b72cd9969d8:/opt/pulsar/puma/scripts$ ls[K  exit
+exit
+
+Script done on Fri May  8 14:46:35 2020

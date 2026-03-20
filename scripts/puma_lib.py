@@ -4,7 +4,7 @@ sys.path.insert(1,os.path.join(sys.path[0], '/opt/pulsar/puma/scripts/'))
 import shutil
 import time
 
-from ConfigParser import SafeConfigParser
+from configparser import ConfigParser
 import sigproc
 import numpy as np
 import glob
@@ -25,7 +25,7 @@ class Observation(object):
 
     def __init__(self, path2dir=os.environ['PWD'], pname=''):
         self.path_to_dir = path2dir
-        if pname != '': 
+        if pname != '':
             self.pname = pname
         else:
             self.pname, self.antenna, self.mjd, self.nchans, self.obs_date = self.get_pulsar_parameters()
@@ -58,6 +58,8 @@ class Observation(object):
     def get_pulsar_parameters(self):
         # select .fil file
         fils = glob.glob(self.path_to_dir + '/*.fil')
+        if len(fils) == 0:
+            raise IOError('No .fil files found in ' + self.path_to_dir)
         fil = fils[0]
 
         # grab name of pulsar from the .fil with sigproc function read_header (dictionary)
@@ -67,6 +69,7 @@ class Observation(object):
         mjd = fil_dic['tstart']
         nchans = fil_dic['nchans']
         obs_date = fil.split('_')[-2]
+        #print(fil_dic)
 
         return pname, antenna, mjd, nchans, obs_date
 
@@ -92,8 +95,8 @@ class Observation(object):
                 F0 = float(filter(None, str_arr)[1])
                 period_s = 1.0/F0
                 period_us = period_s * (10.0**6)
-                print("F0 = " + str(F0))
-                print("period (sec) = " + str(period_s))
+                print(("F0 = " + str(F0)))
+                print(("period (sec) = " + str(period_s)))
                 break
         f.close()
 
@@ -106,7 +109,7 @@ class Observation(object):
             if 'Sample time' in line:
                 str_arr = line.strip().split('= ')
                 t_sampling_us = float(filter(None, str_arr)[1])
-                print("t_sampling (us)= " + str(t_sampling_us))
+                print(("t_sampling (us)= " + str(t_sampling_us)))
                 break
 
         # We calculate a couple of parameters we will need for running RFIClean
@@ -121,7 +124,7 @@ class Observation(object):
 
         # We set up the command line for RFIClean
         output = self.path_to_dir + '/rficlean_obs.fil'
-        rficlean_cmd = ['rficlean',  '-psrf', str(F0), '-psrfbins', str(window_size), '-t', str(block_size), '-white', '-o', output]
+        rficlean_cmd = ['rficlean',  '-psrfbins', str(window_size), '-t', str(block_size), '-white', '-o', output]
         rficlean_cmd.extend(self.params2reduc['fils'])
 
         # Check how long it take to rfiClean all files
@@ -133,7 +136,7 @@ class Observation(object):
         end = time.time()
         hours, rem = divmod(end-start, 3600)
         minutes, seconds = divmod(rem, 60)
-        print('\n rfiClean process completed in {:0>2}:{:0>2}:{:05.2f}\n'.format(int(hours), int(minutes), seconds))
+        print(('\n rfiClean process completed in {:0>2}:{:0>2}:{:05.2f}\n'.format(int(hours), int(minutes), seconds)))
 
         # Interchange the rficleaned file and the original file
         mv_cmd = ['sudo', 'mv', self.params2reduc['fils'][0], new_path_to_folder]
@@ -150,45 +153,64 @@ class Observation(object):
         self.maskname = ''
 
         # search for antenna in one of the .fil(s)
-        if self.antenna == 'A1' or self.antenna == 'R1':
+        if self.antenna == 'A1':
             sigmas = '35'
-        elif self.antenna == 'A2' or self.antenna == 'R2':
+        elif self.antenna == 'A2':
+            sigmas = '8'
+        elif self.antenna == 'R1':
+            sigmas = '35'
+            # Added by Susana Araujo on 21/07/2025.
+            channels_zap = '0,15:18,23:27,63:67,94:97,115:122,127,135:140,143:144,222:234,287,362:365,382:385,428:438,441:444,476:490,511'
+            channels_ignore = '0,15:18,23:27,63:67,94:97,115:122,127,135:140,143:144,222:234,287,362:365,382:385,428:438,441:444,476:490,511'
+        elif self.antenna == 'R2':
             sigmas = '4'
+            # Added by Susana Araujo on 21/07/2025.
+            channels_zap = '0,15:18,23:27,63:67,94:97,115:122,127,135:140,143:144,222:234,287,362:365,382:385,428:438,441:444,476:490,511'
+            channels_ignore = '0,15:18,23:27,63:67,94:97,115:122,127,135:140,143:144,222:234,287,362:365,382:385,428:438,441:444,476:490,511'
         else:
             print('\n ERROR: no antenna A1 or A2 found in .fil name \n')
             sys.exit(1)
 
-        intfrac = '0.5' # Default is 0.3
+        intfrac = '0.3' # Default is 0.3
 
         # RFIfind process
         # - check if we would re-use an existing mask. If not, start rfifind process
         output = 'mask_' + self.pname + '_' + self.params2reduc['nint'] + '_' + self.antenna + '_' + self.params2reduc['date']
-        rfifind = ['rfifind', '-ncpus', self.params2reduc['ncores'], '-time', self.params2reduc['nint'], '-freqsig', sigmas, '-intfrac', intfrac, '-zerodm','-o', output]
-        rfifind.extend(self.params2reduc['fils'])
+        rfifind_cmd = ['rfifind', '-ncpus', self.params2reduc['ncores'],
+            '-time', self.params2reduc['nint'], '-freqsig', sigmas,
+            '-intfrac', intfrac, '-chanfrac', '0.4', '-zerodm', '-o', output]
+        rfifind_cmd.extend(self.params2reduc['fils'])
+        if self.antenna == 'R1':
+            rfifind_cmd.extend(('-ignorechan', channels_ignore))
+            rfifind_cmd.extend(('-zapchan', channels_zap))
+        elif self.antenna == 'R2':
+            rfifind_cmd.extend(('-ignorechan', channels_ignore))
+            rfifind_cmd.extend(('-zapchan', channels_zap))
 
-
+        print(rfifind_cmd)
         if self.params2reduc['reuse']:
             masks = glob.glob(self.path_to_dir + '/*.mask')
             if len(masks) > 1:
                 print('WARNING: More than one mask in the folder! I will use the first one.')
-                usingmask = masks[0]
+                self.maskname = masks[0]
             elif len(masks) == 0:
                 print('WARNING: No mask in the folder. I will make one for you')
-                subprocess.check_call(rfifind, cwd=self.path_to_dir)
+                subprocess.check_call(rfifind_cmd, cwd=self.path_to_dir)
                 self.maskname = self.path_to_dir + '/' + output + '_rfifind.mask'
             else:
                 self.maskname = masks[0]
         else:
-            subprocess.check_call(rfifind, cwd=self.path_to_dir)
+            subprocess.check_call(rfifind_cmd, cwd=self.path_to_dir)
             self.maskname = self.path_to_dir + '/' + output + '_rfifind.mask'
-
+        self.get_mask_percentage(self.maskname) #line added by Eze for tstart modification
         return ierr
 
 
     def prepare_prepfold_cmd(self):
         ''' construct the string to run prepfold '''
         ierr = 0
-
+        if self.mjd > 60098: #added by Eze for tstart
+            self.start = str(70/self.obs_duration)
         # command to run prepfold
         prepfold_args = ['prepfold',
                 '-nsub', self.params2reduc['nchan'],
@@ -197,8 +219,13 @@ class Observation(object):
                 '-ncpus', self.params2reduc['ncores'],
                 '-start', self.start,
                 '-end', self.end,
-		'-fine',
+                '-fine',
                 '-noxwin']
+
+        if self.pname == 'J1810-197':
+            #prepfold_args.append('-nooffsets')
+            #prepfold_args.append('-noscales')
+            pass
 
         # do_dm_search
         if not self.params2reduc['dmsearch']:
@@ -209,11 +236,23 @@ class Observation(object):
             prepfold_args.extend(('-phs', self.params2reduc['phase']))
 
         #Only for J1810, remove later this line
-	if self.antenna == 'A2':
-	    prepfold_args.extend(('-ignorechan', '42:43,62:65'))
-	# search for antenna in one of the .fil(s)
-        if self.antenna == 'A1':
-   	    prepfold_args.extend(('-ignorechan', '22:24,88:94'))
+        if self.antenna == 'A2':
+            prepfold_args.extend(('-ignorechan', '42:43,62:65'))
+        # search for antenna in one of the .fil(s)
+        #if self.antenna == 'A1':
+            #prepfold_args.extend(('-ignorechan', '22:24,88:94'))
+        if self.antenna == 'R2':
+            # Added by Susana Araujo on 21/07/2025.
+            channels_ignore = '0,15:18,23:27,63:67,94:97,115:122,127,135:140,143:144,222:234,287,362:365,382:385,428:438,441:444,476:490,511'
+            prepfold_args.extend(('-ignorechan', channels_ignore))
+            #prepfold_args.extend(('-ignorechan', '60:70,140:145'))
+
+        # search for antenna in one of the .fil(s)
+        if self.antenna == 'R1':
+            # Added by Susana Araujo on 21/07/2025.
+            channels_ignore = '0,15:18,23:27,63:67,94:97,115:122,127,135:140,143:144,222:234,287,362:365,382:385,428:438,441:444,476:490,511'
+            prepfold_args.extend(('-ignorechan', channels_ignore))
+            #prepfold_args.extend(('-ignorechan', '60:70,140:145')) ignorechan previo
 
         if self.params2reduc['ftype'] == 'timing':
             prepfold_args.extend(('-timing', self.dotpar_filename))
@@ -224,7 +263,7 @@ class Observation(object):
                 '-nopdsearch')) 
         elif self.params2reduc['ftype'] == 'search':
             # search dm
-            f = open(self.params2reduc['dotpar'], 'r')
+            f = open(self.dotpar_filename, 'r')
             lines = f.readlines()
             for line in lines:
                 if 'DM ' in line:
@@ -271,7 +310,7 @@ class Observation(object):
         
         # warning if there are more than one fil
         if self.nfils <= 0:
-            print('\n ERROR: no *.fil(s) found in ' + self.path_to_dir + '\n')
+            print(('\n ERROR: no *.fil(s) found in ' + self.path_to_dir + '\n'))
             ierr = -1
             return ierr
         elif self.nfils > 1:
@@ -285,7 +324,7 @@ class Observation(object):
             print('\n WARNING: Pulsar name in the header .fil different from the name of the pulsar you intend to reduce. You might be in a wrong folder. \n')
 
         # grab configuration file with same name as the pulsar
-        configfile = SafeConfigParser()
+        configfile = ConfigParser()
         configfile.read(self.config_dirname + self.pname + '.ini')
 
         # If we are not using manual mode, take all parameters in the config file.
@@ -313,8 +352,9 @@ class Observation(object):
         self.params2reduc['reuse'] = configfile.getboolean('rfi', 'reuse')
 
         self.dotpar_filename = self.par_dirname + '/' + self.pname + '.par'
+        self.params2reduc['dotpar'] = self.dotpar_filename
         if os.path.isfile(self.dotpar_filename) is False:
-            print ('\n ERROR: no .par file found in ' + self.par_dirname + '\n')
+            print(('\n ERROR: no .par file found in ' + self.par_dirname + '\n'))
             ierr = -1
             return ierr
         return ierr
@@ -332,6 +372,7 @@ class Observation(object):
         # apply mask on observation(s)
         ierr = self.do_rfi_search()
         if ierr != 0: sys.exit(1)
+
 
         # prepare to call prepfold for observation reduction process
         prepfold_args, ierr = self.prepare_prepfold_cmd()
@@ -351,7 +392,7 @@ class Observation(object):
         try:
             filename = glob.glob(self.path_to_dir + '/*'+ftype+'*.bestprof')[0]
         except Exception:
-            print('\n FATAL ERROR: could not find bestprofile for ',ftype,'\n')
+            print(('\n FATAL ERROR: could not find bestprofile for ',ftype,'\n'))
             ierr = -1
             return 1000,10,ierr
 
@@ -374,7 +415,10 @@ class Observation(object):
 
         self.thresh = threshold   # Store value in obs object for future analysis
         # Check if the reduction has already been made
-        if len(glob.glob('*timing*.pfd')) + len(glob.glob('*par*.pfd')) >= 2: self.was_reduced = True
+        timing_pfds = glob.glob(os.path.join(path_to_dir, '*timing*.pfd'))
+        par_pfds = glob.glob(os.path.join(path_to_dir, '*par*.pfd'))
+        if len(timing_pfds) + len(par_pfds) >= 2:
+            self.was_reduced = True
 
         if self.was_reduced is False:
             
@@ -386,7 +430,11 @@ class Observation(object):
             ierr = self.do_reduc()
             if ierr != 0: sys.exit(1)
         else:
-            self.maskname = glob.glob('*.mask')[0]
+            masks = glob.glob(os.path.join(path_to_dir, '*.mask'))
+            if len(masks) == 0:
+                print('\n ERROR: no *.mask file found in ' + path_to_dir + '\n')
+                return -1
+            self.maskname = masks[0]
 
         # Check for glitch
         self.P_eph, self.err_P, ierr = self.read_bestprof('timing')
@@ -416,16 +464,16 @@ class Observation(object):
             ierr = 0
             # change pfd header
             coord = self.RAJ + self.DECJ
-            subprocess.call(['psredit',
+            subprocess.check_call(['psredit',
                 '-c', 'coord=' + coord, '-c', 'name=' + self.pname, '-m', pfd])
-            subprocess.call(['psredit',
+            subprocess.check_call(['psredit',
                 '-c', 'obs:projid=PuMA', '-c', 'be:name=Ettus-SDR', '-m', pfd])
 
             # before calling pat to get TOAs, move *_par* files to a temp folder, 
             # run pat, and then bring back *_par* files and remove the tmp folder
             path_to_tmp_folder = pfd_dirname + '/tmp/'
             try:
-                print('creating ' + path_to_tmp_folder)
+                print(('creating ' + path_to_tmp_folder))
                 os.mkdir(path_to_tmp_folder) 
             except:
                 pass
@@ -433,15 +481,18 @@ class Observation(object):
             # move *_par* files to tmp folder
             try:
                 files = glob.glob(pfd_dirname + '/*_par*')
-                print('moving ' + files + 'to' + path_to_tmp_folder)
+                print(('moving ' + ', '.join(files) + ' to ' + path_to_tmp_folder))
                 for file in files:
                     shutil.move(file, path_to_tmp_folder)
             except:   
                 pass
 
             # define arguments for pat and then call it
-            line = '-A PGS -f \"tempo2\" -s ' + std_fname + ' -jFD -j \"T ' + str(n_subints) + '\" '
-            subprocess.call(['pat ' + line + pfd + ' >> ' + tim_fname], shell=True)
+            with open(tim_fname, 'a') as tim_file:
+                subprocess.check_call([
+                    'pat', '-A', 'PGS', '-f', 'tempo2', '-s', std_fname,
+                    '-jFD', '-j', 'T ' + str(n_subints), pfd
+                ], stdout=tim_file)
 
             # move back files in the tmp folder
             try:
@@ -459,7 +510,10 @@ class Observation(object):
 
         ierr = 0
         
-        pfds = glob.glob(pfd_dirname + '/*timing*.pfd')
+        pfds = glob.glob(pfd_dirname + '/prepfold*.pfd')
+        if len(pfds) == 0:
+            print(('\n ERROR: no prepfold*.pfd files found in ' + pfd_dirname + '\n'))
+            return -1
 
         # filenames
         tim_fname = tim_dirname + '/' + self.pname + '_' +  self.antenna + '.tim'
@@ -470,11 +524,11 @@ class Observation(object):
         if mode == 'all':
             # first remove old .tim
             subprocess.call(['rm', '-f', tim_fname])
-            print('Creating tim file ' + tim_fname)
+            print(('Creating tim file ' + tim_fname))
             for pfd in pfds:
                 do_single_toa(pfd, pfd_dirname, par_fname, std_fname, n_subints, tim_fname)
         elif mode == 'add':
-            print('Adding TOA to ' + tim_fname)
+            print(('Adding TOA to ' + tim_fname))
             do_single_toa(pfds[0], pfd_dirname, par_fname, std_fname, n_subints, tim_fname)
         else:
             print('\n ERROR: unknown mode for computing toa(s) \n')
@@ -487,11 +541,11 @@ class Observation(object):
         ''' Calculate the percentage of the observation affected by the mask '''
         ierr = 0
  
-        print('\n Getting GTI from mask: {}\n'.format(maskname))
+        print(('\n Getting GTI from mask: {}\n'.format(maskname)))
 
         if os.path.isfile(maskname) is False:
             ierr = -1
-            print('\nMask {} not found, cannot get_mask_percentage\n\n'.format(maskname))
+            print(('\nMask {} not found, cannot get_mask_percentage\n\n'.format(maskname)))
             return ierr
 
         maskrfi = rfifind.rfifind(maskname)
@@ -501,7 +555,6 @@ class Observation(object):
         ntot = float(len(maskrfi.goodints)) * float(len(maskrfi.freqs))
         self.gti_percentage = (1.0 - nbad/ntot) * 100
         self.obs_duration = float(len(maskrfi.goodints))*maskrfi.dtint
-
         return ierr
 
 

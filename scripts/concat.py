@@ -13,7 +13,7 @@ times = (pd.concat(df_list_1).to_numpy()).T.flatten()
 
 #times.to_csv('times_all.csv', index=False, header=False)
 
-print(times.shape)
+print((times.shape))
 
 
 file_name_2 = 'original_{}.csv'
@@ -26,7 +26,7 @@ originals = (pd.concat(df_list_2).to_numpy()).T.flatten()
 
 #times.to_csv('times_all.csv', index=False, header=False)
 
-print(originals.shape)
+print((originals.shape))
 
 #number of pulses:
 npulses=22900
@@ -50,6 +50,6 @@ if new_times[-1] > times[-1]:
 new_data = (np.interp (new_times, times, originals)).reshape((npulses,new_nbins))
 
 # Write table
-print(new_data.shape)
+print((new_data.shape))
 np.savetxt('pulses.csv',new_data,delimiter=',')
 
