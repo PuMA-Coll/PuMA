@@ -3,6 +3,8 @@
 
 #Author: PuGli-S
 #Date: Feb 2020
+#Py3 version: 2026-03-20
+#Authors: ggancio-codex
 
 import os
 import sys

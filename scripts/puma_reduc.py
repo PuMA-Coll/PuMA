@@ -4,6 +4,8 @@
 #'El hermano lindo de pulsar_reduc'
 #Author: Luciano Combi for PuMA
 #Date: April 2019
+#Py3 version: 2026-03-20
+#Authors: ggancio-codex
 
 import os
 import sys
