@@ -1,3 +1,14 @@
 *.iar
 *.par
 *.ini
+*.pyc
+*.pyo
+*.swp
+*.swo
+*~
+*.bak
+*.save
+__pycache__/
+
+
+
