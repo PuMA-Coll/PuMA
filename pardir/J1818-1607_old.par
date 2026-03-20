@@ -1,0 +1,25 @@
+PSRJ	J1818-1607_old
+PSRB           J1818-1607
+RAJ             18:18:00.0000000           
+DECJ           -16:07:00.00000           1 
+F0             0.73341195975018184364      
+F1             -9.0902022551258640111e-14   
+F2             -2.4650009172876723657e-22   
+PEPOCH         58922.998532061006671       
+POSEPOCH       58922.998532061006671       
+DM             705.99980295997388741       
+TRES           10000         
+EPHVER         2                           
+NE_SW          9.9610000000000000001       
+#CLK            TT(TAI)
+UNITS          TDB
+TIMEEPH        FB90
+DILATEFREQ     N
+PLANET_SHAPIRO N
+T2CMETHOD      TEMPO
+NE_SW          9.961
+CORRECT_TROPOSPHERE  N
+EPHEM          DE405
+NITS           1
+NTOA           0
+CHI2R          10000 0

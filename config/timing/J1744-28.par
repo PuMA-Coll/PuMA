@@ -1,0 +1,46 @@
+PSRJ            J1744-28
+RAJ             17:44:00.0                6.400e-03
+DECJ            -28:00:00.0                2.000e-02
+DM              430                           5.000e+01
+PEPOCH          59374.78
+F0              2.141175                    1.000e-04
+F1              -5.4E-12                   1.200e-10
+DIST_DM         6.291
+DIST_DM1        9.549
+SURVEY          misc
+PMRA            4.8                           5.000e-01
+PMDEC           -7.9                          3.000e-01
+POSEPOCH        54795.0
+DMEPOCH         54270.00
+DIST_A          4.0                           5.000e-01
+AGE             1.41e+03
+RM              -1860                         2.000e+01
+TYPE            AXP,HE
+DATE            2007
+DIST            4.000
+DIST1           4.000
+PMERR_PA        -65.234
+P1_I            2.32e-11
+AGE_I           1.41e+03
+BSURF_I         2.22e+14
+EDOT_I          1.03e+35
+EDOTD2          6.4e+33
+R_LUM14         52.80
+PMTOT           9.2                           4.000e-01
+VTRANS          175.30
+BSURF           2.22e+14
+B_LC            2.34e+02
+EDOT            1.0e+35
+RAJD            237.725516                    2.667e-06
+DECJD           -54.3066984                   5.556e-07
+OSURVEY         000000400000
+DMSINB          -1.91
+GL              327.237
+GB              -0.132
+XX              -2.165
+YY              5.136
+ZZ              -0.009
+PML             2.8                           5.000e-01
+PMB             -8.8                          4.000e-01
+EPHVER          2
+UNITS           TDB

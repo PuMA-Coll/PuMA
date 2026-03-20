@@ -1,0 +1,32 @@
+PSRJ	J0540-6919
+PSRB           J0540-6919
+RAJ             05:40:11.2020000           
+DECJ           -69:19:54.17000             
+F0             19.630448706739001576     1 
+F1             -2.5208924459228738881e-10 1 
+F2             4.6685647718906741656e-21 1 
+F3             0                           
+PEPOCH         60299.998935971362449       
+POSEPOCH       60299.998935971362449       
+DM             147.1999726116211587        
+START          60186.609875391933915       
+FINISH         60766.62131402853948        
+TRACK          -2                          
+TZRFRQ         1428.4375885928266621    
+TZRSITE        iar2   
+TRES           10000         
+EPHVER         2                           
+NE_SW          9.9610000000000000001       
+#CLK            TT(TAI)
+MODE 1
+UNITS          TDB
+TIMEEPH        FB90
+DILATEFREQ     N
+PLANET_SHAPIRO N
+T2CMETHOD      TEMPO
+NE_SW          9.961
+CORRECT_TROPOSPHERE  N
+EPHEM          DE405
+NITS           1
+NTOA           0
+CHI2R          10000 0

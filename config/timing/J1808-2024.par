@@ -1,0 +1,50 @@
+PSRJ            J1808-2024
+NAME            J1808-2024
+RAJ             18:08:39.337                  4.000e-03
+DECJ            -20:24:39.85                  6.000e-02
+ELONG           272.03
+ELAT            3.01
+PEPOCH          53254.0
+F0              0.1323466                     9.000e-07
+F1              -9.62E-12                     1.600e-13
+P0              7.55592                       5.000e-05
+P1              5.49E-10                      9.000e-12
+SURVEY          misc
+PMRA            -4.5                          1.400e+00
+PMDEC           -6.9                          2.000e+00
+POSEPOCH        53254.00
+DMEPOCH         53254.00
+DM		606.8
+F2              -1.78E-20                     2.100e-21
+DIST_AMN        10.0
+DIST_AMX        17.0
+DIST_A          13.0
+ASSOC           SNR:G10.0-0.3(?),XRS:SGR_1806-
+AGE             218
+TYPE            AXP,NRAD
+DATE            1998
+DIST            13.000
+DIST1           13.000
+PMERR_PA        -47.299
+P1_I            5.49e-10
+AGE_I           2.18e+02
+BSURF_I         2.06e+15
+EDOT_I          5.02e+34
+EDOTD2          3.0e+32
+PMTOT           8.2                           1.900e+00
+VTRANS          507.71
+BSURF           2.06e+15
+B_LC            4.48e+01
+EDOT            5.0e+34
+RAJD            272.163904                    1.667e-05
+DECJD           -20.411069                    1.667e-05
+OSURVEY         000000400000
+GL              9.996
+GB              -0.242
+XX              2.256
+YY              -4.303
+ZZ              -0.055
+PML             -1.0                          1.900e+00
+PMB             0.7                           1.600e+00
+EPHVER          2
+UNITS           TDB

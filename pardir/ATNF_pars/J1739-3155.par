@@ -1,0 +1,23 @@
+PSRJ	J1739-3155
+PSRB           J1639-4630
+RAJ             17:39:08.5000000           
+DECJ           -31:55:28.60000             
+F0             3.6086704064965410127     1 
+PEPOCH         59492.186642072523483       
+POSEPOCH       59588.788140081220348       
+DM             929.99982696200867932       
+TRES           10000         
+EPHVER         2                           
+NE_SW          9.9610000000000000001       
+#CLK            TT(TAI)
+UNITS          TDB
+TIMEEPH        FB90
+DILATEFREQ     N
+PLANET_SHAPIRO N
+T2CMETHOD      TEMPO
+NE_SW          9.961
+CORRECT_TROPOSPHERE  N
+EPHEM          DE405
+NITS           1
+NTOA           0
+CHI2R          10000 0

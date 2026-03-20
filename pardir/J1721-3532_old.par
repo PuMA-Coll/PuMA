@@ -1,0 +1,35 @@
+PSRJ	J1721-3532_old
+PSRB           B1718-35
+ELONG          262.0037174008717175965887947   
+ELAT           -12.3743044773443960976030964   
+F0             3.565810234651463882         0.00000000165763696149   
+F1             -3.2000461514633141537e-13    1.0000002480831955305e-18
+F2             0                           
+PEPOCH         59343.998492894878854       
+POSEPOCH       59343.998492894878854       
+DM             479.58649093680267686        0.39999985115012884069   
+EDOT           4.5089673486726687739e-14   
+GLPH_1         0                           
+GLF0_1         0                           
+GLF1_1         0                           
+GLF2_1         0                           
+START          58978.312594964002741     1 
+FINISH         60000.273577038192848     1 
+TRACK          -2                          
+TZRFRQ         1428.4376328892420537    
+TZRSITE        iar2   
+TRES           10000         
+EPHVER         2                           
+NE_SW          9.9610000000000000001       
+#CLK            TT(TAI)
+UNITS          TDB
+TIMEEPH        FB90
+DILATEFREQ     N
+PLANET_SHAPIRO N
+T2CMETHOD      TEMPO
+NE_SW          9.961
+CORRECT_TROPOSPHERE  N
+EPHEM          DE405
+NITS           1
+NTOA           0
+CHI2R          10000 0

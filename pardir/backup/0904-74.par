@@ -1,0 +1,44 @@
+PSRJ            J0904-7459
+PSRB            B0904-74
+NAME            B0904-74
+RAJ             09:04:10.8               2.000e-01
+DECJ            -74:59:42.8              5.000e-01
+ELONG           229.65
+ELAT            -73.27
+DM              51.1                     1.600e+00
+PEPOCH          43555.4259
+F0              1.8196603117             4.000e-10
+F1              -1.533E-15               2.000e-17
+P0              0.54955311909            1.200e-10
+P1              4.63E-16                 6.000e-18
+DIST_DM         1.05
+DIST_DM1        1.84
+SURVEY          mol2,pks70
+S400            11
+S600            11
+W50             20
+W10             32
+POSEPOCH        43555.43
+DMEPOCH         43555.43
+AGE             1.88e+07
+RM              14                       3.000e+00
+DATE            1978
+DIST            1.05
+DIST1           1.84
+PMERR_PA        -142.027
+EDOTD2          1.0e+32
+R_LUM           12.13
+BSURF           5.1e+11
+B_LC            2.88e+01
+EDOT            1.1e+32
+RAJD            136.04500
+DECJD           -74.99522
+OSURVEY         000000004010
+DMSINB          -16.06
+GL              289.74
+GB              -18.32
+XX              -0.94
+YY              8.16
+ZZ              -0.33
+EPHVER          2
+UNITS           TDB

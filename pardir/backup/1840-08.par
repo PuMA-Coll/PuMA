@@ -1,0 +1,14 @@
+PSRJ            J1840-0809
+RAJ             18:40:33.364            
+DECJ            -08:09:03.3           
+DM              349.8                  
+PEPOCH          52091.00000
+F0              1.046383966243        
+F1              -2.5742E-15            
+START           51562.113
+FINISH          52620.633
+CLK             UTC(NIST)
+EPHEM           DE200
+EPHVER          2
+UNITS           TDB
+
