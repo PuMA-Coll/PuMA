@@ -66,6 +66,7 @@ The script can install:
 - `DSPSR`
 - `PRESTO`
 - `PINT`
+- `clfd`
 - `RFIClean`
 - `SIGPROC`
 - `TEMPO`
@@ -89,6 +90,8 @@ By default the script pulls from these upstream locations:
   - `https://github.com/scottransom/presto.git`
 - `PINT`
   - `https://github.com/nanograv/PINT.git`
+- `clfd`
+  - `https://github.com/v-morello/clfd.git`
 - `RFIClean`
   - `https://github.com/ymaan4/RFIClean.git`
 - `SIGPROC`
@@ -153,6 +156,13 @@ For the containerized path, the build recipe comes from:
   - installed with:
     - `pip install .`
   - installed into `PYTOOLS_VENV`
+
+- `clfd`
+  - cloned from source
+  - installed with:
+    - `pip install .`
+  - installed into `PYTOOLS_VENV`
+  - depends on the PSRCHIVE Python bindings being available first
 
 - `RFIClean`
   - cloned from source

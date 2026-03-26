@@ -12,6 +12,7 @@ Build and install the user-space pulsar stack into $HOME/pulsar/install:
   - DSPSR
   - PRESTO
   - PINT
+  - clfd
   - rficlean
   - SIGPROC
   - TEMPO
@@ -37,6 +38,8 @@ Options:
                           (default: <prefix>/presto-venv)
   --pint-src <dir>         PINT source tree override (default: <psrhome>/PINT)
   --pint-repo <url>        PINT git repo to clone if source is missing
+  --clfd-src <dir>         clfd source tree override (default: <psrhome>/clfd)
+  --clfd-repo <url>        clfd git repo to clone if source is missing
   --pytools-venv <dir>     Python virtual environment for PINT/rficlean
                           (default: <prefix>/python-tools-venv)
   --rficlean-src <dir>     rficlean source tree override (default: <psrhome>/rficlean)
@@ -53,6 +56,7 @@ Options:
   --skip-dspsr             Do not build/install DSPSR
   --skip-presto            Do not build/install PRESTO
   --skip-pint              Do not install PINT
+  --skip-clfd              Do not install clfd
   --skip-rficlean          Do not install rficlean
   --skip-sigproc           Do not build/install SIGPROC
   --skip-tempo             Do not build/install TEMPO
@@ -85,6 +89,8 @@ PRESTO_SRC=""
 PRESTO_VENV=""
 PINT_SRC=""
 PINT_REPO="https://github.com/nanograv/PINT.git"
+CLFD_SRC=""
+CLFD_REPO="https://github.com/v-morello/clfd.git"
 PYTOOLS_VENV=""
 RFICLEAN_SRC=""
 RFICLEAN_REPO="https://github.com/ymaan4/RFIClean.git"
@@ -104,6 +110,7 @@ SKIP_PSRCHIVE=0
 SKIP_DSPSR=0
 SKIP_PRESTO=0
 SKIP_PINT=0
+SKIP_CLFD=0
 SKIP_RFICLEAN=0
 SKIP_SIGPROC=0
 SKIP_PGPLOT=0
@@ -179,6 +186,14 @@ while (($#)); do
       PINT_REPO="$2"
       shift 2
       ;;
+    --clfd-src)
+      CLFD_SRC="$2"
+      shift 2
+      ;;
+    --clfd-repo)
+      CLFD_REPO="$2"
+      shift 2
+      ;;
     --pytools-venv)
       PYTOOLS_VENV="$2"
       shift 2
@@ -237,6 +252,10 @@ while (($#)); do
       ;;
     --skip-pint)
       SKIP_PINT=1
+      shift
+      ;;
+    --skip-clfd)
+      SKIP_CLFD=1
       shift
       ;;
     --skip-rficlean)
@@ -1261,6 +1280,21 @@ install_pint() {
   )
 }
 
+install_clfd() {
+  local src="$1"
+  local venv_python
+  echo "==> Installing clfd from $src"
+  if [[ ! -f "$src/pyproject.toml" && ! -f "$src/setup.py" ]]; then
+    echo "clfd source tree has no Python packaging metadata (pyproject.toml or setup.py): $src" >&2
+    exit 1
+  fi
+  venv_python="$(ensure_python_venv "$PYTOOLS_VENV")"
+  (
+    cd "$src"
+    "$venv_python" -m pip install .
+  )
+}
+
 apply_local_rficlean_fixes() {
   local src="$1"
   python3 - "$src" <<'PY'
@@ -1597,6 +1631,9 @@ fi
 if [[ -z "$PINT_SRC" ]]; then
   PINT_SRC="$PSRHOME/PINT"
 fi
+if [[ -z "$CLFD_SRC" ]]; then
+  CLFD_SRC="$PSRHOME/clfd"
+fi
 if [[ -z "$PYTOOLS_VENV" ]]; then
   PYTOOLS_VENV="$PREFIX/python-tools-venv"
 fi
@@ -1647,6 +1684,8 @@ echo "PRESTO REPO   : $PRESTO_REPO"
 echo "PRESTO VENV   : $PRESTO_VENV"
 echo "PINT SRC      : $PINT_SRC"
 echo "PINT REPO     : $PINT_REPO"
+echo "CLFD SRC      : $CLFD_SRC"
+echo "CLFD REPO     : $CLFD_REPO"
 echo "PYTOOLS VENV  : $PYTOOLS_VENV"
 echo "RFICLEAN SRC  : $RFICLEAN_SRC"
 echo "RFICLEAN REPO : ${RFICLEAN_REPO:-not set}"
@@ -1787,6 +1826,17 @@ if [[ "$SKIP_PINT" -eq 0 ]]; then
   fi
   apply_local_pint_codes "$PINT_SRC"
   install_pint "$PINT_SRC"
+fi
+
+if [[ "$SKIP_CLFD" -eq 0 ]]; then
+  verify_install "PSRCHIVE" "clfd needs PSRCHIVE and its Python bindings available in the installed stack first."
+  if [[ ! -d "$CLFD_SRC" ]]; then
+    clone_tree "$CLFD_REPO" "$CLFD_SRC" "clfd"
+  fi
+  if [[ -d "$CLFD_SRC/.git" ]]; then
+    update_tree "$CLFD_SRC" "clfd"
+  fi
+  install_clfd "$CLFD_SRC"
 fi
 
 if [[ "$SKIP_RFICLEAN" -eq 0 ]]; then

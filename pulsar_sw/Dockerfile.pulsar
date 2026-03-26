@@ -87,6 +87,7 @@ RUN /workspace/install_pulsar_stack.sh \
   --skip-dspsr \
   --skip-presto \
   --skip-pint \
+  --skip-clfd \
   --skip-rficlean \
   --clean
 

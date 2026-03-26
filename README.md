@@ -5,6 +5,7 @@ PuMA is a pulsar observation processing toolkit used at IAR to ingest raw observ
 The repository now targets Python 3 for the Python scripts. Runtime functionality still depends on the local pulsar software stack being installed separately.
 
 The current working Python environment used for this repo is the PRESTO virtual environment at `/home/USER/pulsar/install/presto-venv/`.
+Additional Python-side tools from the installer, including `clfd`, are installed into `/home/USER/pulsar/install/python-tools-venv/`.
 
 ## What This Repo Does
 
@@ -163,6 +164,7 @@ The scripts assume that several command-line tools are available on the host env
 - `prepfold`
 - `rfifind`
 - `rficlean`
+- `clfd`
 - `readfile`
 - `pat`
 - `tempo2`
@@ -179,6 +181,7 @@ Some scripts also expect Python bindings or modules such as:
 - `matplotlib`
 - `astropy`
 - `psrchive`
+- `clfd`
 - `libstempo`
 - `sigproc`
 - `rfifind`
@@ -190,7 +193,7 @@ Some scripts also expect Python bindings or modules such as:
    Inventory of filesystem paths and folders accessed by the scripts, including copy and move destinations.
 
 2. [pulsar_sw/INSTALLER.md](/home/USER/proyectos/PuMA/pulsar_sw/INSTALLER.md)
-   Installation guide for the pulsar software environment and related dependencies.
+   Installation guide for the pulsar software environment and related dependencies, including `clfd`.
 
 ## Tests
 
