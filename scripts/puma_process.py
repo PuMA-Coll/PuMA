@@ -50,7 +50,10 @@ def process_observations(obs_folder='', dest_path=''):
       if ierr == 0:
          # calibration sources are not reduced with the pipelines
          #if (pname == 'testSource' or pname == 'cal' or pname == 'bla'):
-         if (pname[0] != 'J'):
+         if pname.startswith('B'):
+            print('\n ERROR: pulsar name {} needs to be updated to its J-name (JXXXX-XXXX)\n'.format(pname))
+            continue
+         if not pname.startswith('J'):
             continue
 
          # pipeline for non-glitching (ms) pulsars:
