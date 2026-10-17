@@ -27,7 +27,7 @@ def set_argparse():
             help='path to where pfd file(s) is(are) located')
     parser.add_argument('--par_dirname', default='/opt/pulsar/tempo/tzpar/', type=str,
             help='path to directory containing .par file')
-    parser.add_argument('--std_dirname', default=os.environ['TIMING'], type=str,
+    parser.add_argument('--std_dirname', default=os.environ.get('TIMING', '/opt/pulsar/puma/config/timing/'), type=str,
             help='path to default folder with .std templates')
     parser.add_argument('--tim_dirname', default=os.environ['PWD'], type=str,
             help='path where .tim will be saved')

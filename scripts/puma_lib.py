@@ -462,9 +462,9 @@ class Observation(object):
         pfds = glob.glob(pfd_dirname + '/*timing*.pfd')
 
         # filenames
-        tim_fname = tim_dirname + '/' + self.pname + '_' +  self.antenna + '.tim'
-        par_fname = par_dirname + self.pname + '.par'
-        std_fname = std_dirname + '/' + self.pname + '.pfd.std'
+        tim_fname = os.path.join(tim_dirname, self.pname + '_' + self.antenna + '.tim')
+        par_fname = os.path.join(par_dirname, self.pname + '.par')
+        std_fname = os.path.join(std_dirname, self.pname + '.pfd.std')
 
         # computing toa for observation(s)
         if mode == 'all':
