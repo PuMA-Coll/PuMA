@@ -416,10 +416,12 @@ class Observation(object):
             ierr = 0
             # change pfd header
             coord = self.RAJ + self.DECJ
-            subprocess.call(['psredit',
-                '-c', 'coord=' + coord, '-c', 'name=' + self.pname, '-m', pfd])
-            subprocess.call(['psredit',
-                '-c', 'obs:projid=PuMA', '-c', 'be:name=Ettus-SDR', '-m', pfd])
+            if subprocess.call(['psredit',
+                '-c', 'coord=' + coord, '-c', 'name=' + self.pname, '-m', pfd]) != 0:
+                return -1
+            if subprocess.call(['psredit',
+                '-c', 'obs:projid=PuMA', '-c', 'be:name=Ettus-SDR', '-m', pfd]) != 0:
+                return -1
 
             # before calling pat to get TOAs, move *_par* files to a temp folder, 
             # run pat, and then bring back *_par* files and remove the tmp folder
@@ -441,7 +443,7 @@ class Observation(object):
 
             # define arguments for pat and then call it
             line = '-A PGS -f \"tempo2\" -s ' + std_fname + ' -jFD -j \"T ' + str(n_subints) + '\" '
-            subprocess.call(['pat ' + line + pfd + ' >> ' + tim_fname], shell=True)
+            ierr = subprocess.call(['pat ' + line + pfd + ' >> ' + tim_fname], shell=True)
 
             # move back files in the tmp folder
             try:
@@ -452,8 +454,6 @@ class Observation(object):
             except:
                 pass
            
-            #except Exception:
-            #    ierr = -1
             return ierr
             
 
@@ -472,10 +472,12 @@ class Observation(object):
             subprocess.call(['rm', '-f', tim_fname])
             print('Creating tim file ' + tim_fname)
             for pfd in pfds:
-                do_single_toa(pfd, pfd_dirname, par_fname, std_fname, n_subints, tim_fname)
+                ierr = do_single_toa(pfd, pfd_dirname, par_fname, std_fname, n_subints, tim_fname)
+                if ierr != 0:
+                    return ierr
         elif mode == 'add':
             print('Adding TOA to ' + tim_fname)
-            do_single_toa(pfds[0], pfd_dirname, par_fname, std_fname, n_subints, tim_fname)
+            ierr = do_single_toa(pfds[0], pfd_dirname, par_fname, std_fname, n_subints, tim_fname)
         else:
             print('\n ERROR: unknown mode for computing toa(s) \n')
             ierr = -1
