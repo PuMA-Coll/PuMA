@@ -46,7 +46,7 @@ def set_argparse():
             help='The folding start time as a fraction of the full obs')
     parser.add_argument('--end', default=1.0, type=float,
             help='The folding end time as a fraction of the full obs')
-    parser.add_argument('--rficlean', default=False, type=bool,
+    parser.add_argument('--rficlean', action='store_true',
             help='Use rficlean as part of the cleaning algorithm')
 
     return parser.parse_args()

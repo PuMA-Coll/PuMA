@@ -6,6 +6,7 @@
 # April 2020
 
 import argparse
+import sys
 import numpy as np
 import shutil
 import math
@@ -101,7 +102,7 @@ def set_argparse():
             help='absolute path to .tim file')
     parser.add_argument('--output_dir', default=os.environ['PWD'], type=str,
             help='absolute path where the plot will be saved')
-    parser.add_argument('--copy2last', default=False, type=bool,
+    parser.add_argument('--copy2last', action='store_true',
             help='Do you want to make a copy in Pugli-S/last_obs?')
     parser.add_argument('--units', default='', type=str,
             help='Units for the plot. Options are: ms, us')
