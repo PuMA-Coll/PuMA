@@ -378,11 +378,15 @@ class Observation(object):
 
         if self.was_reduced is False:
             
-            self.set_params2reduc(ftype='timing', path_to_dir=path_to_dir, par_dirname=par_dirname, ncores=ncores)
+            ierr = self.set_params2reduc(ftype='timing', path_to_dir=path_to_dir, par_dirname=par_dirname, ncores=ncores)
+            if ierr != 0:
+                return ierr
             ierr = self.do_reduc()
             if ierr != 0: sys.exit(1)
 
-            self.set_params2reduc(ftype='par', path_to_dir=path_to_dir, par_dirname=par_dirname, ncores=ncores)
+            ierr = self.set_params2reduc(ftype='par', path_to_dir=path_to_dir, par_dirname=par_dirname, ncores=ncores)
+            if ierr != 0:
+                return ierr
             ierr = self.do_reduc()
             if ierr != 0: sys.exit(1)
         else:
