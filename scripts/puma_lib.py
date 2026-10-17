@@ -171,7 +171,7 @@ class Observation(object):
             masks = glob.glob(self.path_to_dir + '/*.mask')
             if len(masks) > 1:
                 print('WARNING: More than one mask in the folder! I will use the first one.')
-                usingmask = masks[0]
+                self.maskname = masks[0]
             elif len(masks) == 0:
                 print('WARNING: No mask in the folder. I will make one for you')
                 subprocess.check_call(rfifind, cwd=self.path_to_dir)
