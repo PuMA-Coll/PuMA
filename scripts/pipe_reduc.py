@@ -28,7 +28,8 @@ def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/', 
    obs.nfils_total = nfils_total
 
    # reduce using PRESTO (timing mode only)
-   obs.set_params2reduc(path_to_dir=folder)
+   ierr = obs.set_params2reduc(path_to_dir=folder)
+   if ierr != 0: sys.exit(1)
    obs.do_reduc()
 
    # calculate signal-to-noise ratio

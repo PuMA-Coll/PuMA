@@ -88,6 +88,7 @@ if __name__ == '__main__':
     obs = Observation(path2dir=args.folder)
     ierr = obs.set_params2reduc(ftype=args.ftype, path_to_dir=args.folder, par_dirname=args.par_dirname, 
     	ptopo=args.ptopo, start=args.start, end=args.end)
+    if ierr != 0: sys.exit(1)
     ierr = obs.do_reduc(args.rficlean)
     if ierr != 0: sys.exit(1)
 	
