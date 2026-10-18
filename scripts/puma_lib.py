@@ -434,20 +434,35 @@ class Observation(object):
             # before calling pat to get TOAs, move *_par* files to a temp folder, 
             # run pat, and then bring back *_par* files and remove the tmp folder
             path_to_tmp_folder = pfd_dirname + '/tmp/'
-            try:
+            created_tmp_folder = False
+            if not os.path.isdir(path_to_tmp_folder):
                 print('creating ' + path_to_tmp_folder)
-                os.mkdir(path_to_tmp_folder) 
-            except:
-                pass
+                try:
+                    os.mkdir(path_to_tmp_folder)
+                    created_tmp_folder = True
+                except OSError as error:
+                    print('ERROR: could not create {}: {}'.format(path_to_tmp_folder, error))
+                    return -1
 
             # move *_par* files to tmp folder
+            files = glob.glob(pfd_dirname + '/*_par*')
             try:
-                files = glob.glob(pfd_dirname + '/*_par*')
-                print('moving ' + files + 'to' + path_to_tmp_folder)
+                print('moving {} to {}'.format(files, path_to_tmp_folder))
                 for file in files:
                     shutil.move(file, path_to_tmp_folder)
-            except:   
-                pass
+            except (IOError, OSError) as error:
+                print('ERROR: could not move parameter files: {}'.format(error))
+                for file in glob.glob(path_to_tmp_folder + '/*'):
+                    try:
+                        shutil.move(file, pfd_dirname)
+                    except (IOError, OSError):
+                        pass
+                if created_tmp_folder:
+                    try:
+                        os.rmdir(path_to_tmp_folder)
+                    except OSError:
+                        pass
+                return -1
 
             # define arguments for pat and then call it
             line = '-A PGS -f \"tempo2\" -s ' + std_fname + ' -jFD -j \"T ' + str(n_subints) + '\" '
@@ -458,9 +473,11 @@ class Observation(object):
                 files = glob.glob(path_to_tmp_folder + '/*')
                 for file in files:
                     shutil.move(file, pfd_dirname)
-                os.rmdir(path_to_tmp_folder)
-            except:
-                pass
+                if created_tmp_folder:
+                    os.rmdir(path_to_tmp_folder)
+            except (IOError, OSError) as error:
+                print('ERROR: could not restore parameter files: {}'.format(error))
+                return -1
            
             return ierr
             
