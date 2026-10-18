@@ -6,6 +6,7 @@ import os
 import sys
 import glob
 import shutil
+import subprocess
 import numpy as np
 import pandas as pd
 
@@ -13,20 +14,29 @@ import pandas as pd
 def copy_db(pname, antenna, path2ini, path2end):
    '''  Copy files useful for database (.ps converted to png, pfd and polycos)  '''
 
-   path2last = path2end + '/last_obs/'
-   path2pngs = path2end + '/' + pname + '/pngs/'
-   path2pfds = path2end + '/' + pname + '/pfds/'
+   path2last = os.path.join(path2end, 'last_obs')
+   path2pngs = os.path.join(path2end, pname, 'pngs')
+   path2pfds = os.path.join(path2end, pname, 'pfds')
    # Create the specific directory for the pulsar if it does not exist
-   try:
-      os.makedirs(path2pngs)
-      os.makedirs(path2pfds)
-   except Exception:
-      print('pulsar database directory already exists')
+   for path in (path2last, path2pngs, path2pfds):
+      if os.path.isdir(path) is False:
+          try:
+             os.makedirs(path)
+          except OSError as error:
+             if os.path.isdir(path) is False:
+                print('ERROR: could not create database directory {}: {}'.format(path, error))
+                raise
 
    # Convert mask from .ps format to .png
-   ps_mask = glob.glob(path2ini + '/*mask*.ps')[0]
+   mask_files = glob.glob(os.path.join(path2ini, '*mask*.ps'))
+   if len(mask_files) == 0:
+      raise IOError('No mask PostScript file found in {}'.format(path2ini))
+   ps_mask = mask_files[0]
    pngfile = ps_mask[:-2] + 'png'
-   os.system('convert -density 150 -rotate 90 -alpha off ' + ps_mask + ' ' + pngfile)
+   ierr = subprocess.call(['convert', '-density', '150', '-rotate', '90',
+                           '-alpha', 'off', ps_mask, pngfile])
+   if ierr != 0:
+      raise RuntimeError('ImageMagick convert failed for {}'.format(ps_mask))
 
    # Get the paths to all files (pdfs, pfds, polycoss)
    png_files = glob.glob(path2ini + '/*.png')
@@ -36,30 +46,30 @@ def copy_db(pname, antenna, path2ini, path2end):
    # Copy all png files and save their paths in a list of pngs
    pngs = []
    for png in png_files:
-      pngs.append(png.split('/')[-1])
+      pngs.append(os.path.basename(png))
       shutil.copy(png, path2pngs)
       # Make a copy in last_obs directory taking out the date information
       if 'mask' in png:
          # Only the first page of the mask is needed
          if '-0' in png:
-            shutil.copy(png, path2last + pname + '_' + antenna + '_mask.png' )
+            shutil.copy(png, os.path.join(path2last, pname + '_' + antenna + '_mask.png'))
       else:
          if 'par' in png:
-            shutil.copy(png, path2last + pname + '_' + antenna + '_par.png' )
+            shutil.copy(png, os.path.join(path2last, pname + '_' + antenna + '_par.png'))
          elif 'timing' in png:
-            shutil.copy(png, path2last + pname + '_' + antenna + '_timing.png' )
+            shutil.copy(png, os.path.join(path2last, pname + '_' + antenna + '_timing.png'))
          else:
             print('What is this file: ' + png + '?!')
 
    # Copy pfds and polycoss and save their paths in a list of pfds and a list of polycoss
    pfds = []
    for pfd in pfd_files:
-      pfds.append(pfd.split('/')[-1])
+      pfds.append(os.path.basename(pfd))
       shutil.copy(pfd, path2pfds)
 
    polycoss = []
    for polycos in polycos_files:
-      polycoss.append(polycos.split('/')[-1])
+      polycoss.append(os.path.basename(polycos))
       shutil.copy(polycos, path2pfds)
 
    return pngs, pfds, polycoss
@@ -144,9 +154,9 @@ def write_pugliS_info_jason(path2pugliese,obs):
    PSR = path2pugliese + '/' + obs.pname + '/' + obs.pname + '.json'
 
    try:
-       df = pd.read_json(PSR, orient='records')
-   except:
-       df = pd.DataFrame()
+      df = pd.read_json(PSR, orient='records')
+   except (IOError, ValueError):
+      df = pd.DataFrame()
 
    if len(df) == 0:
        print('The DB for this PSR was empty')
