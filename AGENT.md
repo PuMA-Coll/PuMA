@@ -48,11 +48,13 @@ to the software and paths installed by `puma-docker`.
 - Introduce staged logging and error handling: per-observation context,
   consistent library errors, narrow exception handling, subprocess reporting,
   and alert delivery separated from reduction logic.
-- Define a real `puma_pipe` dispatcher. The repository currently has no
-  `puma_pipe.py`; the operational entrypoints are `pipe_reduc.py`,
-  `pipe_pugliS.py`, and `pipe_red_trigger.py`.
-- After the dispatcher and input contract are defined, schedule it approximately
-  hourly or several times per day using a host/service scheduler. The design
+- `puma_process.py` is the dispatcher. It routes
+  canonical J-name pulsars through `config/pulsars.ini`. The current MSPs are
+  J0437-4715 and J2241-5236, and they use `pipe_reduc.py` without glitch
+  searches. Other J-name pulsars use `pipe_pugliS.py`.
+- After the input contract is validated, schedule `puma_process.py`
+  approximately hourly or several times per day using a host/service scheduler.
+  The design
   must include a single-instance lock, retry/backoff, durable logs, failure
   alerts, and protection against processing the same observation twice.
 - Validate scheduling first with a dry-run or disposable input before enabling

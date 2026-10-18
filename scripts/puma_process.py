@@ -18,6 +18,17 @@ import sigproc
 import subprocess
 
 
+def is_msp(pname):
+   """Return whether a canonical J-name uses the non-glitching pipeline."""
+   config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),
+                              'config', 'pulsars.ini')
+   config = SafeConfigParser()
+   config.read(config_path)
+   if config.has_section('pulsars') is False or config.has_option('pulsars', pname) is False:
+      return False
+   return config.getboolean('pulsars', pname)
+
+
 # ---------------------------------------------------------------
 #                        IDEAS
 # ---------------------------------------------------------------
@@ -57,7 +68,7 @@ def process_observations(obs_folder='', dest_path=''):
             continue
 
          # pipeline for non-glitching (ms) pulsars:
-         if pname == 'J0437-4715' or pname == 'J2241-5236':
+         if is_msp(pname):
             # important: make sub-folders for each separate observation
             fils = glob.glob(reduction_path + '/*.fil')
             for i in range(len(fils)):
