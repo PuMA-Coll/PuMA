@@ -44,7 +44,8 @@ def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/sh
    # calculate signal-to-noise ratio
    pfds = glob.glob(folder + '/*.pfd')
    for pfd in pfds:
-      obs.calc_snr(pfd=pfd)
+      ierr = obs.calc_snr(pfd=pfd)
+      if ierr != 0: sys.exit(1)
 
    # calculate TOAs
    tim_folder = path2pugliese + '/tims/'
@@ -59,7 +60,8 @@ def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/sh
       obs.glitch = True
 
    # calculate good time interval percentage
-   obs.get_mask_percentage(obs.maskname)
+   ierr = obs.get_mask_percentage(obs.maskname)
+   if ierr != 0: sys.exit(1)
 
    # copy files for visualization and analysis
    obs.pngs, obs.pfds, obs.polycos = copy_db(obs.pname, obs.antenna, folder, path2pugliese)

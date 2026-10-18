@@ -83,38 +83,58 @@ def move_observation(path_to_obs='', dest_path=''):
    print(path_to_obs)
 
    # grab pulsar name and antenna from *.fil file name
-   try:
-      fil_fname = glob.glob(path_to_obs + '/*.fil')[0]
-      pulsar_name = fil_fname.split('/')[-1].split('_')[1]
-      antenna = fil_fname.split('/')[-1].split('_')[2]
-
-   except:
+   fil_files = glob.glob(os.path.join(path_to_obs, '*.fil'))
+   if len(fil_files) == 0:
       print('\n FATAL ERROR: no .fil file found!')
       ierr = -1
       return ierr, 'NN', 'No path'
 
+   fil_fname = fil_files[0]
+   fil_parts = os.path.basename(fil_fname).split('_')
+   if len(fil_parts) < 3:
+      print('\n FATAL ERROR: could not parse pulsar and antenna from {}\n'.format(fil_fname))
+      ierr = -1
+      return ierr, 'NN', 'No path'
+   pulsar_name = fil_parts[1]
+   antenna = fil_parts[2]
+
+   if os.path.isdir(dest_path) is False:
+      print('\n FATAL ERROR: destination path does not exist: {}\n'.format(dest_path))
+      ierr = -1
+      return ierr, pulsar_name, 'No path'
+
    # add antenna to the observation folder name
-   if (path_to_obs[-2:] == 'A1' or path_to_obs[-2:] == 'A2'):
+   if os.path.basename(path_to_obs.rstrip('/')) in ('A1', 'A2'):
       new_path_to_obs = path_to_obs
    else:
-      new_path_to_obs = path_to_obs + '_' + antenna
-      shutil.move(path_to_obs, new_path_to_obs)
+      new_path_to_obs = path_to_obs.rstrip('/') + '_' + antenna
+      try:
+         shutil.move(path_to_obs, new_path_to_obs)
+      except (IOError, OSError) as error:
+         print('ERROR: could not add antenna to observation path: {}'.format(error))
+         ierr = -1
+         return ierr, pulsar_name, 'No path'
 
    # now try to create folder with pulsar name in dest_path
    # else, just move files inside that folder
-   pulsar_folder_name = dest_path + '/' + pulsar_name
-   try:
-      os.mkdir(pulsar_folder_name)
-   except Exception:
+   pulsar_folder_name = os.path.join(dest_path, pulsar_name)
+   if os.path.isdir(pulsar_folder_name) is False:
+      try:
+         os.makedirs(pulsar_folder_name)
+      except OSError as error:
+         print('ERROR: could not create pulsar folder {}: {}'.format(pulsar_folder_name, error))
+         ierr = -1
+         return ierr, pulsar_name, 'No path'
+   else:
       print('pulsar folder for {} already exists'.format(pulsar_name))
 
    # move obs data to newly created folder
-   path_to_reduc = pulsar_folder_name + '/' + new_path_to_obs.split('/')[-1] + '/'
+   path_to_reduc = os.path.join(pulsar_folder_name, os.path.basename(new_path_to_obs)) + '/'
    try:
-      shutil.move(new_path_to_obs, pulsar_folder_name+'/')
+      shutil.move(new_path_to_obs, pulsar_folder_name)
       return ierr, pulsar_name, path_to_reduc
-   except Exception as e:
-      print(e)
+   except (IOError, OSError) as error:
+      print('ERROR: could not move observation: {}'.format(error))
       ierr = -1
       return ierr, pulsar_name, path_to_reduc
 

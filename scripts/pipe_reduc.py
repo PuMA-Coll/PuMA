@@ -34,7 +34,8 @@ def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/', 
 
    # calculate signal-to-noise ratio
    pfd = glob.glob(folder + '/*.pfd')[0]
-   obs.calc_snr(pfd=pfd)
+   ierr = obs.calc_snr(pfd=pfd)
+   if ierr != 0: sys.exit(1)
 
    # calculate TOAs
    tim_folder = path2pugliese + '/tims/'
@@ -46,7 +47,8 @@ def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/', 
    obs.jump = 0
 
    # calculate good time interval percentage
-   obs.get_mask_percentage(obs.maskname)   
+   ierr = obs.get_mask_percentage(obs.maskname)
+   if ierr != 0: sys.exit(1)
 
    # copy files for visualization and analysis; also store the output paths in observation object
    obs.pngs, obs.pfds, obs.polycos = copy_db(obs.pname, obs.antenna, folder, path2pugliese)   
