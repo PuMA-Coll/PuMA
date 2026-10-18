@@ -37,7 +37,8 @@ def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/sh
    obs.nfils_total = obs.nfils
 
    # search for glitches (code red)
-   obs.do_glitch_search(threshold=thresh, path_to_dir=folder)
+   ierr = obs.do_glitch_search(threshold=thresh, path_to_dir=folder)
+   if ierr != 0: sys.exit(1)
    if obs.red_alert: send_alert('red')
 
    # calculate signal-to-noise ratio
@@ -47,7 +48,8 @@ def do_pipe_puglis(folder='', thresh=1.0e-8, path2pugliese='/home/jovyan/work/sh
 
    # calculate TOAs
    tim_folder = path2pugliese + '/tims/'
-   obs.do_toas(pfd_dirname=folder, tim_dirname=tim_folder)
+   ierr = obs.do_toas(pfd_dirname=folder, tim_dirname=tim_folder)
+   if ierr != 0: sys.exit(1)
 
    # search for glitches (code blue)
    # obs.do_timing(thresh)

@@ -374,7 +374,7 @@ class Observation(object):
 
         self.thresh = threshold   # Store value in obs object for future analysis
         # Check if the reduction has already been made
-        if len(glob.glob('*timing*.pfd')) + len(glob.glob('*par*.pfd')) >= 2: self.was_reduced = True
+        if len(glob.glob(path_to_dir + '/*timing*.pfd')) + len(glob.glob(path_to_dir + '/*par*.pfd')) >= 2: self.was_reduced = True
 
         if self.was_reduced is False:
             
@@ -390,7 +390,11 @@ class Observation(object):
             ierr = self.do_reduc()
             if ierr != 0: sys.exit(1)
         else:
-            self.maskname = glob.glob('*.mask')[0]
+            masks = glob.glob(path_to_dir + '/*.mask')
+            if len(masks) == 0:
+                print('\n ERROR: no mask found in ' + path_to_dir + '\n')
+                return -1
+            self.maskname = masks[0]
 
         # Check for glitch
         self.P_eph, self.err_P, ierr = self.read_bestprof('timing')
@@ -464,6 +468,9 @@ class Observation(object):
         ierr = 0
         
         pfds = glob.glob(pfd_dirname + '/*timing*.pfd')
+        if len(pfds) == 0:
+            print('\n ERROR: no timing .pfd files found in ' + pfd_dirname + '\n')
+            return -1
 
         # filenames
         tim_fname = os.path.join(tim_dirname, self.pname + '_' + self.antenna + '.tim')

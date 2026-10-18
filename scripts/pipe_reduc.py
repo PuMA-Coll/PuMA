@@ -38,7 +38,8 @@ def do_pipe_reduc(folder='', path2pugliese='/home/jovyan/work/shared/PuGli-S/', 
 
    # calculate TOAs
    tim_folder = path2pugliese + '/tims/'
-   obs.do_toas(pfd_dirname=folder, tim_dirname=tim_folder)
+   ierr = obs.do_toas(pfd_dirname=folder, tim_dirname=tim_folder)
+   if ierr != 0: sys.exit(1)
 
    # non-glitching pulsar
    obs.glitch = False

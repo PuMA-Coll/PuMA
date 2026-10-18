@@ -31,7 +31,7 @@ def calc_residuals_errorbars(rms, n_obs):
     return rms_min, rms_max
 
 
-def plot_residuals(par_fname='', tim_fname='', output_dir='', copy2last=False, units=''):
+def plot_residuals(par_fname='', tim_fname='', output_dir='', copy2last=False, units='us'):
     """Plot residuals."""
 
     # file where timing residuals will be stored (use .tim file as reference)
@@ -60,6 +60,8 @@ def plot_residuals(par_fname='', tim_fname='', output_dir='', copy2last=False, u
             un = 1e3
             ylabel = 'res [ms]'
             rms_title = '$ms'
+        else:
+            raise ValueError('units must be either us or ms')
 
         rms = timing.rms()*un    # convert to units
         rms_min, rms_max = calc_residuals_errorbars(n_obs=timing.nobs, rms=rms)
@@ -104,7 +106,7 @@ def set_argparse():
             help='absolute path where the plot will be saved')
     parser.add_argument('--copy2last', action='store_true',
             help='Do you want to make a copy in Pugli-S/last_obs?')
-    parser.add_argument('--units', default='', type=str,
+    parser.add_argument('--units', default='us', type=str,
             help='Units for the plot. Options are: ms, us')
 
     return parser.parse_args()
@@ -118,6 +120,14 @@ def check_cli_arguments(args):
         return ierr
     if os.path.isabs(args.tim_fname) is False:
         print('\n FATAL ERROR: .tim file path is not absolute\n')
+        ierr = -1
+        return ierr
+    if os.path.isdir(args.output_dir) is False:
+        print('\n FATAL ERROR: output folder does not exist\n')
+        ierr = -1
+        return ierr
+    if args.units not in ('us', 'ms'):
+        print('\n FATAL ERROR: units must be either us or ms\n')
         ierr = -1
         return ierr
     return ierr
