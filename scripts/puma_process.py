@@ -19,14 +19,28 @@ import subprocess
 
 
 def is_msp(pname):
-   """Return whether a canonical J-name uses the non-glitching pipeline."""
+   """Return True/False for a known pulsar, or None for an unknown one."""
    config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)),
                               'config', 'pulsars.ini')
    config = SafeConfigParser()
    config.read(config_path)
    if config.has_section('pulsars') is False or config.has_option('pulsars', pname) is False:
-      return False
+      return None
    return config.getboolean('pulsars', pname)
+
+
+def validate_pulsar_assets(pname):
+   """Check that the configured PuMA inputs exist for a canonical J-name."""
+   puma_root = os.path.dirname(os.path.dirname(__file__))
+   required = [
+      os.path.join(puma_root, 'config', pname + '.ini'),
+      os.path.join(puma_root, 'pardir', pname + '.par'),
+      os.path.join(puma_root, 'config', 'timing', pname + '.pfd.std')]
+   missing = [path for path in required if os.path.isfile(path) is False]
+   if len(missing) > 0:
+      print('\n ERROR: missing PuMA assets for {}: {}\n'.format(pname, ', '.join(missing)))
+      return False
+   return True
 
 
 # ---------------------------------------------------------------
@@ -67,8 +81,17 @@ def process_observations(obs_folder='', dest_path=''):
          if not pname.startswith('J'):
             continue
 
+         msp = is_msp(pname)
+         if msp is None:
+            print('\n ERROR: pulsar {} is not in config/pulsars.ini\n'.format(pname))
+            ierr = -1
+            continue
+         if validate_pulsar_assets(pname) is False:
+            ierr = -1
+            continue
+
          # pipeline for non-glitching (ms) pulsars:
-         if is_msp(pname):
+         if msp:
             # important: make sub-folders for each separate observation
             fils = glob.glob(reduction_path + '/*.fil')
             for i in range(len(fils)):
