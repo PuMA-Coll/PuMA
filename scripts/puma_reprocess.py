@@ -36,6 +36,13 @@ def oldfolder_to_newfolder(folder=''):
 
 
    if os.path.isdir(folder):
+      fil_files = []
+      for root, dirs, files in os.walk(folder):
+         fil_files.extend([os.path.join(root, name) for name in files if name.endswith('.fil')])
+      if len(fil_files) == 0:
+         print('\n ERROR: no .fil files found in {}; refusing to remove it\n'.format(folder))
+         return -1
+
       fils_A1 = glob.glob(folder + '*/A1/*/*.fil')
       adapt_folder(folder, fils_A1, 'A1')
 
@@ -50,7 +57,18 @@ def oldfolder_to_newfolder(folder=''):
       fils_A2 = glob.glob(folder + '*/A2/*.fil')
       adapt_folder(folder, fils_A2, 'A2')
 
+      remaining_files = []
+      for root, dirs, files in os.walk(folder):
+         remaining_files.extend([os.path.join(root, name) for name in files if name.endswith('.fil')])
+      if len(remaining_files) > 0:
+         print('\n ERROR: not all .fil files were moved from {}; refusing to remove it\n'.format(folder))
+         return -1
+
       shutil.rmtree(folder)
+      return 0
+
+   print('\n ERROR: folder does not exist: {}\n'.format(folder))
+   return -1
    
 
 #====================================================================================
@@ -78,7 +96,9 @@ if __name__ == '__main__':
    # Change the structure in the old observation folder to match the new one
    print('\n Adapting ' + str(len(old_folders)) + ' folders to the new format')
    for folder in old_folders:
-      oldfolder_to_newfolder(folder=folder)
+      ierr = oldfolder_to_newfolder(folder=folder)
+      if ierr != 0:
+         sys.exit(1)
 
    # Move all the observations to a new directory to reduce them one by one
    print('\n Moving the observations to a temporary folder')
